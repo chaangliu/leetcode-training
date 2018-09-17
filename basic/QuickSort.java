@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class QuickSort {
 
+    //第一种写法
     private static void quickSort(int[] a, int low, int high) {
         //递归的出口
         if (low > high) {
@@ -41,56 +42,56 @@ public class QuickSort {
         quickSort(a, i + 1, high);
     }
 
-    public static void main(String[] args) {
-        int a[] = {9, 0, 2, 3, 1};
-        System.out.println(Arrays.toString(a));
-        quickSort(a, 0, a.length - 1);
-        System.out.println(Arrays.toString(a));
+    //第二种写法，直接调用
+    private void quickSort2(int[] arr, int low, int high) {
+        if (low > high) return;
+        int i = low, pivot = arr[high];
+        for (int j = low; j < high; j++) {
+            //把<pivot的数换到前面去，并且i坐标右移1位，那么这样走一趟下来i（最后已经加过1）就是pivot的正确位置
+            if (arr[j] < pivot) {
+                swap(i, j, arr);
+                i++;
+            }
+        }
+        swap(i, high, arr);
+        quickSort2(arr, low, i - 1);
+        quickSort2(arr, i + 1, high);
+    }
+
+    private void swap(int a, int b, int[] arr) {
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
+
+    //第三种写法，单次partition求得pivot正确的位置
+    private int partition(int[] arr, int low, int high) {
+        int i = low, pivot = arr[high];
+        for (int j = low; j < high; j++) {
+            //把<pivot的数换到前面去，并且i坐标右移1位，那么这样走一趟下来i（最后已经加过1）就是pivot的正确位置
+            if (arr[j] < pivot) {
+                swap(i, j, arr);
+                i++;
+            }
+        }
+        swap(i, high, arr);
+        return i;
+    }
+
+    private void quickSort3(int[] arr, int low, int high) {
+        if (low > high) return;
+        int pivot = partition(arr, low, high);
+        quickSort3(arr, low, pivot - 1);
+        quickSort3(arr, pivot + 1, high);
     }
 
 
-//    private void quickSort(int left, int right, int[] nums) {
-//        if (left >= right)
-//            return;
-//        int i = left, j = right, pivot = nums[left];
-//        while (i < j) {
-//            while (i < j && nums[j] >= pivot)
-//                j--;
-//            if (i < j)
-//                nums[i] = nums[j];
-//            while (i < j && nums[i] <= pivot)
-//                i++;
-//            if (i < j)
-//                nums[j] = nums[i];
-//        }
-//        nums[i] = pivot;
-//        quickSort(left, i - 1, nums);
-//        quickSort(i + 1, right, nums);
-//    }
-
-//    public void quickSort(int array[], int low, int high) {
-//        int i, j;
-//        int index;
-//        if (low >= high) return;
-//
-//        i = low;
-//        j = high;
-//        //stash一下最左边的元素
-//        index = array[i];
-//        while (i < j) {
-//            while (i < j && array[j] > index)
-//                j--;
-//            if (i < j)
-//                array[i++] = array[j];
-//            while (i < j && array[i] < index)
-//                i++;
-//            if (i < j)
-//                array[j--] = array[i];
-//        }
-//        array[i] = index;
-//        quickSort(array, low, i - 1);
-//        quickSort(array, i + 1, high);
-//
-//    }
-
+    public static void main(String[] args) {
+//        int a[] = {9, 0, 2, 3, 1};
+        int a[] = {3, 2, 7, 3, 1};
+//        System.out.println(Arrays.toString(a));
+//        quickSort(a, 0, a.length - 1);
+        new QuickSort().quickSort3(a, 0, a.length - 1);
+        System.out.println(Arrays.toString(a));
+    }
 }
