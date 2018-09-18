@@ -42,7 +42,7 @@ public class QuickSort {
         quickSort(a, i + 1, high);
     }
 
-    //第二种写法，直接调用
+    //第二种写法，partition思想
     private void quickSort2(int[] arr, int low, int high) {
         if (low > high) return;
         int i = low, pivot = arr[high];
@@ -64,7 +64,7 @@ public class QuickSort {
         arr[b] = tmp;
     }
 
-    //第三种写法，单次partition求得pivot正确的位置
+    //第三种写法，抽出partition函数。单次partition求得pivot正确的位置
     private int partition(int[] arr, int low, int high) {
         int i = low, pivot = arr[high];
         for (int j = low; j < high; j++) {
