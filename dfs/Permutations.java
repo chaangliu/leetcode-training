@@ -98,7 +98,6 @@ public class Permutations {
     private void backtracking2(int[] nums, List<List<Integer>> res, ArrayList<Integer> item) {
         for (int i = 0; i < nums.length; i++) {
             if (item.size() == nums.length) {
-                //注意这里需要创建一个新的对象，item里的东西赋值给它
                 res.add(new ArrayList<Integer>(item));
                 return;
             } else {
