@@ -7,6 +7,23 @@ import java.util.List;
 /**
  * 递归、字典序
  * Created by DrunkPiano on 2016/12/14 .
+ * <p>
+ * Given a collection of distinct integers, return all possible permutations.
+ * <p>
+ * Example:
+ * <p>
+ * Input: [1,2,3]
+ * Output:
+ * [
+ * [1,2,3],
+ * [1,3,2],
+ * [2,1,3],
+ * [2,3,1],
+ * [3,1,2],
+ * [3,2,1]
+ * ]
+ * https://leetcode.com/problems/permutations/description/
+ * https://www.jianshu.com/p/d7a02c614cfb
  */
 
 public class Permutations {
