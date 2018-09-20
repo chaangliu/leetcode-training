@@ -75,37 +75,34 @@ public class Permutations {
 
     //backtracking第一种写法
     private void backtracking(int[] nums, List<List<Integer>> res, boolean[] used, ArrayList<Integer> item) {
-        //注意for循环外面没有内容了
+        if (item.size() == nums.length) {
+            //注意这里需要创建一个新的对象，item里的东西赋值给它
+            res.add(new ArrayList<Integer>(item));
+            return;
+        }
         for (int i = 0; i < nums.length; i++) {
-            if (item.size() == nums.length) {
-                //注意这里需要创建一个新的对象，item里的东西赋值给它
-                res.add(new ArrayList<Integer>(item));
-                return;
-            } else {
-                //利用一个used[]数组
-                if (!used[i]) {
-                    item.add(nums[i]);
-                    used[i] = true;
-                    backtracking(nums, res, used, item);
-                    used[i] = false;//返回上一层递归栈的时候恢复状态
-                    item.remove(item.size() - 1);//删除最后一次增加的元素
-                }
+            //利用一个used[]数组
+            if (!used[i]) {
+                item.add(nums[i]);
+                used[i] = true;
+                backtracking(nums, res, used, item);
+                used[i] = false;//返回上一层递归栈的时候恢复状态
+                item.remove(item.size() - 1);//删除最后一次增加的元素
             }
         }
     }
 
     //backtracking第二种写法
     private void backtracking2(int[] nums, List<List<Integer>> res, ArrayList<Integer> item) {
+        if (item.size() == nums.length) {
+            res.add(new ArrayList<Integer>(item));
+            return;
+        }
         for (int i = 0; i < nums.length; i++) {
-            if (item.size() == nums.length) {
-                res.add(new ArrayList<Integer>(item));
-                return;
-            } else {
-                if (!item.contains(nums[i])) {
-                    item.add(nums[i]);
-                    backtracking2(nums, res, item);
-                    item.remove(item.size() - 1);
-                }
+            if (!item.contains(nums[i])) {
+                item.add(nums[i]);
+                backtracking2(nums, res, item);
+                item.remove(item.size() - 1);
             }
         }
     }
