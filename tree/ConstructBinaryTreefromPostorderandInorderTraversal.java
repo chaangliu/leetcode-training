@@ -1,5 +1,8 @@
 package tree;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Given preorder and inorder traversal of a tree, construct the binary tree.
  * <p>
@@ -14,72 +17,105 @@ package tree;
  * TreeNode right;
  * TreeNode(int x) { val = x; }
  * }
+ * ----
+ * <p>
+ * Given inorder and postorder traversal of a tree, construct the binary tree.
+ * <p>
+ * Note:
+ * You may assume that duplicates do not exist in the tree.
+ * <p>
+ * For example, given
+ * <p>
+ * inorder = [9,3,15,20,7]
+ * postorder = [9,15,7,20,3]
+ * Return the following binary tree:
+ * <p>
+ * 3
+ * / \
+ * 9  20
+ * /  \
+ * 15   7
  */
 
 public class ConstructBinaryTreefromPostorderandInorderTraversal {
 
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
-    }
-
+    //----- 20181017 review -----
     public TreeNode buildTree(int[] inorder, int[] postorder) {
         if (inorder == null || postorder == null) return null;
-        return construct(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
-    }
-
-    public TreeNode construct(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
-
-        if (inStart > inEnd || postStart > postEnd) return null;
-
-        int val = postorder[postEnd];
-        TreeNode p = new TreeNode(val);
-        int pivot = 0;
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < inorder.length; i++) {
-            if (inorder[i] == val) {
-                pivot = i;
-            }
+            map.put(inorder[i], i);
         }
+        return helper(postorder, postorder.length - 1, 0, inorder.length - 1, map);
+    }
 
-        //pivot is not the length !!! needs to - inStart to get the length
-        p.left = construct(inorder, inStart, pivot - 1, postorder, postStart, postStart + pivot - inStart - 1);
-        p.right = construct(inorder, pivot + 1, inEnd, postorder, postStart + pivot - inStart, postEnd - 1);
-        return p;
+    //思路与105题一样，仍然是找root在inorder中的位置，递归构造左右子树。
+    private TreeNode helper(int[] postorder, int postIdx, int inStart, int inEnd, Map idxMap) {
+        if (inStart > inEnd) return null;
+        TreeNode root = new TreeNode(postorder[postIdx]);
+
+        int pivot = (int) idxMap.get(postorder[postIdx]);
+        //难点是新的postIdx，一开始写成了postIdx - (inorder.length - pivot) - 1，想法是对的但是没考虑周全。改了一次之后AC了。
+        root.left = helper(postorder, postIdx - (inEnd - pivot) - 1, inStart, pivot - 1, idxMap);
+        root.right = helper(postorder, postIdx - 1, pivot + 1, inEnd, idxMap);
+        return root;
     }
 
 
-    private void preorderTraverse(TreeNode root) {
-        if (root != null) {
-            System.out.println(root.val);
-            preorderTraverse(root.left);
-            preorderTraverse(root.right);
-        }
-    }
-    @Override
-    protected void finalize() throws Throwable
-    {
-        super.finalize();
-        System.out.println("finalize.");
-    }
+    //----- original thread -----
 
-
-    /**
-     * preorder:  {7}, {10,4,3,1}, {2,8,11}
-     * inorder:   {4,10,3,1}, {7}, {11, 8,2}
-     */
-    public static void main(String args[]) {
-//        ConstructBinaryTreefromPostorderandInorderTraversal constructBinaryTreefromPreorderandInorderTraversal = new ConstructBinaryTreefromPostorderandInorderTraversal();
-//        int[] preorder = {7, 10, 4, 3, 1, 2, 8, 11};
-//        int[] inorder = {4, 10, 3, 1, 7, 11, 8, 2};
-//        TreeNode result = constructBinaryTreefromPreorderandInorderTraversal.buildTree(preorder, inorder);
-//		String s = "asd";
-//		s.intern();
-//        constructBinaryTreefromPreorderandInorderTraversal.preorderTraverse(result);
-		System.out.println(Integer.parseInt("00"));
-    }
+//    public TreeNode buildTree(int[] inorder, int[] postorder) {
+//        if (inorder == null || postorder == null) return null;
+//        return construct(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+//    }
+//
+//    public TreeNode construct(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
+//
+//        if (inStart > inEnd || postStart > postEnd) return null;
+//
+//        int val = postorder[postEnd];
+//        TreeNode p = new TreeNode(val);
+//        int pivot = 0;
+//        for (int i = 0; i < inorder.length; i++) {
+//            if (inorder[i] == val) {
+//                pivot = i;
+//            }
+//        }
+//
+//        //pivot is not the length !!! needs to - inStart to get the length
+//        p.left = construct(inorder, inStart, pivot - 1, postorder, postStart, postStart + pivot - inStart - 1);
+//        p.right = construct(inorder, pivot + 1, inEnd, postorder, postStart + pivot - inStart, postEnd - 1);
+//        return p;
+//    }
+//
+//
+//    private void preorderTraverse(TreeNode root) {
+//        if (root != null) {
+//            System.out.println(root.val);
+//            preorderTraverse(root.left);
+//            preorderTraverse(root.right);
+//        }
+//    }
+//    @Override
+//    protected void finalize() throws Throwable
+//    {
+//        super.finalize();
+//        System.out.println("finalize.");
+//    }
+//
+//
+//    /**
+//     * preorder:  {7}, {10,4,3,1}, {2,8,11}
+//     * inorder:   {4,10,3,1}, {7}, {11, 8,2}
+//     */
+//    public static void main(String args[]) {
+////        ConstructBinaryTreefromPostorderandInorderTraversal constructBinaryTreefromPreorderandInorderTraversal = new ConstructBinaryTreefromPostorderandInorderTraversal();
+////        int[] preorder = {7, 10, 4, 3, 1, 2, 8, 11};
+////        int[] inorder = {4, 10, 3, 1, 7, 11, 8, 2};
+////        TreeNode result = constructBinaryTreefromPreorderandInorderTraversal.buildTree(preorder, inorder);
+////		String s = "asd";
+////		s.intern();
+////        constructBinaryTreefromPreorderandInorderTraversal.preorderTraverse(result);
+//		System.out.println(Integer.parseInt("00"));
+//    }
 }
