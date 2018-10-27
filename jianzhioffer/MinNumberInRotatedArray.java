@@ -28,7 +28,7 @@ public class MinNumberInRotatedArray {
 //        }
 //        return array[left];
 //    }
-
+    //跟 search in rotated sorted array一起看
     public int minNumberInRotateArray(int[] array) {
         if (array == null || array.length == 0) return 0;
         int left = 0, right = array.length - 1;
@@ -47,7 +47,9 @@ public class MinNumberInRotatedArray {
                 //最小值可能是mid或者mid的左边
                 right = mid;
             } else {
-                //10111,只能遍历
+                // TODO: 2018/10/27 这里为什么不能left++ ??
+//                left++;
+//                //10111,只能遍历
                 int min = array[0];
                 for (int i = 0; i < array.length; i++) {
                     min = Math.min(min, array[i]);
