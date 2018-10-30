@@ -5,6 +5,8 @@ package jianzhioffer;
  */
 public class JumpFloorII {
     //approach 1, 常规思路： dp[i] = dp[i - 1] + dp[i - 2] + .. dp[0]
+    //**这里好像用不了滚动数组**
+
     public int JumpFloorII(int target) {
         int dp[] = new int[target + 1];
         if (target < 1) return 1;

@@ -5,14 +5,31 @@ package jianzhioffer;
  */
 public class JumpFloor {
     //dp[i] = dp[i - 1] + dp[i - 2]
+    //**注意，这里最好用滚动数组**
+
+//    public int JumpFloor(int target) {
+//        if (target < 1) return 1;
+//        int[] dp = new int[target + 1];
+//        dp[0] = 1;
+//        dp[1] = 1;
+//        for (int i = 2; i < target + 1; i++) {
+//            dp[i] = dp[i - 1] + dp[i - 2];
+//        }
+//        return dp[target];
+//    }
+
+
+    //dp - 滚动数组
     public int JumpFloor(int target) {
-        if (target < 1) return 1;
-        int[] dp = new int[target + 1];
-        dp[0] = 1;
-        dp[1] = 1;
+        if (target <= 0) return 1;
+        int tmp0 = 1;
+        int tmp1 = 1;
+        int tmp2 = 1;
         for (int i = 2; i < target + 1; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
+            tmp2 = tmp1 + tmp0;
+            tmp0 = tmp1;
+            tmp1 = tmp2;
         }
-        return dp[target];
+        return tmp2;
     }
 }
