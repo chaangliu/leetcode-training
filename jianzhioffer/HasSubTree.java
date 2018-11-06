@@ -11,7 +11,7 @@ public class HasSubTree {
 
 //    public boolean HasSubtree(TreeNode root1, TreeNode root2) {
 //        if (root1 == null || root2 == null) return false;
-//        if (root1.val == root2.val) {//错误！这样如果node1跟node2不同，那根本没递归下去就结束了，好蠢
+//        if (root1.val == root2.val) {//错误！！！这样如果node1跟node2不同，那根本没递归下去就结束了，好蠢，找了好久才发现
 //            return helper(root1, root2);
 //        }
 //        return HasSubtree(root1.left, root2) || HasSubtree(root1.right, root2);
@@ -37,6 +37,32 @@ public class HasSubTree {
     }
 
 
+    //复习一下572. subtree of another tree
+
+    /**
+     * Given two non-empty binary trees s and t, check whether tree t has exactly the same structure and node values with a subtree of s.
+     * A subtree of s is a tree consists of a node in s and all of this node's descendants. The tree s could also be considered as a subtree of itself.
+     */
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if (s == null) return false;
+        return sameTree(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t);
+    }
+
+    private boolean sameTree(TreeNode s, TreeNode t) {
+        if (s == null && t == null) {
+            return true;
+        }
+        if (s == null || t == null) {
+            return false;
+        }
+        if (s.val != t.val) {
+            return false;
+        }
+        return sameTree(s.left, t.left) && sameTree(s.right, t.right);
+    }
+
+    //leetcode上另一种substring的解法太奇葩了不看了 讲解都错了
+
     public static void main(String args[]) {
         TreeNode p = new TreeNode(8);
         TreeNode root1 = new TreeNode(8);
@@ -51,7 +77,8 @@ public class HasSubTree {
         root2.left = new TreeNode(9);
         root2.right = new TreeNode(2);
 
-        System.out.println(new HasSubTree().HasSubtree(p, root2));
+//        System.out.println(new HasSubTree().HasSubtree(p, root2));
+        System.out.println(new HasSubTree().isSubtree(p, root2));
         int a = 1;
     }
 }
