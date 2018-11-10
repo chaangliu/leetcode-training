@@ -66,7 +66,7 @@ public class VerifyPostOrderBST {
     public static void main(String args[]) {
         int[] a = {3, 5, 8, 6, 9, 4, 7, 2, 1};
 //        int[] a = {1, 3, 2};
-        System.out.println(new VerifyPostOrderBST().VerifySquenceOfBST(a));
+//        System.out.println(new VerifyPostOrderBST().VerifySquenceOfBST(a));
         int aa;
     }
 
