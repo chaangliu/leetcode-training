@@ -96,29 +96,29 @@ public class VerifyPostOrderBST {
     }
 
     //todo recursion: 意识已模糊。。我发现不能连续做一小时以上
-//    public boolean VerifySquenceOfBST(int[] sequence) {
-//        if (sequence == null || sequence.length == 0) return false;
-//        return helper(sequence, 0, sequence.length - 1);
-//    }
+    public boolean VerifySquenceOfBST_3(int[] sequence) {
+        if (sequence == null || sequence.length == 0) return false;
+        return helper(sequence, 0, sequence.length - 1);
+    }
 
-//    private boolean helper(int[] sequence, int start, int end) {
-//        if (start >= end || end <= -1) return true;
-//        int pivot = -1;
-//        int i = start;
-//        for (; i < end; i++) {
-//            if (pivot == -1) {
-//                if (sequence[i] > sequence[end]) {
-//                    pivot = i;
-//                }
-//            } else {
-//                if (sequence[i] < sequence[end]) {
-//                    return false;
-//                }
-//            }
-//        }
-////        if (i == end) return true;
-//        return i == end && helper(sequence, start, pivot - 1) && helper(sequence, pivot + 1, end);
-//    }
+    private boolean helper(int[] sequence, int start, int end) {
+        if (start > end) return true;
+        int pivot = -1;
+        int i = start;
+        for (; i < end; i++) {
+            if (pivot == -1) {
+                if (sequence[i] > sequence[end]) {
+                    pivot = i;
+                }
+            } else {
+                if (sequence[i] < sequence[end]) {
+                    return false;
+                }
+            }
+        }
+//        if (i == end) return true;
+        return helper(sequence, start, pivot - 1) && helper(sequence, pivot + 1, end);
+    }
 
 //
 //    bool judge(vector<int>&a, int l, int r) {
@@ -135,4 +135,21 @@ public class VerifyPostOrderBST {
 //        if (!a.size()) return false;
 //        return judge(a, 0, a.size() - 1);
 //    }
+
+    public boolean VerifySquenceOfBST(int[] sequence) {
+        if (sequence == null || sequence.length == 0) {
+            return false;
+        }
+        return judge(sequence, 0, sequence.length - 1);
+    }
+
+    private boolean judge(int[] a, int l, int r) {
+        if (l > r) return true;
+        int i = r;
+        while (i > l && a[i - 1] > a[r]) --i;
+        for (int j = i - 1; j >= l; --j) {
+            if (a[j] > a[r]) return false;
+        }
+        return judge(a, l, i - 1) && judge(a, i, r - 1);
+    }
 }
