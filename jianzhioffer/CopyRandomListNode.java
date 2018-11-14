@@ -41,24 +41,16 @@ public class CopyRandomListNode {
             node = node.next.next;
         }
 
-        //3. 分离
-//        node = pHead.next;
-//        RandomListNode fakeHead = new RandomListNode(-1);
-//        fakeHead.next = node;
-//        while (node != null && node.next != null) {
-//            node.next = node.next.next;
-//            node = node.next;//易错
-//        }
-//        return fakeHead.next;
+        //3. 分离, 注意是deep copy所以不能改变pHead结构
         node = pHead;
-        RandomListNode pCloneHead = pHead.next;
+        RandomListNode res = node.next;
         while (node != null) {
             RandomListNode cloneNode = node.next;
             node.next = cloneNode.next;
             cloneNode.next = cloneNode.next == null ? null : cloneNode.next.next;
             node = node.next;
         }
-        return pCloneHead;
+        return res;
     }
 
     public static void main(String args[]) {
