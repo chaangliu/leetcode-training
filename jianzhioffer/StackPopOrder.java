@@ -1,48 +1,56 @@
 package jianzhioffer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
  * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。
  * 假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，
  * 序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+ *
+ * 同题：leetcode 946. Validate Stack Sequences
  */
 public class StackPopOrder {
     //我的解法：规律是：压入顺序，当前数字之前压入的数字，在弹出序列中要保持原来的倒序。比如1，2，3；pop出来不能是3，1，2
-//    public boolean StackPopOrder(int[] pushA, int[] popA) {
-//        if (pushA == null || popA == null || pushA.length == 0) return true;
-//        Map<Integer, Integer> map = new HashMap<>();
-//        for (int i = 0; i < pushA.length; i++) {
-//            map.put(pushA[i], i);
-//        }
-//        int tmp[] = new int[popA.length];
-//        for (int i = 0; i < popA.length; i++) {
-//            if (map.get(popA[i]) == null) {//corner case，pop的序列里的数字push里的没有，无法放入到数组
-//                return false;
-//            }
-//            tmp[i] = map.get(popA[i]);
-//        }
-//        List<Integer> dec = new ArrayList<>();
-//        for (int i = 0; i < tmp.length - 1; i++) {
-//            dec.add(tmp[i]);
-//            for (int j = i + 1; j < tmp.length; j++) {
-//                if (tmp[i] > tmp[j]) {
-//                    if (tmp[j] > dec.get(dec.size() - 1)) {
-//                        return false;
-//                    }
-//                    dec.add(tmp[j]);
-//                }
-//            }
-//            dec = new ArrayList<>();
-//        }
-//        return true;
-//    }
+    public boolean StackPopOrder2(int[] pushA, int[] popA) {
+        if (pushA == null || popA == null || pushA.length == 0) return true;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < pushA.length; i++) {
+            map.put(pushA[i], i);
+        }
+        int tmp[] = new int[popA.length];
+        for (int i = 0; i < popA.length; i++) {
+            if (map.get(popA[i]) == null) {//corner case，pop的序列里的数字push里的没有，无法放入到数组
+                return false;
+            }
+            tmp[i] = map.get(popA[i]);
+        }
+        List<Integer> dec = new ArrayList<>();
+        for (int i = 0; i < tmp.length - 1; i++) {
+            dec.add(tmp[i]);
+            for (int j = i + 1; j < tmp.length; j++) {
+                if (tmp[i] > tmp[j]) {
+                    if (tmp[j] > dec.get(dec.size() - 1)) {
+                        return false;
+                    }
+                    dec.add(tmp[j]);
+                }
+            }
+            dec = new ArrayList<>();
+        }
+        return true;
+    }
 
     //网上解法： 栈的题当然要用栈来模拟。。。s.peek() == popA[popIndex]相等的时候就s.pop，不相等就s.push
 //    链接：https://www.nowcoder.com/questionTerminal/d77d11405cc7470d82554cb392585106
 //    来源：牛客网
 //
-//【思路】借用一个辅助的栈，遍历压栈顺序，先讲第一个放入栈中，这里是1，然后判断栈顶元素是不是出栈顺序的第一个元素，这里是4，很显然1≠4，所以我们继续压栈，直到相等以后开始出栈，出栈一个元素，则将出栈顺序向后移动一位，直到不相等，这样循环等压栈顺序遍历完成，如果辅助栈还不为空，说明弹出序列不是该栈的弹出顺序。
+//【思路】借用一个辅助的栈，遍历压栈顺序，先讲第一个放入栈中，这里是1，然后判断栈顶元素是不是出栈顺序的第一个元素，
+// 这里是4，很显然1≠4，所以我们继续压栈，直到相等以后开始出栈，出栈一个元素，则将出栈顺序向后移动一位，直到不相等，
+// 这样循环等压栈顺序遍历完成，如果辅助栈还不为空，说明弹出序列不是该栈的弹出顺序。
 //
 //    举例：
 //
