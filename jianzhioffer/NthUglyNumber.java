@@ -8,8 +8,32 @@ package jianzhioffer;
  */
 public class NthUglyNumber {
 
-    //brute force: TLE.
     public int GetUglyNumber_Solution(int index) {
+        if (index <= 0) return 0;
+        int dp[] = new int[index];
+        dp[0] = 1;
+        int index2 = 0, index3 = 0, index5 = 0;
+        int factor2 = 2, factor3 = 3, factor5 = 5;
+        for (int i = 1; i < index; i++) {
+            int min = Math.min(factor2, Math.min(factor3, factor5));
+            dp[i] = min;
+            if (min == factor2) {
+                factor2 = 2 * dp[++index2]; // 1 * 2, 2* 2, 3 * 2...
+            }
+            //注意这里不能加else......
+            if (min == factor3) {
+                factor3 = 3 * dp[++index3];
+            }
+            if (min == factor5) {
+                factor5 = 5 * dp[++index5];
+            }
+        }
+        return dp[index - 1];
+    }
+
+
+    //brute force: TLE.
+    public int GetUglyNumber_Solution_TLE(int index) {
         if (index <= 0) return -1;
         if (index == 1) return 1;
         int res = 0;
