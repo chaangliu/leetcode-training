@@ -1,5 +1,6 @@
 package array;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,30 +57,46 @@ public class TwoSum {
         throw new IllegalArgumentException("No two sum solution");
     }
 
-    public static void main(String args[]) {
-//        int[] nums = {3, 2, 4};
-        int[] nums = {2, 7, 11, 15};
-//        int target = 9;
-//        result = twoSum(nums, target);
-		new TwoSum().twoSum2018(nums,9);
-        System.out.println(result[0] + " , " + result[1]);
+    public int[] twoSum2018(int[] nums, int target) {
+        if (nums == null || nums.length == 0) return result;
+        Map<Integer, Integer> map = new HashMap();
+        for (int i = 0; i < nums.length; i++) {
+            map.put(nums[i], i);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (map.get(target - nums[i]) != null && i != map.get(target - nums[i])) {
+                result[0] = i;
+                result[1] = map.get(target - nums[i]);
+                return result;
+            }
+        }
+        return result;
     }
 
-//		int[] result = new int[2];
+    //注意这道题不能用two pointers，因为用two pointers必定要排序（首先就已经慢了。。），但是这题要求的是index。
+//    public int[] twoSum_(int[] nums, int target) {
+//        if (nums == null || nums.length == 0) return new int[]{};
+//        Arrays.sort(nums);
+//        int low = 0, high = nums.length - 1;
+//        while (low < high) {
+//            int sum = nums[low] + nums[high];
+//            if (sum < target) {
+//                low++;
+//            } else if (sum > target) {
+//                high--;
+//            } else {
+//                return new int[]{nums[low], nums[high]};
+//            }
+//        }
+//        return new int[]{};
+//    }
 
-		public  int[] twoSum2018(int[] nums, int target) {
-			if(nums == null || nums.length == 0) return result;
-			Map<Integer, Integer> map = new HashMap();
-			for(int i = 0 ; i < nums.length; i ++ ){
-				map.put(nums[i],i);
-			}
-			for(int i = 0 ; i < nums.length ; i ++){
-				if(map.get(target - nums[i])!= null && i != map.get(target - nums[i])){
-					result[0] = i;
-					result[1] = map.get(target - nums[i]);
-					return result;
-				}
-			}
-			return result;
-		}
+    public static void main(String args[]) {
+        int[] nums = {3, 2, 4};
+//        int[] nums = {2, 7, 11, 15};
+//        int target = 9;
+//        result = twoSum(nums, target);
+//        int []result = new TwoSum().twoSum_(nums, 9);
+        System.out.println(result[0] + " , " + result[1]);
+    }
 }
