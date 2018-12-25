@@ -17,8 +17,8 @@ class SymmetricTree {
     private boolean recursion(TreeNode left, TreeNode right) {
         if (left == null || right == null) return left == right;
 
-        //
-        if (left.val == right.val) return true;
+//        if (left.val == right.val) return true;
+        if (left.val != right.val) return false;
         return recursion(left.right, right.left) && recursion(left.left, right.right);
     }
 
