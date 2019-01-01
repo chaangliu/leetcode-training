@@ -51,6 +51,7 @@ public class WordSearch {
         return false;
     }
 
+
     public static void main(String args[]) {
         char[][] a = {{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
         WordSearch wordSearch = new WordSearch();

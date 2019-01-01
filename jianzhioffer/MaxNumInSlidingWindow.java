@@ -55,7 +55,7 @@ public class MaxNumInSlidingWindow {
 //        //not implemented
 //    }
 
-    //better approach，利用双端队列的pollFirst, pollLast功能，还是比较难用的
+    //better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
     //链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
 
     public ArrayList<Integer> maxInWindows(int[] num, int size) {
