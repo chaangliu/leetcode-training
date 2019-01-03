@@ -104,11 +104,12 @@ public class QuickSort {
 
     private void helper(int[] array, int low, int high) {
         if (array == null || low >= high) return;
-        int pivot = partition(array, low, high);
+        int pivot = partition2(array, low, high);
         helper(array, low, pivot - 1);
         helper(array, pivot + 1, high);
     }
 
+    //每次partition让比pivot小的数落在pivot左边
     private int partition(int[] array, int low, int high) {
         int pivot = array[high];
         int slot = low;
@@ -120,6 +121,20 @@ public class QuickSort {
         }
         //最后把pivot放在正确的位置上。比如，跟pivot对比的数都比它大，那么slot从来都没有增加过，pivot就被移动到了首位。
         swap(array, slot, high);
+        return slot;
+    }
+
+    //每次partition让比pivot大的数落在pivot右边的写法
+    private int partition2(int[] array, int low, int high) {
+        int pivot = array[low];
+        int slot = high;
+        for (int i = low + 1; i < high + 1; i++) {
+            if (array[i] > pivot) {
+                swap(array, slot--, i);
+            }
+        }
+        //最后把pivot放在正确的位置上。比如，跟pivot对比的数都比它小，那么slot从来都没有--过，pivot就被移动到了末位。
+        swap(array, slot, low);
         return slot;
     }
 
