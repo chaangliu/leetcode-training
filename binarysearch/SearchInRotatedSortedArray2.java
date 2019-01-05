@@ -1,4 +1,4 @@
-package array;
+package binarysearch;
 
 /**
  * Total Accepted: 84001
