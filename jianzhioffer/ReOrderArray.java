@@ -29,6 +29,24 @@ public class ReOrderArray {
         }
     }
 
+    //20190106review
+    public void reOrderArray20190106(int[] array) {
+        if (array == null || array.length <= 1) return;
+        int odIdx = 0;
+        for (int i = 0; i < array.length; i++) {
+            //如果i位是奇数，那么把[odIdx ,i - 1]的数往右移动1位，把i上的数字插到odIdx上
+            if ((array[i] & 1) == 1) {
+                int tmp = array[i];
+                int k = i;
+                while (k > odIdx) {
+                    array[k] = array[k - 1];
+                    k--;
+                }
+                array[odIdx++] = tmp;
+            }
+        }
+    }
+
     //还有其他思路，都是换位置，比如：
     //    /**
     //     * 1.要想保证原有次序，则只能顺次移动或相邻交换。
@@ -37,9 +55,6 @@ public class ReOrderArray {
     //     * 4.将[i,...,j-1]的元素整体后移一位，最后将找到的奇数放入i位置，然后i++。
     //     * 5.終止條件：j向後遍歷查找失敗。
     //     */
-
-
-
 
 
     public static void main(String args[]) {
