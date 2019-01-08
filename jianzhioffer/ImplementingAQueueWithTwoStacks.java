@@ -27,7 +27,8 @@ public class ImplementingAQueueWithTwoStacks {
 //        return res;
 //    }
 
-    //效率高的解法
+    //效率高的解法。
+    //20100108 review 可以这么想，stack2的都是与stack1反向的，如果stack2空了，就从stack1里面拿。
     public void push(int node) {
         stack1.push(node);
     }
