@@ -27,6 +27,8 @@ package database;
  * Write a SQL query for a report that provides the following information for each person in the Person table, regardless if there is an address for each of those people:
  *
  * FirstName, LastName, City, State
+ *
+ * 20190112
  */
 public class CombineTwoTables {
 //    #http://www.w3school.com.cn/sql/sql_join_left.asp
