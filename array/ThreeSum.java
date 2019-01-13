@@ -2,6 +2,7 @@ package array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -62,10 +63,40 @@ public class ThreeSum {
         return list;
     }
 
+    //20190113review 这题的思路，要以一个pivot为基准，从前往后扫描，在后面找两个合适的数；找两个数的的方法就是sorted 2 sum的方案，难点是去重
+    public List<List<Integer>> threeSum2(int[] num) {
+        Arrays.sort(num);
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i < num.length - 2; i++) {//pivot后面至少有两个数
+            if (i > 0 && num[i] == num[i - 1]) continue;//已犯错误: 这一行不能少，否则会出现-2, -1, -1 , 0, 1的case里面有两个[-1, 0, 1]
+            int low = i + 1, high = num.length - 1;
+            //在pivot后面寻找两个数
+            while (low < high) {
+                if (num[low] + num[high] + num[i] == 0) {
+                    res.add(Arrays.asList(num[i], num[low], num[high]));
+                    //下面几行也是为了防止重复的set
+                    while (num[low] == num[low + 1] || i > 0 && num[i] == num[i - 1]) {
+                        low++;
+                    }
+                    while (num[high] == num[high - 1]) {
+                        high--;
+                    }
+                    low++;
+                    high--;
+                } else if (num[low] + num[high] + num[i] < 0) {
+                    low++;
+                } else {
+                    high--;
+                }
+            }
+        }
+        return res;
+    }
+
     public static void main(String args[]) {
-//        int[] nums = {-1, 0, 1, 2, -1, -4};
-        int[] nums = {-2, 0, 1, 1, 2};
-        List<List<Integer>> list = threeSum(nums);
+        int[] nums = {-1, 0, 1, 2, -1, -4};
+//        int[] nums = {-2, 0, 1, 1, 2};
+        List<List<Integer>> list = new ThreeSum().threeSum2(nums);
         System.out.println("result--->" + list.toString());
     }
 
