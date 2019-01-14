@@ -18,21 +18,34 @@ public class RemoveDuplicatesfromSortedList {
     //这题的迭代和递归都跟RemoveLinkedListElements类似
 
     //iteration
+//    这题不需要runner..
+//    public ListNode deleteDuplicates(ListNode head) {
+//        ListNode fakeHead = new ListNode(-1);
+//        fakeHead.next = head;
+//        ListNode walker = fakeHead;
+//        ListNode runner = head;
+//        while (runner != null && runner.next != null) {
+//            //如果runner和下一个节点的val相同，那么找到不重复的那个为止
+//            while (runner.next != null && runner.val == runner.next.val) {
+//                runner = runner.next;
+//            }
+//            walker.next = runner;
+//            walker = walker.next;
+//            runner = runner.next;// do not forget this
+//        }
+//        return fakeHead.next;
+//    }
+    //iteration
     public ListNode deleteDuplicates(ListNode head) {
-        ListNode fakeHead = new ListNode(-1);
-        fakeHead.next = head;
-        ListNode walker = fakeHead;
-        ListNode runner = head;
-        while (runner != null && runner.next != null) {
-            //如果runner和下一个节点的val相同，那么找到不重复的那个为止
-            while (runner.next != null && runner.val == runner.next.val) {
-                runner = runner.next;
+        ListNode current = head;
+        while (current != null && current.next != null) {
+            if (current.next.val == current.val) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
             }
-            walker.next = runner;
-            walker = walker.next;
-            runner = runner.next;// do not forget this
         }
-        return fakeHead.next;
+        return head;
     }
 
     //recursion
