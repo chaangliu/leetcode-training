@@ -75,10 +75,10 @@ public class ThreeSum {
                 if (num[low] + num[high] + num[i] == 0) {
                     res.add(Arrays.asList(num[i], num[low], num[high]));
                     //下面几行也是为了防止重复的set
-                    while (num[low] == num[low + 1] || i > 0 && num[i] == num[i - 1]) {
+                    while (low < high && num[low] == num[low + 1]) {
                         low++;
                     }
-                    while (num[high] == num[high - 1]) {
+                    while (low < high && num[high] == num[high - 1]) {
                         high--;
                     }
                     low++;
