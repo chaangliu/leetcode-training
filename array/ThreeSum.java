@@ -68,17 +68,17 @@ public class ThreeSum {
         Arrays.sort(num);
         List<List<Integer>> res = new LinkedList<>();
         for (int i = 0; i < num.length - 2; i++) {//pivot后面至少有两个数
-            if (i > 0 && num[i] == num[i - 1]) continue;//已犯错误: 这一行不能少，否则会出现-2, -1, -1 , 0, 1的case里面有两个[-1, 0, 1]
+            if (i != 0 && num[i] == num[i - 1]) continue; //已犯错误: 这一行的意义是去重[-1,-1,0,1]这种case
             int low = i + 1, high = num.length - 1;
             //在pivot后面寻找两个数
             while (low < high) {
                 if (num[low] + num[high] + num[i] == 0) {
                     res.add(Arrays.asList(num[i], num[low], num[high]));
                     //下面几行也是为了防止重复的set
-                    while (num[low] == num[low + 1] || i > 0 && num[i] == num[i - 1]) {
+                    while (low < high && num[low] == num[low + 1]) {//low < high 重要，否则[0,0,0]过不了
                         low++;
                     }
-                    while (num[high] == num[high - 1]) {
+                    while (low < high && num[high] == num[high - 1]) {
                         high--;
                     }
                     low++;
