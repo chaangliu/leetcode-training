@@ -1,6 +1,9 @@
 package other;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -36,8 +39,8 @@ import java.util.Queue;
  */
 public class CourseSchedule {
 
-    //BFS
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
+    //BFS 邻接矩阵(adjacent matrix)
+    public boolean canFinish____0(int numCourses, int[][] prerequisites) {
         if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
         int[][] matrix = new int[numCourses][numCourses];
         int[] indegree = new int[numCourses];
@@ -47,13 +50,14 @@ public class CourseSchedule {
             //当前课程的前驱课程
             int pre = prerequisites[i][1];
             if (matrix[pre][ready] == 0) {
-                //完成当前课程的前驱课程（入度）+1；这个if是防止prerequisites数组有重复
+                //pre->ready, 完成当前课程的前驱课程（入度）+1；这个if是防止prerequisites数组有重复
                 indegree[ready]++;
             }
             //用邻接矩阵描述有向图；matrix的指向：需要先上的课指向后上的课
             matrix[pre][ready] = 1;
         }
         int count = 0;
+        //把所有没有前驱课程的课加入队列
         Queue<Integer> queue = new LinkedList<>();
         for (int i = 0; i < indegree.length; i++) {
             if (indegree[i] == 0) {
@@ -72,5 +76,51 @@ public class CourseSchedule {
             }
         }
         return count == numCourses;
+    }
+
+    //BFS 邻接表(adjacent list)
+    public boolean canFinish____1(int numCourses, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
+        ArrayList[] adjacentList = new ArrayList[numCourses];
+        int[] inDegrees = new int[numCourses];
+        for (int i = 0; i < prerequisites.length; i++) {
+            //当前课程
+            int ready = prerequisites[i][0];
+            //当前课程的前驱课程
+            int pre = prerequisites[i][1];
+            inDegrees[ready]++;
+            if (adjacentList[pre] == null) {//已犯错误1 没有初始化
+                adjacentList[pre] = new ArrayList();
+            }
+            adjacentList[pre].add(ready);
+        }
+        int count = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int curCourse = queue.poll();
+            count++;
+            //在邻接表中寻找当前课程上完了可以上的课程
+            for (int i = 0; adjacentList[curCourse] != null && i < adjacentList[curCourse].size(); i++) {
+                int nextCourse = (int) adjacentList[curCourse].get(i);
+                //如果nextCourse在curCourse结束之后就没有要上的课了
+                if (--inDegrees[nextCourse] == 0) {
+                    queue.offer(nextCourse);//已犯错误2：写成了queue.offer(i)
+                }
+            }
+
+        }
+        return count == numCourses;
+    }
+
+    public static void main(String args[]) {
+        int[][] prerequisites = new int[2][2];
+        prerequisites[0] = new int[]{1, 0};
+        prerequisites[1] = new int[]{2, 1};
+        new CourseSchedule().canFinish____1(3, prerequisites);
     }
 }
