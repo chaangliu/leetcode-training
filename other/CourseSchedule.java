@@ -117,6 +117,51 @@ public class CourseSchedule {
         return count == numCourses;
     }
 
+    //DFS 邻接表(adjacent list)
+    //TODO 这题dfs好像也可以借助indgree表，然后通过visited的数组是否都为true判断
+    public boolean canFinish____2(int numCourses, int[][] prerequisites) {
+        if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
+        ArrayList[] adjacentList = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adjacentList[i] = new ArrayList();
+        }
+//        int[] inDegrees = new int[numCourses];// doesn't need a indegree list here
+        for (int i = 0; i < prerequisites.length; i++) {
+            //当前课程
+            int ready = prerequisites[i][0];
+            //当前课程的前驱课程
+            int pre = prerequisites[i][1];
+            if (adjacentList[pre] == null) {//已犯错误1 没有初始化
+                adjacentList[pre] = new ArrayList();
+            }
+            adjacentList[pre].add(ready);
+        }
+        //从每个节点开始判断有没有环
+        for (int i = 0; i < numCourses; i++) {
+            if (!helper(i, adjacentList, new boolean[numCourses])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean helper(int cur, ArrayList[] adjacentList, boolean[] visited) {
+        if (visited[cur]) {
+            //有环
+            return false;
+        } else {
+            visited[cur] = true;
+        }
+        //当前课程上完了可以上的课程列表
+        for (int i = 0; i < adjacentList[cur].size(); i++) {
+            if (!helper((int) adjacentList[cur].get(i), adjacentList, visited)) {
+                return false;
+            }
+        }
+        visited[cur] = false;
+        return true;
+    }
+
     public static void main(String args[]) {
         int[][] prerequisites = new int[2][2];
         prerequisites[0] = new int[]{1, 0};
