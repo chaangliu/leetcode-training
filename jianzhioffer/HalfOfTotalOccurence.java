@@ -23,7 +23,10 @@ public class HalfOfTotalOccurence {
         return 0;
     }
 
-    //最优解法：
+    //O(n)解法: quick select，也就是第k小元素解法，找到中间(len >> 1)那个值；最后仍要做一次循环验证这个数出现的个数是不是大于数组长度一半。
+    //代码略。
+
+    //O(n)解法：剑指offer解法2
     //作者：无聊刷刷题
     //链接：https://www.nowcoder.com/questionTerminal/e8a1b01a2df14cb2b228b30ee6a92163
     //「我来解释一下这题为什么可以这么做。首先第一个for循环结束后得到的num是什么？如果这个数组中存在个数大于数组长度一半的数，
@@ -46,7 +49,8 @@ public class HalfOfTotalOccurence {
             }
         }
 
-        // 判断result是否符合条件，即出现次数大于数组长度的一半
+        // 仍要判断result是否符合条件，即出现次数大于数组长度的一半；
+        // 比如，1,2,3最后times是1，result是3，这种虽然times>0，但是不满足条件。
         times = 0;
         for (int i = 0; i < array.length; ++i) {
             if (array[i] == result) ++times;
