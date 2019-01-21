@@ -13,6 +13,8 @@ package array;
 //        Note:
 //        You may assume k is always valid, 1 ≤ k ≤ array's length.
 
+import java.util.PriorityQueue;
+
 public class KthLargestElementInAnArray {
 //    public int findKthLargest(int[] nums, int k) {
 //        if (k < 1 || k > nums.length || nums == null) return Integer.MAX_VALUE;
@@ -50,6 +52,25 @@ public class KthLargestElementInAnArray {
 //    }
 
     //20190104
+    //approach 0. priority queue模拟最【小】堆，one pass之后，留下的是最大的k个数，堆顶是最小的那个。这题求的是「第k大元素」而不是「第k小元素」，所以直接poll即可
+//    public int findKthLargest________pq(int[] nums, int k) {
+//        // init heap 'the smallest element first'
+//        PriorityQueue<Integer> heap =
+//                new PriorityQueue<Integer>((n1, n2) -> n1 - n2);
+//
+//        // keep k largest elements in the heap
+//        for (int n: nums) {
+//            heap.add(n);
+//            if (heap.size() > k)
+//                heap.poll();
+//        }
+//
+//        // output
+//        return heap.poll();
+//    }
+
+    //approach 1. quick select算法，每次折半，时间O(n)
+    //https://leetcode.com/articles/kth-largest-element-in-an-array/
     public int findKthLargest(int[] nums, int k) {
         if (nums == null || nums.length == 0) {
             return -1;
