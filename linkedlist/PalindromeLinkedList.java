@@ -13,7 +13,7 @@ package linkedlist;
  * Output: true
  * Follow up:
  * Could you do it in O(n) time and O(1) space?
- *
+ * <p>
  * 20190122
  */
 public class PalindromeLinkedList {
@@ -36,7 +36,7 @@ public class PalindromeLinkedList {
         //退出循环的时候，如果list长度是偶数，slow是中间的那个node；如果list长度是偶数，slow是中点右边的node
 
         //slow成了新的head
-        slow = reverseList(slow);
+        slow = reverseListRecursion(slow);
         fast = head;
         while (slow != null && fast != null) {
             if (slow.val != fast.val) {
@@ -64,6 +64,16 @@ public class PalindromeLinkedList {
             cur = next;
         }
         return pre;
+    }
+
+    //反转链表recursion写法
+    private ListNode reverseListRecursion(ListNode node) {
+        //node.next也不能是null，因为需要node.next.next指向node
+        if (node == null || node.next == null) return node;//这里返回node给上一层，也就是最后一个节点
+        ListNode head = reverseListRecursion(node.next);//这个head一直都是最后一个节点
+        node.next.next = node;
+        node.next = null;//这一步只对最后一个节点有意义，如果不加，就会形成无限循环
+        return head;
     }
 
     public static void main(String args[]) {
