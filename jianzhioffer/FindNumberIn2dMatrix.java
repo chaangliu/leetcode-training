@@ -20,12 +20,14 @@ package jianzhioffer;
  */
 
 public class FindNumberIn2dMatrix {
+    //O(m+n)，这题跟240. Search a 2D Matrix II一样
     public boolean Find(int target, int[][] array) {
         if (array == null || array.length == 0 || array[0].length == 0) return false;
         //左下角(array[length - 1][0])
         int start_x = array.length - 1;
         int start_y = 0;
-        while (start_x >= 0 && start_y < array.length) {
+        int cols = array[0].length;
+        while (start_x >= 0 && start_y < cols) {
             if (array[start_x][start_y] == target) return true;
             if (array[start_x][start_y] < target) {
                 start_y++;
@@ -34,5 +36,10 @@ public class FindNumberIn2dMatrix {
             }
         }
         return false;
+    }
+
+    public static void main(String args[]) {
+        int[][] a = {{-1}, {-1}};
+        new FindNumberIn2dMatrix().Find(0, a);
     }
 }

@@ -26,22 +26,22 @@ public class Searcha2DMatrix {
         System.out.println(searcha2DMatrix.searchMatrix(a, 3));
     }
 
+    //20190123 review
+    //Don't treat it as a 2D matrix, just treat it as a sorted list，这题跟240. Search a 2D Matrix II的区别是，这题可以当做一个折行的list，时间是O(log n)；240那题时间是O(m + n)
     public boolean searchMatrix(int[][] matrix, int target) {
         if (matrix.length == 0) return false;
         int length = matrix.length * matrix[0].length;
         int left = 0;
         int right = length - 1;
         while (left <= right) {
-            int mid = (left + right)/2;
+            int mid = (left + right) / 2;
             int row = mid / matrix[0].length;
             int col = mid % matrix[0].length;
-            if (matrix[row][col]==target){
+            if (matrix[row][col] == target) {
                 return true;
-            }
-            else if(matrix[row][col]<target){
-                left = mid+1;
-            }
-            else right = mid -1;
+            } else if (matrix[row][col] < target) {
+                left = mid + 1;
+            } else right = mid - 1;
 
         }
         return false;
