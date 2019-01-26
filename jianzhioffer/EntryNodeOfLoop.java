@@ -23,7 +23,7 @@ public class EntryNodeOfLoop {
         return null;
     }
 
-    //快慢指针的话，只能保证交点在环中，不适用；牛客上有tricky的方法，这里不列出了
+    //快慢指针的话，只能保证交点在环中，不适用(20190126update: 环中相遇也是可以的，再让一个点从头开始就行了)；牛客上有tricky的方法，这里不列出了
 //    public ListNode EntryNodeOfLoop(ListNode pHead) {
 //        ListNode slow = pHead;
 //        ListNode fast = pHead;
@@ -37,6 +37,33 @@ public class EntryNodeOfLoop {
 //        }
 //        return slow;
 //    }
+
+    //20190126update
+    //左神讲的
+//先说个定理：两个指针一个fast、一个slow同时从一个链表的头部出发
+//fast一次走2步，slow一次走一步，如果该链表有环，两个指针必然在环内相遇
+//此时只需要把其中的一个指针重新指向链表头部，另一个不变（还在环内），
+//这次两个指针一次走一步，相遇的地方就是入口节点。
+//这个定理可以自己去网上看看证明。
+//    public class Solution {
+//        public ListNode EntryNodeOfLoop(ListNode pHead){
+//            ListNode fast = pHead;
+//            ListNode slow = pHead;
+//            while(fast != null && fast.next !=null){
+//                fast = fast.next.next;
+//                slow = slow.next;
+//                if(fast == slow)
+//                    break;
+//            }
+//            if(fast == null || fast.next == null)
+//                return null;
+//            fast = pHead;
+//            while(fast != slow){
+//                fast = fast.next;
+//                slow = slow.next;
+//            }
+//            return fast;
+//        }
 
     public static void main(String args[]) {
         //1 - 2 - 3 - 4 - 2
