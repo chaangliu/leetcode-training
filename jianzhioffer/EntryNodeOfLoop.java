@@ -38,7 +38,7 @@ public class EntryNodeOfLoop {
 //        return slow;
 //    }
 
-    //20190126update
+    //20190126update，相关问题，leetcode 142, 287
     //左神讲的
 //先说个定理：两个指针一个fast、一个slow同时从一个链表的头部出发
 //fast一次走2步，slow一次走一步，如果该链表有环，两个指针必然在环内相遇
