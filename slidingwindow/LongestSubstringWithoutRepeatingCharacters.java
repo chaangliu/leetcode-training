@@ -1,4 +1,4 @@
-package array;
+package slidingwindow;
 
 import java.util.HashMap;
 import java.util.HashSet;
