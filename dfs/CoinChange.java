@@ -1,6 +1,8 @@
 package dfs;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
@@ -69,6 +71,43 @@ public class CoinChange {
 //        return -1;
 //    }
 
+    //1.5. backtracking(dfs) + pruning， AC
+    int res = Integer.MAX_VALUE;
+
+    public int coinChange(int[] coins, int amount) {
+        if (coins == null || coins.length == 0 || amount < 0) return -1;
+        //一定要先逆序排列，不然TLE。这里我实在不知道怎么用java来逆序array..所以先正序然后手动反转
+        Arrays.sort(coins);
+        for (int i = 0, j = coins.length - 1; i < j; i++, j--) {
+            int tmp = coins[j];
+            coins[j] = coins[i];
+            coins[i] = tmp;
+        }
+        helper(0, coins, 0, amount);
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+
+    private void helper(int index, int[] coins, int curCount, int remain) {
+        //无需
+        //        if (remain == 0) {
+        //            res = Math.min(res, curCount);
+        //            return;
+        //        }
+        //这个backtracking跟permutations，subsets, combination sum之类的一样，都是先判断是否找到解集，找到了就backtrack就完事了
+        if (index == coins.length - 1) {
+            if (remain % coins[index] == 0) {//这个%有两种功能，1代表remain可能已经是0了，2代表remain是最后一枚硬币的倍数
+                res = Math.min(res, remain / coins[index] + curCount);
+            }
+        } else {
+            for (int k = remain / coins[index]; k >= 0 && k + curCount < res; k--) {
+                //pruning
+                //if (k + curCount >= res) continue;
+                //dfs
+                helper(index + 1, coins, curCount + k, remain - k * coins[index]);
+            }
+        }
+    }
+
     //2. dfs with cache, top down, code from leetcode solutions
 //    public class Solution {
 //
@@ -92,20 +131,20 @@ public class CoinChange {
 //        }
 //    }
 
-    //3. dp, bottom up
-    public int coinChange(int[] coins, int amount) {
-        if (coins == null || coins.length == 0 || amount < 0) return -1;
-        if (amount == 0) return 0;
-        int[] dp = new int[amount + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE - 1);
-        dp[0] = 0;
-        for (int i = 1; i <= amount; i++)
-            for (int j = 0; j < coins.length; j++) {
-                if (i - coins[j] >= 0)
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);//这里是滚动数组，二维转一维；另外这里隐含了一个条件，如果已经计算出dp[i - coins[j]]的话才加以利用
-            }
-        return dp[amount] == Integer.MAX_VALUE - 1 ? -1 : dp[amount];
-    }
+    //4. dp, bottom up
+//    public int coinChange(int[] coins, int amount) {
+//        if (coins == null || coins.length == 0 || amount < 0) return -1;
+//        if (amount == 0) return 0;
+//        int[] dp = new int[amount + 1];
+//        Arrays.fill(dp, Integer.MAX_VALUE - 1);
+//        dp[0] = 0;
+//        for (int i = 1; i <= amount; i++)
+//            for (int j = 0; j < coins.length; j++) {
+//                if (i - coins[j] >= 0)
+//                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);//这里是滚动数组，二维转一维；另外这里隐含了一个条件，如果已经计算出dp[i - coins[j]]的话才加以利用
+//            }
+//        return dp[amount] == Integer.MAX_VALUE - 1 ? -1 : dp[amount];
+//    }
 
     public static void main(String args[]) {
         int[] coins = {1, 2, 5};
