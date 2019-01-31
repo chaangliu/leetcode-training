@@ -27,7 +27,9 @@ package dfs;
  * 20190129
  */
 public class CoinChangeII {
-    //1. brute force, 借鉴coin change 1的代码，TLE
+    //经典背包问题, knapsack problem
+
+    //1. dfs brute force, 借鉴coin change 1的代码，TLE
 //    int res = 0;
 //    public int change(int amount, int[] coins) {
 //        coinChange(0, coins, amount);
@@ -54,4 +56,30 @@ public class CoinChangeII {
 //        return -1;
 //    }
 
+    //2. dp
+    // if(amount - coin >= 0) dp[amount] += dp[amount - coin]
+    // 例子
+    // 12, [1,2,5]
+    // 第一趟：使用1元coin时，dp[2] = dp[2 - 1] + dp[2]，意思是amount等于1元时候的combination数量，加上剩下的钱的组合数量
+    public int change(int amount, int[] coins) {
+        if (amount == 0 && coins.length == 0) return 1;
+        if (amount < 0 || coins == null || coins.length == 0) return 0;
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
+        for (int coin : coins) {
+            for (int i = 1; i <= amount; i++) {
+                if (i - coin >= 0) {//剩余的钱可以用当前硬币来找钱
+                    dp[i] += dp[i - coin];//not dp[i - 1]
+                    System.out.print(dp[i] + " ");
+                }
+            }
+            System.out.println();
+        }
+        return dp[dp.length - 1];
+    }
+
+    public static void main(String args[]) {
+        int[] coins = {4};
+        System.out.println(new CoinChangeII().change(7, coins));
+    }
 }
