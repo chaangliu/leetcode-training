@@ -15,84 +15,47 @@ import java.util.Map;
  */
 
 public class SubArraySumequalstoK {
-    //    public int subarraySum(int[] nums, int k) {
-//        int res = 0;
-//        int temp = k;
-//        if (nums == null || nums.length == 0) return 0;
-//        for (int i = 0; i < nums.length; i++) {
-////            temp = k - nums[i];
-//            for (int j = i; j >= 0 && temp * k >= 0; j--) {
-//                temp = temp - nums[j];
-//                if (temp == 0 && k != 0) res++;
-//                if (k == 0 && temp == 0 && j != i) res++;
-//            }
-//            temp = k;
-//        }
-//        return res;
-//    }
-////
-//    public int subarraySum(int[] nums, int k) {
-//        int res = 0;
-//        if (nums == null || nums.length == 0) return 0;
-//        for (int i = 0; i < nums.length; i++) {
-//            int temp = k;
-//            for (int j = i; j >= 0; j--) {
-//                temp = temp - nums[j];
-//                if (temp == 0) res++;
-//            }
-//        }
-//        return res;
-//    }
 
-//    class Solution {
-//        public:
-//        int subarraySum(vector<int>& nums, int k) {
-//            unordered_multiset<int> s;
-//            s.insert(0);
-//            int result = 0, sum = 0;
-//            for (const auto &i : nums) {
-//                sum += i;
-//                result += s.count(sum - k);
-//                s.insert(sum);
-//            }
-//            return result;
-//        }
-//    };
+    public int subarraySum(int[] nums, int k) {
+        int sum = 0, result = 0;
+        Map<Integer, Integer> preSum = new HashMap<>();
+        preSum.put(0, 1);
 
-    //    public int subarraySum(int[] nums, int k) {
-//        HashSet<Integer> s  = new HashSet<>();
-//        s.add(0);
-//        int res = 0 , sum = 0 ;
-//        for (int i = 0 ; i < nums.length ; i ++){
-//            sum += nums[i] ;
-//            res += s.contains(sum - k) ? 1 : 0 ;
-//            s.add(sum);
-//        }
-//        return res;
-//    }
-
-        public int subarraySum(int[] nums, int k) {
-            int sum = 0, result = 0;
-            Map<Integer, Integer> preSum = new HashMap<>();
-            preSum.put(0, 1);
-
-            for (int i = 0; i < nums.length; i++) {
-                sum += nums[i];
-                if (preSum.containsKey(sum - k)) {
-                    result += preSum.get(sum - k);
-                }
-                preSum.put(sum, preSum.getOrDefault(sum, 0) + 1);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (preSum.containsKey(sum - k)) {
+                result += preSum.get(sum - k);
             }
-            return result;
+            preSum.put(sum, preSum.getOrDefault(sum, 0) + 1);
         }
+        return result;
+    }
 
-//public int subarraySum(int[] nums, int k) {
-//    //用一个map记录<迄今为止>subarray的值
-//}
+
+    //20190204 review
+    //approach 1. 累加
+    //nums[i : j] = sum[j + 1] - sum[i], 用一个map记录<迄今为止>subarray的值；时间仍然是O(n * n)
+    public int subarraySum__MAP(int[] nums, int k) {
+        if (nums == null || nums.length < 1) return 0;
+        int count = 0;
+        int[] curSum = new int[nums.length + 1];
+        curSum[1] = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+            curSum[i + 1] = curSum[i] + nums[i];
+        }
+        for (int start = 0; start < nums.length; start++) {
+            for (int end = start + 1; end <= nums.length; end++) {
+                if (curSum[end] - curSum[start] == k)
+                    count++;
+            }
+        }
+        return count;
+    }
+
     public static void main(String args[]) {
-        int[] nums = {1, -1, 1,-1};
-//        int[] nums = {1, 2, 1, 2, 1};
-//        int[] nums = {-92, -63, 75, -86, -58, 22, 31, -16, -66, -67, 420};
+        int[] nums = {1, -1, 1, -1};
+        //int[] nums = {1, 2, 1, 2, 1};
+        //int[] nums = {-92, -63, 75, -86, -58, 22, 31, -16, -66, -67, 420};
         System.out.println(new SubArraySumequalstoK().subarraySum(nums, 0));
     }
 
