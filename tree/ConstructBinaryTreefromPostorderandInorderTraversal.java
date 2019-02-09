@@ -38,9 +38,32 @@ import java.util.Map;
  */
 
 public class ConstructBinaryTreefromPostorderandInorderTraversal {
+    //20190210 review
+    int postRightIndex;
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        postRightIndex = postorder.length - 1;
+        return helper(inorder, postorder, 0, inorder.length - 1);
+    }
+
+    private TreeNode helper(int[] inorder, int[] postorder, int inLow, int inHigh) {
+        if (inLow > inHigh || postRightIndex < 0) return null;
+        TreeNode root = new TreeNode(postorder[postRightIndex]);
+        int pivot = -1;
+        for (int i = inLow; i <= inHigh; i++) {//可用Map优化
+            if (inorder[i] == postorder[postRightIndex]) {
+                pivot = i;
+                break;
+            }
+        }
+        postRightIndex--;//这个原来写成了递归的参数，后来发现回溯之后index又回去了，显然不是想要的。所以写成全局变量
+        root.right = helper(inorder, postorder, pivot + 1, inHigh);//观察两个序列想到的，先递归右边
+        root.left = helper(inorder, postorder, inLow, pivot - 1);
+        return root;
+    }
 
     //----- 20181017 review -----
-    public TreeNode buildTree(int[] inorder, int[] postorder) {
+    public TreeNode buildTree__17(int[] inorder, int[] postorder) {
         if (inorder == null || postorder == null) return null;
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < inorder.length; i++) {

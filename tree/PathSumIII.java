@@ -31,6 +31,7 @@ package tree;
  */
 public class PathSumIII {
     /**
+     * 我的写法：
      * 从每一个node出发dfs，遇到sum满足就target + 1，到达leaf为止
      */
     int res = 0;
@@ -55,15 +56,19 @@ public class PathSumIII {
             helper(root.right, sum - root.val);
     }
 
+    /**
+     * 下面摘录一下leetcode上的高票解法, 思路和复杂度跟我一样，写法是bottom-up recursion，类似binary tree max depth
+     */
+    public int pathSum__LEETCODE(TreeNode root, int sum) {
+        if (root == null) return 0;
+        return pathSumFrom(root, sum) + pathSum__LEETCODE(root.left, sum) + pathSum__LEETCODE(root.right, sum);
+    }
 
-//    private void helper(TreeNode root, int sum) {
-//        if (sum == 0)
-//            res++;
-//        if (root == null)
-//            return;
-//        helper(root.left, sum - root.val);
-//        helper(root.right, sum - root.val);
-//    }
+    private int pathSumFrom(TreeNode node, int sum) {
+        if (node == null) return 0;
+        return (node.val == sum ? 1 : 0)
+                + pathSumFrom(node.left, sum - node.val) + pathSumFrom(node.right, sum - node.val);
+    }
 
     public static void main(String args[]) {
         TreeNode root = new TreeNode(1);
