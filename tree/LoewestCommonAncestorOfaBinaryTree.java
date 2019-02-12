@@ -5,6 +5,8 @@ package tree;
  * According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
  * <p>
  * Created by DrunkPiano on 2017/3/28.
+ *
+ * 20190211 reviewed at pvg airport
  */
 
 class LoewestCommonAncestorOfaBinaryTree {
