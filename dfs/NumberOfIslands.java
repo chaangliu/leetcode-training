@@ -1,5 +1,8 @@
 package dfs;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Given a 2d grid map of '1's (land) and '0's (water), count the number of islands.
  * An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.
@@ -57,11 +60,68 @@ public class NumberOfIslands {
         //为什么不需要恢复现场
     }
 
-    public static void main(String args[]) {
-        char[][] nums = {{'1', '1', '1', '1', '0'}, {'1', '1', '1', '1', '0'}, {'1', '1', '1', '1', '0'}, {'1', '1', '1', '1', '0'}};
-        NumberOfIslands numberOfIslands = new NumberOfIslands();
-        numberOfIslands.numIslands(nums);
+    /**
+     * bfs solution, 20190213
+     * 这题我一开始想不到bfs为什么要用到queue，但是后来仔细想了想bfs的实施，它循环起来的条件就应该是queue不为空，这样才能一圈一圈地向外扩散；所以说BFS跟queue是绑定的
+     */
+    class Pair {
+        int i;
+        int j;
+
+        Pair(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
     }
 
+    public int numIslands_bfs(char[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        int row = grid.length, col = grid[0].length;
+        int res = 0;
+        Queue<Pair> queue = new LinkedList<>();
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == '1') {
+                    queue.add(new Pair(i, j));
+                    bfs(grid, queue);
+                    res++;
+                }
+            }
+        return res;
+    }
 
+    private void bfs(char[][] grid, Queue<Pair> queue) {
+        while (!queue.isEmpty()) {
+            Pair pair = queue.poll();
+            if (pair.i - 1 >= 0 && grid[pair.i - 1][pair.j] == '1') {
+                queue.add(new Pair(pair.i - 1, pair.j));
+                grid[pair.i - 1][pair.j] = '0';
+            }
+            if (pair.i + 1 < grid.length && grid[pair.i + 1][pair.j] == '1') {
+                queue.add(new Pair(pair.i + 1, pair.j));
+                grid[pair.i + 1][pair.j] = '0';
+            }
+            if (pair.j - 1 >= 0 && grid[pair.i][pair.j - 1] == '1') {
+                queue.add(new Pair(pair.i, pair.j - 1));
+                grid[pair.i][pair.j - 1] = '0';
+            }
+            if (pair.j + 1 < grid[0].length && grid[pair.i][pair.j + 1] == '1') {
+                queue.add(new Pair(pair.i, pair.j + 1));
+                grid[pair.i][pair.j + 1] = '0';
+            }
+        }
+    }
+
+    //btw，这题还可以用union find来做
+
+
+    public static void main(String args[]) {
+        char[][] nums = {
+                {'1', '1', '1', '1', '0'},
+                {'1', '1', '1', '1', '0'},
+                {'1', '1', '1', '1', '0'},
+                {'1', '1', '1', '1', '0'}};
+        NumberOfIslands numberOfIslands = new NumberOfIslands();
+        System.out.println(numberOfIslands.numIslands(nums));
+    }
 }
