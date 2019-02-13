@@ -18,15 +18,35 @@ package tree;
 
 public class ConstructBinaryTreefromPreorderandInorderTraversal {
 
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
+    /**
+     * 20190211 review @ PVG airport
+     */
+    int preOrderIndex;
 
-        TreeNode(int x) {
-            val = x;
-        }
+    public tree.TreeNode buildTree__2019(int[] preorder, int[] inorder) {
+        preOrderIndex = 0;
+        tree.TreeNode res = helper(inorder, preorder, 0, inorder.length - 1);
+        return res;
     }
+
+    private tree.TreeNode helper(int[] inorder, int[] preorder, int inLow, int inHigh) {
+        if (inLow > inHigh || preOrderIndex > preorder.length - 1) return null;
+        tree.TreeNode root = new tree.TreeNode(preorder[preOrderIndex]);
+        int pivot = -1;
+        for (int i = inLow; i <= inHigh; i++) {//可用Map优化
+            if (inorder[i] == preorder[preOrderIndex]) {
+                pivot = i;
+                break;
+            }
+        }
+        preOrderIndex++;//这个原来写成了递归的参数，后来发现回溯之后index又回去了，显然不是想要的。所以写成全局变量
+        root.left = helper(inorder, preorder, inLow, pivot - 1);
+        root.right = helper(inorder, preorder, pivot + 1, inHigh);//观察两个序列想到的，先递归左边
+        return root;
+    }
+
+
+    //---------------------------------------------------------------------------------------------------------------
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         return construct(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);

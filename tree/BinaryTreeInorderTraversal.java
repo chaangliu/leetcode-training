@@ -47,6 +47,23 @@ public class BinaryTreeInorderTraversal {
         return res;
     }
 
+    //20190205 盲写
+    public List<Integer> inorderTraversal__20190205(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> res = new ArrayList<>();
+        //这个条件我想了一会儿才写出，一开始写的是!stack.empty()，但是这样就必须要先stack.push(root)进栈，会导致root被push两次，所以加了一个||root != null
+        while (!stack.empty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            TreeNode node = stack.pop();
+            res.add(node.val);
+            root = node.right;//让rChild再执行同样的操作，类似递归执行同一段程序
+        }
+        return res;
+    }
+
 
 //	public ArrayList<Integer> inorderTraversal(TreeNode root) {
 //		ArrayList<Integer> res = new ArrayList<>();

@@ -1,35 +1,37 @@
 package tree;
 
-import tree.TreeLinkNode;
-
 /**
  * Created by DrunkPiano on 2017/4/3.
+ * <p>
+ * 20190211 review @ pvg airport
  */
 
 public class PopulatingNextRightPointersinEachNode {
 
-//    public void connect(TreeLinkNode root) {
-//        if (root == null) return;
-//
-//        TreeLinkNode pre = root;
-//        TreeLinkNode cur = null;
-//        while (pre.left != null) {
-//            cur = pre;
-//            while (cur != null) {
-//                //pre.left!=null保证了cur.left不为Null
-//                cur.left.next = cur.right;
-//                //无形中把下一层的最左边的node跟右边连接起来了
-//                if (cur.right != null) {
-//                    cur.right.next = cur.right.left;
-//                }
-//                cur = cur.next;
-//            }
-//            pre = pre.left;
-//        }
-//    }
+    //1. 这题可以用BFS做，但不满足constant space了，
+
+    //2.iteration，比较tricky
+    public void connect(TreeLinkNode root) {
+        if (root == null) return;
+        TreeLinkNode pre = root;
+        TreeLinkNode cur;
+        while (pre.left != null) {
+            cur = pre;
+            while (cur != null) {
+                //pre.left!=null保证了cur.left不为Null
+                cur.left.next = cur.right;
+                //无形中把下一层的最左边的node跟右边连接起来了
+                if (cur.right != null && cur.next != null) {
+                    cur.right.next = cur.next.left;
+                }
+                cur = cur.next;
+            }
+            pre = pre.left;
+        }
+    }
 
     //based on level order traversal
-    public void connect(TreeLinkNode root) {
+    public void connect__OLD(TreeLinkNode root) {
 
         TreeLinkNode cur = root;
         TreeLinkNode pre = null; //下一level的dummyNode
