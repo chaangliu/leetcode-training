@@ -1,4 +1,4 @@
-package dp;
+package bfs;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -71,7 +71,7 @@ public class PerfectSquares {
         while (!queue.isEmpty()) {
             level++;
             int size = queue.size();
-            for (int i = 0; i < size; i++) {//已犯错误1：<=, NOT <
+            for (int i = 0; i < size; i++) {
                 int remain = queue.poll();
                 for (int j = 1; j * j <= remain; j++) {
                     if (j * j == remain) return level;
