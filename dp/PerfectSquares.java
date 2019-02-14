@@ -62,6 +62,26 @@ public class PerfectSquares {
         return -1;
     }
 
+    //bfs还有种写法，跟tree bfs一样，每次while开始时，保持queue里面只是同一层的元素
+    public int numSquares___BFS2(int n) {
+        if (n <= 0) return 0;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(n);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            level++;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {//已犯错误1：<=, NOT <
+                int remain = queue.poll();
+                for (int j = 1; j * j <= remain; j++) {
+                    if (j * j == remain) return level;
+                    queue.add(remain - j * j);
+                }
+            }
+        }
+        return -1;
+    }
+
     public static void main(String args[]) {
         System.out.println(new PerfectSquares().numSquares___BFS(13));
     }
