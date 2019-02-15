@@ -81,4 +81,40 @@ public class OpenTheLock {
         }
         return -1;
     }
+
+    //2-end bfs:
+    //以下摘自：https://leetcode.com/problems/open-the-lock/discuss/110237/Regular-java-BFS-solution-and-2-end-BFS-solution-with-improvement
+    // If you know exactly the start position and the end position(In this problem, the start position is "0000" and the end position is target),
+    // you can do BFS from both side instead of doing BFS only from the starting position.You find the intersection, you get the result.
+    public int openLock__2end(String[] deadends, String target) {
+        Set<String> begin = new HashSet<>();
+        Set<String> end = new HashSet<>();
+        Set<String> deads = new HashSet<>(Arrays.asList(deadends));
+        //从begin和target同时bfs（并不是同时，而是交替）
+        begin.add("0000");
+        end.add(target);
+        int level = 0;
+        while (!begin.isEmpty() && !end.isEmpty()) {
+            Set<String> temp = new HashSet<>();
+            for (String s : begin) {
+                if (end.contains(s)) return level;
+                if (deads.contains(s)) continue;
+                deads.add(s);
+                StringBuilder sb = new StringBuilder(s);
+                for (int i = 0; i < 4; i++) {
+                    char c = sb.charAt(i);
+                    String s1 = sb.substring(0, i) + (c == '9' ? 0 : c - '0' + 1) + sb.substring(i + 1);
+                    String s2 = sb.substring(0, i) + (c == '0' ? 9 : c - '0' - 1) + sb.substring(i + 1);
+                    if (!deads.contains(s1))
+                        temp.add(s1);
+                    if (!deads.contains(s2))
+                        temp.add(s2);
+                }
+            }
+            level++;
+            begin = end;
+            end = temp;
+        }
+        return -1;
+    }
 }
