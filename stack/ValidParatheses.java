@@ -1,6 +1,7 @@
-package dp;
+package stack;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
@@ -9,7 +10,31 @@ import java.util.LinkedList;
  */
 
 public class ValidParatheses {
+    /**
+     * 20190216review
+     */
     public boolean isValid(String s) {
+        if (s == null || s.length() == 0) return true;
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[') {
+                stack.push(s.charAt(i));
+            } else if (s.charAt(i) == ')') {
+                if (stack.empty() || stack.pop() != '(') return false;
+            } else if (s.charAt(i) == '}') {
+                if (stack.empty() || stack.pop() != '{') return false;
+            } else if (s.charAt(i) == ']') {
+                if (stack.empty() || stack.pop() != '[') return false;
+            }
+        }
+        return stack.empty();//不能直接return true，不然'['过不了
+    }
+
+
+    /**
+     * initial post
+     */
+    public boolean isValid__INITIAL_POST(String s) {
         int len = s.length();
 
         LinkedList<String> stack = new LinkedList<>();
