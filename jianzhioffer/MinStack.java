@@ -26,7 +26,10 @@ import java.util.Stack;
 public class MinStack {
 
     //又没想出来。。想到了priorityqueue，但是pq的插入复杂度不是O(1)
-    //正确方法是两个栈
+    //常规方法是两个栈
+
+    //20190216 这次想出来了。
+    //另外在leetcode上看到了一个stack的方法:https://leetcode.com/explore/learn/card/queue-stack/230/usage-stack/1360/discuss/49014/Java-accepted-solution-using-one-stack
 
     Stack<Integer> stack = new Stack<>();
     Stack<Integer> minStack = new Stack<>();
