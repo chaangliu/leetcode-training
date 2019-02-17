@@ -1,4 +1,4 @@
-package other;
+package stack;
 
 import java.util.Stack;
 
@@ -20,6 +20,39 @@ import java.util.Stack;
  * minStack.getMin();   --> Returns -2.
  */
 class MinStack {
+    //20190216review 除了用2个stack，这题也可以只用一个stack做, 思路来自leetcode:
+    //如果将要push的元素比当前min小，就把oldMin也push进去，这样，在最小的数下面就维护了一个第二小的元素
+    class MinStack__ONSTACK {
+        int min = Integer.MAX_VALUE;
+        Stack<Integer> stack = new Stack<Integer>();
+
+        public void push(int x) {
+            // only push the old minimum value when the current
+            // minimum value changes after pushing the new value x
+            if (x <= min) {
+                stack.push(min);
+                min = x;
+            }
+            stack.push(x);
+        }
+
+        public void pop() {
+            // if pop operation could result in the changing of the current minimum value,
+            // pop twice and change the current minimum value to the last minimum value.
+            if (stack.pop() == min) min = stack.pop();
+        }
+
+        public int top() {
+            return stack.peek();
+        }
+
+        public int getMin() {
+            return min;
+        }
+    }
+
+
+    //initial post
     private Stack<Integer> mStack;
     private Stack<Integer> mMinStack;
 
