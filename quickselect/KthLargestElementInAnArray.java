@@ -1,4 +1,4 @@
-package array;
+package quickselect;
 
 //Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
 //
@@ -12,8 +12,6 @@ package array;
 //        Output: 4
 //        Note:
 //        You may assume k is always valid, 1 ≤ k ≤ array's length.
-
-import java.util.PriorityQueue;
 
 public class KthLargestElementInAnArray {
 //    public int findKthLargest(int[] nums, int k) {
@@ -79,18 +77,19 @@ public class KthLargestElementInAnArray {
     }
 
     private int helper(int[] nums, int k, int low, int high) {
-//        if (low > high) return -1;//已犯错误1. （（删除线）这里不能是>=，否则虽然能排序，但是会漏掉很多次求pivot的步骤）这里完全不需要判断low，high，partition会判断
-        int pivot = partitioning(nums, low, high);
-        System.out.println("pivot == " + pivot);
-        if (pivot + 1 == k) {
-            return nums[pivot];////已犯错误3. 此处不需要pivot + 1..
-        } else if (pivot + 1 > k) {//已犯错误2. 此处需要对partition进行折半，否则效率低
-            return helper(nums, k, low, pivot - 1);
+        //if (low > high) return -1;//已犯错误1. （（删除线）这里不能是>=，否则虽然能排序，但是会漏掉很多次求pivot的步骤）这里完全不需要判断low，high，partition会判断
+        int slot = partitioning(nums, low, high);
+        System.out.println("pivot == " + slot);
+        if (slot + 1 == k) {
+            return nums[slot];////已犯错误3. 此处不需要pivot + 1..
+        } else if (slot + 1 > k) {//已犯错误2. 此处需要对partition进行折半，否则效率低
+            return helper(nums, k, low, slot - 1);
         } else {
-            return helper(nums, k, pivot + 1, high);
+            return helper(nums, k, slot + 1, high);
         }
     }
 
+    //单次partition，把所有比high大的数移到前面
     private int partitioning(int[] nums, int low, int high) {
         int pivot = nums[high];
         int slot = low;
