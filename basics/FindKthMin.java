@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 /**
  * 查找第k小的元素

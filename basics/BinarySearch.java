@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 /**
  * Created by DrunkPiano on 2016/12/29.

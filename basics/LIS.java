@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 public class LIS {
     public static int lis(int[] arr) {

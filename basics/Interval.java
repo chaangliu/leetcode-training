@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 public class Interval {
 	public int start;
