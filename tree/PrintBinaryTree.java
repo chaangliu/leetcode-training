@@ -73,6 +73,36 @@ public class PrintBinaryTree {
         dfs(canvas, node.right, (leftBound + rightBound + 1)/2, rightBound, curDepth + 1, totalDepth);//这波操作让我眼花缭乱，这里leftBound不能是pos 或者pos + 1；属实需要找规律
     }
 
+//    另外，这题dfs像下面这么写也是可以过的：不判断leftBound > rightBound，有时候left大于right也能插入
+//    public List<List<String>> printTree(TreeNode root) {
+//        int row = getMaxHeight(root);
+//        int col = (int) Math.pow(2, row) - 1;
+//        List<List<String>> canvas = new ArrayList<>();
+//        for (int i = 0; i < row; i++) {
+//            List<String> item = new ArrayList<>();
+//            for (int j = 0; j < col; j++) {
+//                item.add("");
+//            }
+//            canvas.add(new ArrayList<String>(item));
+//        }
+//
+//        dfs(canvas, root, 0, col, 1);
+//        return canvas;
+//    }
+//
+//    private void dfs(List<List<String>> canvas, TreeNode node, int leftBound, int rightBound, int curDepth) {
+//        if (node == null) return;
+//        int pos = (leftBound + rightBound) / 2;
+//        canvas.get(curDepth - 1).set(pos, node.val + "");
+//        dfs(canvas, node.left, leftBound, pos - 1, curDepth + 1);
+//        dfs(canvas, node.right, pos + 1, rightBound, curDepth + 1);
+//    }
+//    private int getMaxHeight(TreeNode node) {
+//        if (node == null) return 0;
+//        return Math.max(getMaxHeight(node.left), getMaxHeight(node.right)) + 1;
+//    }
+
+
     private int getMaxHeight(TreeNode node) {
         if (node == null) return 0;
         return Math.max(getMaxHeight(node.left), getMaxHeight(node.right)) + 1;
