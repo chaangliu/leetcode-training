@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 /**
  * 插入排序。稳定。时间O(n2)。

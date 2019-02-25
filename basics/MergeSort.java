@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 //20190108
 //相关题: InversePairs

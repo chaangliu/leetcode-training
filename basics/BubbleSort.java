@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 //20190128
 public class BubbleSort {

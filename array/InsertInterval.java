@@ -3,7 +3,7 @@ package array;
 import java.util.ArrayList;
 import java.util.List;
 
-import basic.Interval;
+import basics.Interval;
 
 
 /**

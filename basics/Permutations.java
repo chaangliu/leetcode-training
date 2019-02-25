@@ -1,4 +1,4 @@
-package basic;
+package basics;
 
 /**
  * 算法思路：
