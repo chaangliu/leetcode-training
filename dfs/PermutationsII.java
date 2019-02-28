@@ -41,7 +41,7 @@ public class PermutationsII {
             //1 1 2
             //1 1 2
             //1 1 2
-            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;//意思是不用从同一个初始入口进入dfs
             if (!used[i]) {
                 used[i] = true;
                 item.add(nums[i]);
@@ -53,7 +53,7 @@ public class PermutationsII {
     }
 
     public static void main(String args[]) {
-        int[] nums = {3, 3, 0, 3};
+        int[] nums = {3, 3, 3};
         List<List<Integer>> res = new PermutationsII().permuteUnique(nums);
         System.out.println();
     }
