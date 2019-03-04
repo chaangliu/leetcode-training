@@ -4,7 +4,7 @@ package linkedlist;
 /**
  * Given a linked list, swap every two adjacent nodes and return its head.
  * For example,
- *
+ * <p>
  * Given 1->2->3->4, you should return the list as 2->1->4->3.
  * Your algorithm should use only constant space. You may not modify the values in the list, only nodes itself can be changed.
  * Created by DrunkPiano on 2017/3/4.
@@ -38,5 +38,25 @@ public class SwapNodesInPairs {
             curS = curS.next;
         }
         return fakeHead.next;
+    }
+
+
+    /**
+     * approach 2. recursion
+     * 20190304
+     */
+    //    First, we swap the first two nodes in the list, i.e. head and head.next;
+    //    Then, we call the function self as swap(head.next.next) to swap the rest of the list following the first two nodes.
+    //    Finally, we attach the returned head of the sub-list in step (2) with the two nodes swapped in step (1) to form a new linked list.
+    //    1234 2143
+    public linkedlist.ListNode swapPairs(linkedlist.ListNode head) {
+        if (head != null && head.next != null) {
+            linkedlist.ListNode n = head.next;
+            linkedlist.ListNode tmp = head.next.next;
+            head.next.next = head;
+            head.next = swapPairs(tmp);
+            return n;
+        }
+        return head;
     }
 }
