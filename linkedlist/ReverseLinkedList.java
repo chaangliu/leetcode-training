@@ -3,21 +3,16 @@ package linkedlist;
 
 /**
  * Reverse a singly linked list(单链表).
- * <p>
- * <p>
+ * Input: 1->2->3->4->5->NULL
+ * Output: 5->4->3->2->1->NULL
  * Created by DrunkPiano on 2017/3/23.
  */
 
 class ReverseLinkedList {
-    public static class ListNode {
-        int val;
-        ListNode next;
 
-        ListNode(int x) {
-            val = x;
-        }
-    }
-
+    /**
+     * approach1. iteration
+     */
     public ListNode reverseList1(ListNode head) {
         if (head == null) return null;
         //dummy node 头插法
@@ -33,38 +28,60 @@ class ReverseLinkedList {
     }
 
     /**
-
-        My thought: 在if语句的return之前, head会指向最后一个结点(p->next == null了),所以p会指向最后一个节点；然后就返回到上一层递归，这时候head已经不是最后一个节点了，而是倒数第二个节点。然后把p指向head。head.next=null，不然会产生环。再返回逆序后的首节点p。至于为什么每次都返回p，想不清了，暂时就只要想因为我们最终就需要返回p。
+     * approach2. recursion
+     * 两个注意的点
+     * 1. 只在最后返回了p，中途没有对p进行操作
+     * 2. 打印p.val，打印了n - 1次head的值(取最后一次)
      */
     public static ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) return head;
         ListNode p = reverseList(head.next);
         head.next.next = head;
         head.next = null;
+        System.out.println(p.val);
         return p;
     }
 
 
+    /**
+     * recursion我的写法
+     */
+    ListNode res = null;
+
+    public ListNode reverseList___REDUNDANT(ListNode head) {
+        ListNode tmp;
+        if (head != null && head.next != null) {
+            tmp = head.next.next;
+            head.next.next = head;
+            if (tmp != null) {
+                reverseList___REDUNDANT(tmp);
+                tmp.next = head.next;
+                head.next = null;
+            } else {
+                res = head.next;
+                head.next = null;
+            }
+        } else {
+            res = head;
+        }
+        return res;
+    }
+
+
+    /**
+     * test-----------------------------------------------------------------------------------------------------------------------
+     */
     public static void main(String[] args) {
 
         ListNode n1 = new ListNode(1);
         ListNode n2 = new ListNode(2);
         ListNode n3 = new ListNode(3);
         ListNode n4 = new ListNode(4);
-
-//        ListNode n4 = new ListNode(3);
-//        ListNode n5 = new ListNode(4);
-//        ListNode n6 = new ListNode(5);
-
         n1.next = n2;
         n2.next = n3;
         n3.next = n4;
-//        n3.next = n4;
-//        n4.next = n5;
-//        n5.next = n6;
-
         n1 = reverseList(n1);
-        printList(n1);
+//        printList(n1);
 
     }
 
