@@ -22,7 +22,39 @@ import java.util.List;
  */
 
 public class PascalsTriangle2 {
+
+
+    /**
+     * approach1. 递归
+     * f(i,j) = f(i−1,j−1)+f(i−1,j)
+     * f(i,j) = 1 where j=1 or j=i
+     */
+    private List<Integer> upperRow = new ArrayList<>();
+    private List<Integer> curRow = new ArrayList<>();
+
     public List<Integer> getRow(int rowIndex) {
+        helper(1, rowIndex + 1);
+        return upperRow;
+    }
+
+    private void helper(int depth, int rowLimit) {
+        if (depth > rowLimit) return;
+        for (int i = 0; i < depth; i++) {
+            if (i == 0 || i == depth - 1) curRow.add(1);
+            else {
+                curRow.add(upperRow.get(i - 1) + upperRow.get(i));
+            }
+        }
+        upperRow = new ArrayList<>(curRow);//这里不要直接引用指向，不然clear就完了
+        curRow.clear();
+        helper(depth + 1, rowLimit);
+    }
+
+
+    /**
+     * approach2. iteration
+     */
+    public List<Integer> getRow__ITERATION(int rowIndex) {
         List<Integer> preLine = new ArrayList<>();
         //corner case
         if (rowIndex == 0) return preLine;
@@ -30,11 +62,11 @@ public class PascalsTriangle2 {
 
         //first line
         preLine.add(1);
-        for (int i = 1; i <= rowIndex ; i++) {
+        for (int i = 1; i <= rowIndex; i++) {
             List<Integer> currentLine = new ArrayList<>();
             currentLine.add(1);
-            for (int j = 0; j < preLine.size() -1; j++) {
-                currentLine.add(preLine.get(j) + preLine.get(j+1));
+            for (int j = 0; j < preLine.size() - 1; j++) {
+                currentLine.add(preLine.get(j) + preLine.get(j + 1));
 
             }
             //last number

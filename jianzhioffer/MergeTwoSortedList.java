@@ -44,4 +44,35 @@ public class MergeTwoSortedList {
         }
         return list1.val < list2.val ? list1 : list2;
     }
+
+    /**
+     * recursion 20190306
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+        ListNode dummy;
+        ListNode cruiser = new ListNode(-1);
+        dummy = cruiser;
+        helper(l1, l2, cruiser);
+        return dummy.next;
+    }
+
+    private void helper(ListNode l1, ListNode l2, ListNode cruiser) {
+        if (l1 == null) {
+            cruiser.next = l2;
+            return;
+        }
+        if (l2 == null) {
+            cruiser.next = l1;
+            return;
+        }
+        if (l1.val < l2.val) {
+            cruiser.next = l1;
+            helper(l1.next, l2, cruiser.next);
+        } else {
+            cruiser.next = l2;
+            helper(l1, l2.next, cruiser.next);
+        }
+    }
 }

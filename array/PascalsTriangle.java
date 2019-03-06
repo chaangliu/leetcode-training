@@ -22,7 +22,57 @@ import java.util.List;
  */
 
 public class PascalsTriangle {
+
+    /**
+     * approach1. 递归
+     *     f(i,j) = f(i−1,j−1)+f(i−1,j)
+     *     f(i,j) = 1 where j=1 or j=i
+     */
+
     public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> res = new ArrayList<>();
+        helper(res, 1, numRows);
+        return res;
+    }
+
+    private void helper(List<List<Integer>> res, int depth, int rowLimit) {
+        if (depth > rowLimit) return;
+        if (res.size() < depth) {
+            res.add(new ArrayList<Integer>());
+        }
+        List<Integer> curRow = res.get(depth - 1);
+        for (int i = 0; i < depth; i++) {
+            if (i == 0 || i == depth - 1) curRow.add(1);
+            else {
+                List<Integer> upperRow = res.get(depth - 1 - 1);
+                curRow.add(upperRow.get(i - 1) + upperRow.get(i));
+            }
+        }
+        helper(res, depth + 1, rowLimit);
+    }
+
+    //我一开始想模仿二叉树level order traversal那么dfs，但是这么做行不通，因为这题是top-down的，而这么做会是bottom-up，会从底往上加数据
+    private void dfs(List<List<Integer>> res, int depth, int rowLimit, int start) {
+        if (depth > rowLimit) return;
+        if (res.size() < depth) {
+            res.add(new ArrayList<Integer>());
+        }
+        List<Integer> curRow = res.get(depth - 1);
+        for (int i = start; i < depth; i++) {
+            if (i == 0 || i == depth - 1) curRow.add(1);
+            else {
+                List<Integer> upperRow = res.get(depth - 1 - 1);
+                curRow.add(upperRow.get(i - 1) + upperRow.get(i));
+            }
+            dfs(res, depth + 1, rowLimit, i);
+        }
+    }
+
+
+    /**
+     * approach2. 迭代
+     */
+    public List<List<Integer>> generate__ITERATION(int numRows) {
         List<List<Integer>> result = new ArrayList<>();
         //corner case
         if (numRows == 0) return result;
