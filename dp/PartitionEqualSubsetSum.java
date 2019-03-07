@@ -27,10 +27,37 @@ import java.util.Arrays;
  */
 public class PartitionEqualSubsetSum {
     /**
-     * 01背包问题，二维DP
-     * 动态转移方程：dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
+     * approach1. dfs
      */
     public boolean canPartition(int[] nums) {
+        if (nums == null || nums.length == 0) return false;
+        int sum = 0;
+        for (Integer num : nums) {
+            sum += num;
+        }
+        if ((sum & 1) == 1) return false;
+        return dfs(sum / 2, nums, new boolean[nums.length]);
+    }
+
+    private boolean dfs(int sum, int[] nums, boolean[] used) {
+        if (sum == 0) return true;
+        if (sum < 0) return false;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && !used[i - 1] && nums[i] == nums[i - 1]) continue;//这题的prune跟permutation那题属实有点像
+            if (!used[i]) {
+                used[i] = true;
+                if (dfs(sum - nums[i], nums, used)) return true;
+                used[i] = false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * approach2. 01背包问题，二维DP
+     * 动态转移方程：dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
+     */
+    public boolean canPartition___DP(int[] nums) {
         if (nums == null || nums.length == 0) return false;
         int sum = 0;
         for (Integer num : nums) {
@@ -80,6 +107,7 @@ public class PartitionEqualSubsetSum {
 
     public static void main(String args[]) {
         int[] nums = {1, 5, 11, 5};
-        new PartitionEqualSubsetSum().canPartition(nums);
+//        int[] nums = {1, 2, 1, 2};
+        System.out.println(new PartitionEqualSubsetSum().canPartition(nums));
     }
 }

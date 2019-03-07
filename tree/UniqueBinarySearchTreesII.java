@@ -24,6 +24,7 @@ abstract class UniqueBinarySearchTreesII {
         return dfs(1, n);
     }
 
+    //生成一棵树，你想嘛，肯定先生成所有可能的左子树，然后生成所有可能的右子树，然后左子树那边取一个，右子树那边取一个，然后和根结点一拼，就是一棵大树了😂
     private List<TreeNode> dfs(int left, int right) {
         List<TreeNode> res = new ArrayList<>();
         if (left > right) {
