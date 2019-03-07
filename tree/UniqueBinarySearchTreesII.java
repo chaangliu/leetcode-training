@@ -13,11 +13,13 @@ import java.util.List;
  * for the right sub tree, we need count how many possible trees are there constructed from {2,3,4,5}, apparently it's the same number as {1,2,3,4}.
  * So the total number of trees under "1" picked as root is dp[0] * dp[4] = 14. (assume dp[0] =1).
  * Similarly, root 2 has dp[1]*dp[3] = 5 trees. root 3 has dp[2]*dp[2] = 4, root 4 has dp[3]*dp[1]= 5 and root 5 has dp[0]*dp[4] = 14. Finally sum the up and it's done.
+ *
+ * 20190307review
  */
 
 abstract class UniqueBinarySearchTreesII {
     public List<TreeNode> generateTrees(int n) {
-        if(n == 0 ) return new ArrayList<>();
+        if (n == 0) return new ArrayList<>();
         //以root=1开始，root=n结束
         return dfs(1, n);
     }
@@ -25,7 +27,7 @@ abstract class UniqueBinarySearchTreesII {
     private List<TreeNode> dfs(int left, int right) {
         List<TreeNode> res = new ArrayList<>();
         if (left > right) {
-            res.add(null);
+            res.add(null);//left到right之间不可能构造子树的情形必须添加一个null节点，If you don't add null, return an empty list, the second for loop won't loop and won't reach the third for loop thus won't generate the tree needed
             return res;
         }
         for (int i = left; i <= right; i++) {
@@ -42,6 +44,4 @@ abstract class UniqueBinarySearchTreesII {
         }
         return res;
     }
-
-
 }
