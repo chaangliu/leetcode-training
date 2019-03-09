@@ -3,6 +3,7 @@ package dfs;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Given an m x n matrix of non-negative integers representing the height of each unit cell in a continent, the "Pacific ocean" touches the left and top edges of the matrix and the "Atlantic ocean" touches the right and bottom edges.
@@ -111,12 +112,55 @@ public class PacificAtlanticWaterFlow {
         }
     }
 
+    /**
+     * approach2. bfs
+     * 边界条件的判断要想清楚。最好直接在出边界的时候统一判断，不要在临界就返回TRUE OR FALSE.
+     */
+    public List<int[]> pacificAtlantic____BFS(int[][] matrix) {
+        List<int[]> res = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++)
+            for (int j = 0; j < matrix[0].length; j++)
+                if (bfs(i, j, matrix, new boolean[matrix.length][matrix[0].length])) res.add(new int[]{i, j});
+        return res;
+    }
+
+    private boolean bfs(int i, int j, int[][] matrix, boolean[][] visited) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i, j});
+        visited[i][j] = true;
+        boolean pacific = false, atlantic = false;
+        int[][] dir = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int k = 0; k < size; k++) {
+                int[] coord = queue.poll();
+                for (int[] d : dir) {
+                    int x1 = coord[0] + d[0], y1 = coord[1] + d[1];
+                    if (x1 < 0 || y1 < 0) {
+                        pacific = true;//reached 上&左
+                        if (atlantic) return true;
+                        continue;
+                    }
+                    if (x1 > matrix.length - 1 || y1 > matrix[0].length - 1) {
+                        atlantic = true;//reached 下&右
+                        if (pacific) return true;
+                        continue;
+                    }
+                    if (matrix[x1][y1] > matrix[coord[0]][coord[1]] || visited[x1][y1]) continue;
+                    queue.offer(new int[]{x1, y1});
+                    visited[x1][y1] = true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     public static void main(String args[]) {
-        int[][] nums = {{1, 2, 2, 3, 5}, {3, 2, 3, 4, 4}};
+        int[][] nums = {{1, 2, 2, 3, 5}, {3, 2, 3, 4, 4}, {2, 4, 5, 3, 1}, {6, 7, 1, 4, 5}, {5, 1, 1, 2, 4}};
 //        node.next.next = new ListNode(3);
 //        ListNode res = new Test().reverseList(node);
-        List res = new PacificAtlanticWaterFlow().pacificAtlantic____DFS(nums);
+        List res = new PacificAtlanticWaterFlow().pacificAtlantic____BFS(nums);
         System.out.print("");
     }
 }
