@@ -43,7 +43,7 @@ public class HouseRobberIII {
      * 这个解法的启示是，∑不一定要bfs，dfs然后加上返回值那种方式也可以
      * <p>
      * 注意不能用Set而要用Map，val保存从每个结点向下开始偷能偷到的最大值
-     *
+     * <p>
      * 1，2，3，4这样左边一条棍子；从下到上得到的结果分别是4，4，6，6
      */
     public int rob(TreeNode root) {
@@ -61,10 +61,32 @@ public class HouseRobberIII {
         if (root.right != null) {
             val += robSub(root.right.left, map) + robSub(root.right.right, map);
         }
+        //从当前这家开始、或者从lChild、rChild开始，取一个最佳的值。这里有点像DP了。这也是为什么可以跨越2级以上选择
         val = Math.max(val, robSub(root.left, map) + robSub(root.right, map));
         map.put(root, val);
 
         return val;
+    }
+
+    /**
+     * dp solution, 从讨论区看来的；但是也用了递归
+     */
+    public int rob__DP(TreeNode root) {
+        int[] res = robSub(root);
+        return Math.max(res[0], res[1]);
+    }
+
+    private int[] robSub(TreeNode root) {
+        if (root == null) return new int[2];
+
+        int[] left = robSub(root.left);
+        int[] right = robSub(root.right);
+        int[] res = new int[2];
+
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        res[1] = root.val + left[0] + right[0];
+
+        return res;
     }
 
 
