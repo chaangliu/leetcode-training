@@ -30,7 +30,7 @@ public class MaxAreaofIsland {
      * 这题跟number of island 那题几乎一样，用floodFill。
      * 不过在dfs的时候我思考了五分钟如何计算面积。
      * <p>
-     * 另外这题bfs应该也可以。
+     * 同样，这题bfs也可以。
      */
     public int maxAreaOfIsland(int[][] grid) {
         if (grid == null || grid.length == 0) return 0;
