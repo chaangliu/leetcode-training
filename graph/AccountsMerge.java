@@ -39,7 +39,7 @@ public class AccountsMerge {
      */
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
         //这个graph是无向图，node的value是email地址，没有重复email
-        Map<String, Set<String>> graph = new HashMap<>();  //<email node, neighbor nodes>
+        Map<String, Set<String>> graph = new HashMap<>();  //<email node, neighbor nodes>，neighbor nodes代表邻接点
         Map<String, String> name = new HashMap<>();        //<email, username>
         // Build the graph;
         for (List<String> account : accounts) {
