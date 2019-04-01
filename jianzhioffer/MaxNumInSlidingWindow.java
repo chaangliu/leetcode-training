@@ -55,8 +55,13 @@ public class MaxNumInSlidingWindow {
 //        //not implemented
 //    }
 
-    //better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
-    //链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
+    /**
+     * better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
+     * 链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
+     * <p>
+     * 这题同leetcode 239. Sliding Window Maximum，以下是O(n)解法
+     */
+
 
     public ArrayList<Integer> maxInWindows(int[] num, int size) {
         ArrayList<Integer> res = new ArrayList<>();
@@ -70,7 +75,7 @@ public class MaxNumInSlidingWindow {
             else//左边界大于最大值所在的index了，就把最大值的index出列
                 if (begin > q.peekFirst())
                     q.pollFirst();
-            //右边进来的数比队尾的数大，就从后往前把所有比它小的数的index出列，然后自己入列(有可能最后queue只有它一个)
+            //右边进来的数比队尾的数大，就从后往前把所有比它小的数的index出列，然后自己入列(有可能最后queue只有它一个)，保证左边peek永远是最大值
             while ((!q.isEmpty()) && num[q.peekLast()] <= num[i])
                 q.pollLast();
             q.add(i);
