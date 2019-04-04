@@ -21,6 +21,65 @@ package dfs;
  */
 
 public class WordSearch {
+    /**
+     * 20190404update
+     * 不用visited[][]空间
+     * ------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
+
+    public boolean exist__(char[][] board, String word) {
+        int m = board.length, n = board[0].length;
+        boolean[][] visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dfs__(board, word, 0, i, j)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs__(char[][] board, String word, int index, int x, int y) {
+        if (index == word.length()) return true;
+        if (x < 0 || x >= board.length || y < 0 || y >= board[0].length || board[x][y] != word.charAt(index) || board[x][y] == '#') return false;
+        char tmp = board[x][y];
+        board[x][y] = '#';
+        if (dfs__(board, word, index + 1, x - 1, y)) return true;
+        if (dfs__(board, word, index + 1, x + 1, y)) return true;
+        if (dfs__(board, word, index + 1, x, y - 1)) return true;
+        if (dfs__(board, word, index + 1, x, y + 1)) return true;
+        board[x][y] = tmp;
+        return false;
+    }
+
+    /**
+     * SOLUTIONS里的写法
+     */
+    public boolean exist___(char[][] board, String word) {
+        char[] w = word.toCharArray();
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[y].length; x++) {
+                if (exist(board, y, x, w, 0)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean exist(char[][] board, int y, int x, char[] word, int i) {
+        if (i == word.length) return true;
+        if (y < 0 || x < 0 || y == board.length || x == board[y].length) return false;
+        if (board[y][x] != word[i]) return false;
+        board[y][x] ^= 256;
+        boolean exist = exist(board, y, x + 1, word, i + 1)
+                || exist(board, y, x - 1, word, i + 1)
+                || exist(board, y + 1, x, word, i + 1)
+                || exist(board, y - 1, x, word, i + 1);
+        board[y][x] ^= 256;
+        return exist;
+    }
+
+    /**
+     * original post---------------------------------------------------------------------------------------------------------------------------------------------
+     */
     public boolean exist(char[][] board, String word) {
         int m = board.length, n = board[0].length;
         boolean[][] visited = new boolean[m][n];
@@ -50,6 +109,10 @@ public class WordSearch {
 
         return false;
     }
+
+    /**
+     * test--------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
 
 
     public static void main(String args[]) {
