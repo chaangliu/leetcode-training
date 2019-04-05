@@ -76,6 +76,12 @@ public class ImplementTrie {
         }
     }
 
+    public static void main(String args[]){
+        Trie trie = new ImplementTrie().new Trie();
+        trie.insert("abc");
+        trie.startsWith("ab");
+    }
+
 //    With my solution I took the simple approach of giving each TrieNode a 26 element array of each possible child node it may have.
 //    I only gave 26 children nodes because we are only working with lowercase 'a' - 'z'.
 //    If you are uncertain why I made the root of my Trie an empty character this is a standard/typical approach for building out a Trie it is somewhat arbitrary what the root node is.

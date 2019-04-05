@@ -1,4 +1,4 @@
-package dfs;
+package easy;
 
 /**
  * Created by DrunkPiano on 2017/3/16.
