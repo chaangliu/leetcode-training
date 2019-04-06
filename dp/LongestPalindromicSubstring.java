@@ -19,34 +19,33 @@ package dp;
  */
 
 public class LongestPalindromicSubstring {
-    //    public String longestPalindrome(String s) {
-//        if (s.length() == 0) return null;
-//        int maxLength = 1;
-//        String longestPalindrome = s.substring(0, 1);
-//        for (int i = 0; i < s.length(); i++) {
-//            String temp = helper(s, i, i);
-//            if (temp.length() > longestPalindrome.length()) {
-//                longestPalindrome = temp;
-//            }
-//        }
-//        for (int i = 0; i < s.length(); i++) {
-//            String temp = helper(s, i, i + 1);
-//            if (temp.length() > longestPalindrome.length()) {
-//                longestPalindrome = temp;
-//            }
-//        }
-//
-//        return longestPalindrome;
-//    }
-//
-//    private String helper(String s, int begin, int end) {
-//        while (begin >= 0 && end <= s.length() - 1 && s.charAt(begin) == s.charAt(end)) {
-//            begin--;
-//            end++;
-//        }
-//        return s.substring(begin+1, end);
-//    }
+    /**
+     * approach1. dp
+     * 这题跟LongestPalindromicSubsequence那题的转移方程几乎一致，都要用到i + 1 j - 1，所以做法也是外层从后往前循环
+     * dp[i][j] = s[i] == s[j] && (dp[i + 1][j - 1] ||  i + 1 == j) // i + 1 == j这个条件容易忽略，例如abbd的case
+     * <p>
+     * 20190406
+     */
     public String longestPalindrome(String s) {
+        if (s == null || s.length() == 0) return "";
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int start = 0, end = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            dp[i][i] = true;
+            for (int j = i + 1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j) && (dp[i + 1][j - 1] || i + 1 == j)) {
+                    dp[i][j] = true;
+                    if (j - i + 1 > end - start + 1) {
+                        start = i;
+                        end = j;
+                    }
+                }
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    public String longestPalindrome__2017(String s) {
         if (s == null || s.length() <= 1)
             return s;
         int len = s.length();
@@ -55,7 +54,6 @@ public class LongestPalindromicSubstring {
         String longest = null;
         for (int i = s.length() - 1; i >= 0; i--)
             for (int j = i; j < s.length(); j++) {
-
                 if (s.charAt(i) == s.charAt(j) && (j - i <= 2 || dp[i + 1][j - 1])) {
                     dp[i][j] = true;
 
@@ -65,15 +63,17 @@ public class LongestPalindromicSubstring {
                     }
                 }
             }
-
         return longest;
     }
 
+    /**
+     * Approach 2: Expand Around Center
+     * O(n2)，Constant Space，思路比较简单，不写了
+     */
+
+
     public static void main(String args[]) {
         LongestPalindromicSubstring longestPalindromicSubstring = new LongestPalindromicSubstring();
-//        System.out.println(longestPalindromicSubstring.longestPalindrome("babad"));
         System.out.println(longestPalindromicSubstring.longestPalindrome("aaaa"));
-//        String s = "babad";
-//        System.out.println(s.substring(0,2));
     }
 }
