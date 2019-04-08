@@ -27,7 +27,46 @@ package dfs;
  * 20190129
  */
 public class CoinChangeII {
-    //经典背包问题, knapsack problem
+    /**
+     * 经典背包问题, knapsack problem
+     */
+    public int change(int amount, int[] coins) {
+        //dp[i][j] : the number of combinations to make up amount j by using the first i types of coins
+        int[][] dp = new int[coins.length + 1][amount + 1];
+        dp[0][0] = 1;
+
+        for (int i = 1; i <= coins.length; i++) {
+            dp[i][0] = 1;
+            for (int j = 1; j <= amount; j++) {
+                //dp[i - 1][j]: 完全不用当前硬币组成j有多少种组合
+                //dp[i][j - coins[i - 1]]: 使用至少一个当前硬币（与上面一条是互斥事件）组成组成j有多少组合
+                dp[i][j] = dp[i - 1][j] + (j >= coins[i - 1] ? dp[i][j - coins[i - 1]] : 0);
+            }
+        }
+        return dp[coins.length][amount];
+    }
+
+    // 一维DP
+    // if(amount - coin >= 0) dp[amount] += dp[amount - coin]
+    // 例如amount:12, [1,2,5]
+    // 第一趟：使用1元coin时，dp[2] = dp[2 - 1] + dp[2]，意思是amount等于1元时候的combination数量，加上剩下的钱的组合数量
+    public int change____1D(int amount, int[] coins) {
+        if (amount == 0 && coins.length == 0) return 1;
+        if (amount < 0 || coins == null || coins.length == 0) return 0;
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
+        for (int coin : coins) {
+            for (int i = 1; i <= amount; i++) {
+                if (i - coin >= 0) {//如果剩余的钱可以用当前硬币来找钱
+                    dp[i] += dp[i - coin];//not dp[i - 1]
+                    System.out.print(dp[i] + " ");
+                }
+            }
+            System.out.println();
+        }
+        return dp[dp.length - 1];
+    }
+
 
     //1. dfs brute force, 借鉴coin change 1的代码，TLE
 //    int res = 0;
@@ -56,30 +95,9 @@ public class CoinChangeII {
 //        return -1;
 //    }
 
-    //2. dp
-    // if(amount - coin >= 0) dp[amount] += dp[amount - coin]
-    // 例子
-    // 12, [1,2,5]
-    // 第一趟：使用1元coin时，dp[2] = dp[2 - 1] + dp[2]，意思是amount等于1元时候的combination数量，加上剩下的钱的组合数量
-    public int change(int amount, int[] coins) {
-        if (amount == 0 && coins.length == 0) return 1;
-        if (amount < 0 || coins == null || coins.length == 0) return 0;
-        int[] dp = new int[amount + 1];
-        dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
-        for (int coin : coins) {
-            for (int i = 1; i <= amount; i++) {
-                if (i - coin >= 0) {//剩余的钱可以用当前硬币来找钱
-                    dp[i] += dp[i - coin];//not dp[i - 1]
-                    System.out.print(dp[i] + " ");
-                }
-            }
-            System.out.println();
-        }
-        return dp[dp.length - 1];
-    }
 
     public static void main(String args[]) {
-        int[] coins = {4};
-        System.out.println(new CoinChangeII().change(7, coins));
+        int[] coins = {1, 2, 5};
+        System.out.println(new CoinChangeII().change(6, coins));
     }
 }
