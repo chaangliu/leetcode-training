@@ -1,4 +1,4 @@
-package dfs;
+package dp;
 
 /**
  * You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.
@@ -28,7 +28,7 @@ package dfs;
  */
 public class CoinChangeII {
     /**
-     * 经典背包问题, knapsack problem
+     * 经典背包问题, knapsack problem，DP
      */
     public int change(int amount, int[] coins) {
         //dp[i][j] : the number of combinations to make up amount j by using the first i types of coins
@@ -57,7 +57,7 @@ public class CoinChangeII {
         dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
         for (int coin : coins) {
             for (int i = 1; i <= amount; i++) {
-                if (i - coin >= 0) {//如果剩余的钱可以用当前硬币来找钱
+                if (i - coin >= 0) {//如果当前的钱可以用当前硬币来找钱
                     dp[i] += dp[i - coin];//not dp[i - 1]
                     System.out.print(dp[i] + " ");
                 }
