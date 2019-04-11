@@ -40,6 +40,28 @@ public class ValidateStackSequences {
         return stack.isEmpty();
     }
 
+
+    /**
+     * 20190411review
+     * 用一个stack模拟push，每push一个数就检查栈顶是否和pop队列的指针j指向的一致，是的话就要不停弹出，因为此时不贪就没机会贪了，是所谓「贪心」
+     * If the stack has say, 2 at the top, then if we have to pop that value next, we must do it now.
+     * That's because any subsequent push will make the top of the stack different from 2, and we will never be able to pop again.
+     */
+    public boolean validateStackSequences__(int[] pushed, int[] popped) {
+        int N = pushed.length;
+        Stack<Integer> stack = new Stack<>();
+
+        int j = 0;
+        for (int x : pushed) {
+            stack.push(x);
+            while (!stack.isEmpty() && j < N && stack.peek() == popped[j]) {
+                stack.pop();
+                j++;
+            }
+        }
+        return j == N;
+    }
+
     public static void main(String args[]) {
 //        int[] pushed = {1, 0};
 //        int[] popped = {1, 0};
