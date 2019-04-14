@@ -27,7 +27,7 @@ import tree.TreeNode;
  */
 public class SumOfRootToLeafBinaryNumbers {
     /**
-     * 这题要mod 1e9+7才能过，很坑
+     * 这题要mod 1e9+7才能过，很坑(大数阶乘，大数的排列组合等，一般都要求将输出结果对 1000000007 取模。)
      */
     int sum = 0, mod = (int) 1e9 + 7;
 
