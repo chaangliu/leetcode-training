@@ -1,11 +1,27 @@
 package tree;
 
 /**
- * ConvertBianaryArrayToBinarySearchTree
+ * Given an array where elements are sorted in ascending order, convert it to a 【height balanced】BST.
+ *
+ * For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+ *
+ * Example:
+ *
+ * Given the sorted array: [-10,-3,0,5,9],
+ *
+ * One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+ *
+ *       0
+ *      / \
+ *    -3   9
+ *    /   /
+ *  -10  5
+ *
+ *
  * Created by DrunkPiano on 2017/3/27.
  */
 
-class ConvertBianaryArrayToBinarySearchTree {
+class ConvertSortedArrayToBinarySearchTree {
 
     public TreeNode sortedArrayToBST(int[] nums) {
         return recursion(nums, 0, nums.length - 1);
@@ -23,15 +39,8 @@ class ConvertBianaryArrayToBinarySearchTree {
     }
 
     public static void main(String args[]) {
-//        TreeNode root = new TreeNode(2);
-//        TreeNode left = new TreeNode(1);
-//        TreeNode right = new TreeNode(3);
-//        root.left = left ;
-//        root.right = right ;
-
         int[] nums = {1, 2, 3};
-        ConvertBianaryArrayToBinarySearchTree obj = new ConvertBianaryArrayToBinarySearchTree();
-
+        ConvertSortedArrayToBinarySearchTree obj = new ConvertSortedArrayToBinarySearchTree();
         TreeNode res = obj.sortedArrayToBST(nums);
         System.out.println(res);
     }
