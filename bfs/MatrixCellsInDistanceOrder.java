@@ -2,8 +2,10 @@ package bfs;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * We are given a matrix with R rows and C columns has cells with integer coordinates (r, c), where 0 <= r < R and 0 <= c < C.
@@ -49,6 +51,8 @@ public class MatrixCellsInDistanceOrder {
      * 6         for (int i = 0; i < value.length; i++) {
      * 7             hash = 31 * h + val[i];
      * 8         }
+     * <p>
+     * 【20190424】评论区别人的回复我，并不是hashCode导致的，原因是1，11和11，1这种会导致相同，加上分隔符即可
      */
     public int[][] allCellsDistOrder(int R, int C, int r0, int c0) {
         Queue<int[]> q = new LinkedList<>();
@@ -75,29 +79,32 @@ public class MatrixCellsInDistanceOrder {
     }
 
 
-//    public int[][] allCellsDistOrder(int R, int C, int r0, int c0) {
-//        Queue<int[]> q = new LinkedList<>();
-//        Set<String> visited = new HashSet<>();
-//        int[][] res = new int[R * C][2];
-//        q.offer(new int[]{r0, c0});
-//        int index = 0;
-//        while (!q.isEmpty()) {
-//            int size = q.size();
-//            for (int i = 0; i < size; i++) {
-//                int[] tmp = q.poll();
-//                int x = tmp[0], y = tmp[1];
-//                if (x < 0 || x >= R || y < 0 || y >= C) continue;
-//                if (visited.contains(tmp[0] + "" + tmp[1])) continue;
-//                res[index++] = tmp;
-//                visited.add(tmp[0] + "" + tmp[1]);
-//                q.offer(new int[]{x - 1, y});
-//                q.offer(new int[]{x + 1, y});
-//                q.offer(new int[]{x, y - 1});
-//                q.offer(new int[]{x, y + 1});
-//            }
-//        }
-//        return res;
-//    }
+    /**
+     * 使用String + set记录visited
+     */
+    public int[][] allCellsDistOrder__SET(int R, int C, int r0, int c0) {
+        Queue<int[]> q = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        int[][] res = new int[R * C][2];
+        q.offer(new int[]{r0, c0});
+        int index = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int[] tmp = q.poll();
+                int x = tmp[0], y = tmp[1];
+                if (x < 0 || x >= R || y < 0 || y >= C) continue;
+                if (visited.contains(x + "," + y)) continue;
+                res[index++] = tmp;
+                visited.add(x + "," + y);
+                q.offer(new int[]{x - 1, y});
+                q.offer(new int[]{x + 1, y});
+                q.offer(new int[]{x, y - 1});
+                q.offer(new int[]{x, y + 1});
+            }
+        }
+        return res;
+    }
 
     /**
      * approach2 sort
