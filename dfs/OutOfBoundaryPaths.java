@@ -1,7 +1,5 @@
 package dfs;
 
-import android.widget.HeterogeneousExpandableList;
-
 import java.util.Arrays;
 
 /**
@@ -59,9 +57,9 @@ public class OutOfBoundaryPaths {
     }
 
     /**
-     * approach1 with cache
+     * approach1 + cache
      * 对于每个格子，记录从那个格子开始走有多少种答案，以后来到那个路口就不需要再走下去了，跟DP一样
-     * 这里用了三维数组，第三维表示路径。
+     * 这里用了三维数组，第三维表示剩余步数。
      * <p>
      * 这里真正写起来的时候我发现memo[i][j][N] = helper + .... 以及最后一行return memo[i][j][N]很巧妙。另外这种写法的mod很折磨人，必须前两个mod后两个mod最后再mod不然WA。
      */
@@ -84,6 +82,37 @@ public class OutOfBoundaryPaths {
         memo[i][j][N] = ((helper(m, n, N - 1, i - 1, j, memo) + helper(m, n, N - 1, i + 1, j, memo)) % mod
                 + (helper(m, n, N - 1, i, j - 1, memo) + helper(m, n, N - 1, i, j + 1, memo)) % mod) % mod;
         return memo[i][j][N];
+    }
+
+
+    /**
+     * approach2 dp
+     * 实际上是个三维DP降维到2维；dp[i][j][k]代表从i,j开始走k步 出去有多少种可能
+     * 比起上面的bottom up recursion, 思维仍然是有难度..
+     */
+    public int findPaths__DP(int m, int n, int N, int x, int y) {
+        int MOD = 1000000000 + 7;
+        int dp[][] = new int[m][n];
+        dp[x][y] = 1;//考虑1,1,1,0,0的情形，
+        int res = 0;
+        int dir[][] = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int moves = 1; moves <= N; moves++) {
+            int[][] temp = new int[m][n];
+            for (int r = 0; r < m; r++) {
+                for (int c = 0; c < n; c++) {
+                    for (int[] d : dir) {
+                        int nr = r + d[0], nc = c + d[1];
+                        if (nr < 0 || nr >= m || nc < 0 || nc >= n) {
+                            res = (res + dp[r][c]) % MOD;//更新结果（在结果上加上上一步的可能数）
+                        } else {
+                            temp[nr][nc] = (temp[nr][nc] + dp[r][c]) % MOD;
+                        }
+                    }
+                }
+            }
+            dp = temp;
+        }
+        return res;
     }
 
     public static void main(String args[]) {

@@ -53,7 +53,7 @@ public class JumpGame {
 
         int furthestJump = Math.min(position + nums[position], nums.length - 1);
         for (int nextPosition = position + 1; nextPosition <= furthestJump; nextPosition++) {
-            if (canJumpFromPosition(nextPosition, nums)) {
+            if (canJumpFromPosition__(nextPosition, nums)) {
                 memo[position] = Index.GOOD;
                 return true;
             }
