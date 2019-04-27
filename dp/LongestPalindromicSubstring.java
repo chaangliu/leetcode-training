@@ -67,8 +67,10 @@ public class LongestPalindromicSubstring {
     }
 
     /**
-     * Approach 2: Expand Around Center
-     * O(n2)，Constant Space，思路比较简单，不写了
+     * Approach 2: Expand Around Center，跟647. Palindromic Substrings一样思路
+     * O(n2)，Constant Space，思路比较简单，但是其实空间占用还比DP小。
+     *
+     * 代码略。
      */
 
 
