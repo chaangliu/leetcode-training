@@ -37,6 +37,7 @@ public class MinimumWindowSubstring {
         if (s == null || t == null || s.length() == 0 || t.length() == 0) return "";
         String res = "";
         Map<Character, Integer> map = new HashMap<>();
+        //统计t中的字母出现频次
         for (char c : t.toCharArray()) {
             map.put(c, map.getOrDefault(c, 0) + 1);
         }
@@ -45,8 +46,8 @@ public class MinimumWindowSubstring {
             //expand
             char rChar = s.charAt(right);
             if (map.containsKey(rChar)) {
-                map.put(rChar, map.get(rChar) - 1);//map的key只包含t中有的字母。value是s中对应字母减去t中对应字母的差值，可以为负数。
-                if (map.get(rChar) == 0) count--;//count表示T中unique的字母在S中数量一致的个数。大于等于零。
+                map.put(rChar, map.get(rChar) - 1);//map的key只包含t中有的字母。value是s中对应字母个数减去t中对应字母个数的差值，可以为负数。
+                if (map.get(rChar) == 0) count--;//count表示T中的字母在S中没被cover住的个数。大于等于零。等于0的时候意思是S的[left,right]包含了T中的所有字母。
             }
             right++;
 

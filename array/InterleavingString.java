@@ -13,51 +13,39 @@ package array;
  */
 
 public class InterleavingString {
+
+    /**
+     * approach1. dp
+     * dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1) || dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
+     *
+     * 20190505review
+     */
     public boolean isInterleave(String s1, String s2, String s3) {
+        //dp[i][j]表示，s1中前i个元素和s2的前j个元素可以组成s3中的前i+j个元素。
         if (s1 == null) return s2.equals(s3);
         if (s2 == null) return s1.equals(s3);
         if (s1.length() + s2.length() != s3.length()) return false;
-
-        boolean matrix[][] = new boolean[s1.length() + 1][s2.length() + 1];
-        matrix[0][0] = true;
-//        matrix[i][j]表示，s1中前i个元素和s2的前j个元素可以组成s3中的前i+j个元素。
+        boolean dp[][] = new boolean[s1.length() + 1][s2.length() + 1];
+        ///注意，这些初始化都可以放到两层的for循环当中去做，这里为了清晰先不放进去
+        dp[0][0] = true;
         for (int i = 1; i <= s1.length(); i++) {
-            //matrix[i][j] = true的条件. 注意第二个条件是i-1
-            matrix[i][0] = matrix[i - 1][0] && s3.charAt(i - 1) == s1.charAt(i - 1);
+            //dp[i][j] = true的条件：如果s2是空字符串，那么s3的前i位要和s1的前i位相同
+            dp[i][0] = dp[i - 1][0] && s3.charAt(i - 1) == s1.charAt(i - 1);
         }
-
         for (int j = 1; j <= s2.length(); j++) {
-            //matrix[i][j] = true的条件
-            matrix[0][j] = matrix[0][j - 1] && s3.charAt(j - 1) == s2.charAt(j - 1);
+            dp[0][j] = dp[0][j - 1] && s3.charAt(j - 1) == s2.charAt(j - 1);
         }
-
         for (int i = 1; i <= s1.length(); i++)
             for (int j = 1; j <= s2.length(); j++) {
-                //如果加进来的这个数(matrix[i][j])是s2的第j-1位
-//                if (s3.charAt(i + j - 1) == s2.charAt(j - 1))
-//                    //加入s2的第j位之前的状态，是matrix[i][j-1](因为，往右走1步就是加s2，往下走一步就是加入s1)
-//                    //这样分成两行写，跟下面两个条件一起判断那种看起来是一样的，但是有种情况，就是matrix[i][j]本来是true，却可能会被matrix[i - 1][j]置于fasle
-//                    matrix[i][j] = matrix[i][j - 1];
-//                //如果加进来的这个数是s1中的
-//                if (s3.charAt(i + j - 1) == s1.charAt(i - 1))
-//                    matrix[i][j] = matrix[i - 1][j];
-
-
-                if (s1.charAt(i - 1) == s3.charAt(i + j - 1) && matrix[i - 1][j]) {
-                    matrix[i][j] = true;
-                }
-                if (s2.charAt(j - 1) == s3.charAt(i + j - 1) && matrix[i][j - 1]) {
-                    matrix[i][j] = true;
-                }
+                //分别判断把s1[i]、s2[j]加进来是否满足interleaving条件，满足其一即可
+                dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1)
+                        || dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
             }
-
-        return matrix[s1.length()][s2.length()];
+        return dp[s1.length()][s2.length()];
     }
 
-    public static void main(String args[]) {
-        InterleavingString interleavingString = new InterleavingString();
-        System.out.println(interleavingString.isInterleave("aabcc",
-                "dbbca",
-                "aadbbcbcac"));
-    }
+    /**
+     * approach2. bfs
+     * 想象成一个棋盘，向右走就是把s1[i]加入字符串，向下走就是把s2[j]加入字符串，每轮把满足条件的保存起来，看最后能不能遍历完了s1和s2
+     */
 }
