@@ -15,58 +15,37 @@ public class RegularExpressionMatching {
     }
 
 
-    //c++解法摘自
-    //    链接：https://www.nowcoder.com/questionTerminal/45327ae22b7b413ea21df13ee7d6429c
-    /*
-        解这题需要把题意仔细研究清楚，反正我试了好多次才明白的。
-        首先，考虑特殊情况：
-             1>两个字符串都为空，返回true
-             2>当第一个字符串不空，而第二个字符串空了，返回false（因为这样，就无法
-                匹配成功了,而如果第一个字符串空了，第二个字符串非空，还是可能匹配成
-                功的，比如第二个字符串是“a*a*a*a*”,由于‘*’之前的元素可以出现0次，
-                所以有可能匹配成功）
-        之后就开始匹配第一个字符，这里有两种可能：匹配成功或匹配失败。但考虑到pattern
-        下一个字符可能是‘*’， 这里我们分两种情况讨论：pattern下一个字符为‘*’或
-        不为‘*’：
-              1>pattern下一个字符不为‘*’：这种情况比较简单，直接匹配当前字符。如果
-                匹配成功，继续匹配下一个；如果匹配失败，直接返回false。注意这里的
-                “匹配成功”，除了两个字符相同的情况外，还有一种情况，就是pattern的
-                当前字符为‘.’,同时str的当前字符不为‘\0’。
-              2>pattern下一个字符为‘*’时，稍微复杂一些，因为‘*’可以代表0个或多个。
-                这里把这些情况都考虑到：
-                   a>当‘*’匹配0个字符时，str当前字符不变，pattern当前字符后移两位，
-                    跳过这个‘*’符号；
-                   b>当‘*’匹配1个或多个时，str当前字符移向下一个，pattern当前字符
-                    不变。（这里匹配1个或多个可以看成一种情况，因为：当匹配一个时，
-                    由于str移到了下一个字符，而pattern字符不变，就回到了上边的情况a；
-                    当匹配多于一个字符时，相当于从str的下一个字符继续开始匹配）
-        之后再写代码就很简单了。
-    */
-//    class Solution {
-//        public:
-//        bool match(char* str, char* pattern)
-//        {
-//            if (*str == '\0' && *pattern == '\0')
-//            return true;
-//            if (*str != '\0' && *pattern == '\0')
-//            return false;
-//            //if the next character in pattern is not '*'
-//            if (*(pattern+1) != '*')
-//            {
-//                if (*str == *pattern || (*str != '\0' && *pattern == '.'))
-//                return match(str+1, pattern+1);
-//            else
-//                return false;
-//            }
-//            //if the next character is '*'
-//        else
-//            {
-//                if (*str == *pattern || (*str != '\0' && *pattern == '.'))
-//                return match(str, pattern+2) || match(str+1, pattern);
-//            else
-//                return match(str, pattern+2);
-//            }
-//        }
-//    };
+    /**
+     * 2. dp
+     * dp[i + 1][j + 1]表示p[i:]和s[j:]能否匹配
+     */
+    public boolean isMatch__DP(String s, String p) {
+        if (s == null || p == null) return false;
+
+        boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+        dp[0][0] = true;
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) == '*' && dp[0][i - 1]) {
+                dp[0][i + 1] = true;
+            }
+        }
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < p.length(); j++) {
+                //如果i,j对应字母相同或者为'.'，那么取决于前一位
+                if (p.charAt(j) == '.' || p.charAt(j) == s.charAt(i)) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else if (p.charAt(j) == '*') {
+                    //比如p[j]是*，j - 1位是a，而s[i]是b，那么a*只能代表a * 0，匹配0个a =》也就是dp[i + 1][j - 1]，相当于a*这个pattern没用到。
+                    if (p.charAt(j - 1) != s.charAt(i) && p.charAt(j - 1) != '.') {
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1];
+                    } else {
+                        //a*如果满足 single a (a * 1) || multiple a (a * n) || empty a 即可。multi a这里这么理解：相当于s[i]忽略掉，*可以cover。
+                        dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1] || dp[i + 1][j - 1]);
+                    }
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
 
 }
