@@ -33,8 +33,13 @@ public class DailyTemperatures {
         return ans;
     }
 
-    //approach2
-    //从后往前遍历，用一个栈保存index，遍历到一个数的时候先把栈中所有比它小的数的index出栈，再入栈这个数的index。因为后面的都没价值了。有点像QueueReconstructionByHeight那题，在两个高个子的人中间的矮子都没存在的必要了，因为不会用他们做参照物😄
+    /**
+     * approach2 单调栈
+     * 从后往前遍历，用一个栈保存index，遍历到一个数的时候先把栈中所有比它小的数的index出栈，再入栈这个数的index。因为后面的都没价值了。有点像QueueReconstructionByHeight那题，在两个高个子的人中间的矮子都没存在的必要了，因为不会用他们做参照物😄
+     * 这个就是单调栈的应用，这里用的是「小顶栈」（我发明的词）。
+     *
+     * 这题google面过
+     */
     public int[] dailyTemperatures__STACK(int[] T) {
         int[] res = new int[T.length];
         Stack<Integer> indicesStack = new Stack<>();
@@ -42,7 +47,24 @@ public class DailyTemperatures {
             while (!indicesStack.empty() && T[indicesStack.peek()] <= T[i]) {
                 indicesStack.pop();
             }
-            res[i] = indicesStack.empty() ? 0 : indicesStack.peek() - i;
+            res[i] = indicesStack.empty() ? 0 : indicesStack.peek() - i;//单调栈的peek存放着第一个比自己大的数的index，正是我们要找的index
+            indicesStack.push(i);
+        }
+        return res;
+    }
+
+    /**
+     * 单调栈写法二
+     * 小顶栈，left to right。没有前面那种直观
+     */
+    public int[] dailyTemperatures__MONOSTACK2(int[] T) {
+        int[] res = new int[T.length];
+        Stack<Integer> indicesStack = new Stack<>();
+        for (int i = 0; i < T.length; i++) {
+            while (!indicesStack.empty() && T[indicesStack.peek()] < T[i]) {//考虑1，2，3..
+                res[indicesStack.peek()] = i - indicesStack.peek();
+                indicesStack.pop();
+            }
             indicesStack.push(i);
         }
         return res;
