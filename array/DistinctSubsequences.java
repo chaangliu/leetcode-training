@@ -10,15 +10,6 @@ package array;
  * <p>
  * Return 3.
  * Created by DrunkPiano on 2017/3/1.
- * <p>
- * <p>
- * <p>
- * <p>
- * dp[i][j]表示s的前i位和t的前j位的最长公共子序列长度。
- * <p>
- * 1. dp[i][j] = 0, if(i == 0) or (j == 0)
- * 2. dp[i][j] = dp[i-1][j-1] + 1, if(s[i] == t[j])
- * 3. dp[i][j] = max{dp[i][j-1] , dp[i-1][j] } , if(s[i] != t[j])
  */
 
 public class DistinctSubsequences {
