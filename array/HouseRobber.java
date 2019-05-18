@@ -7,9 +7,27 @@ package array;
  * <p>
  * Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
  * Created by DrunkPiano on 2017/4/10.
+ * 20190518review
  */
 
 public class HouseRobber {
+
+    /**
+     * dp, 方程dp[i] = max(dp[i - 2] + nums[i] , dp[i - 1])
+     */
+    public int rob(int[] nums) {
+        if (nums.length == 0) return 0;
+        if (nums.length == 1) return nums[0];
+        // maximum amount till the ith house
+        int dp[] = new int[nums.length];
+        dp[0] = nums[0];
+        dp[1] = nums[1] > nums[0] ? nums[1] : nums[0];
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
+        }
+        return dp[dp.length - 1];
+    }
+
 //    public int rob(int[] nums) {
 //        if (nums.length == 0) return 0;
 //        int local = nums[0];
@@ -26,18 +44,4 @@ public class HouseRobber {
 //        }
 //        return global;
 //    }
-
-    public int rob(int[] nums) {
-        if (nums.length == 0) return 0;
-        if (nums.length == 1) return nums[0];
-        // maximum amount till the ith house
-        int dp[] = new int[nums.length];
-        //dp[i] = max(dp[i-2] + nums[i] , dp[i-1] )
-        dp[0] = nums[0];
-        dp[1] = nums[1] > nums[0] ? nums[1] : nums[0];
-        for (int i = 2; i < nums.length; i++) {
-            dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
-        }
-        return dp[dp.length - 1];
-    }
 }
