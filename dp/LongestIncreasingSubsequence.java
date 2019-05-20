@@ -15,36 +15,35 @@ package dp;
  */
 
 public class LongestIncreasingSubsequence {
-//[10, 9, 2, 5, 3, 7, 101, 18]
-//[1,  1, 1, 2, 2, 3, 4, 4]
-
+    /**
+     * dp[i] represents the length of the longest increasing subsequence possible considering the array elements upto the ith
+     * index only ,by necessarily including the ith element.
+     * <p>
+     * dp[i]表示[0,i]范围的LIS，但是一定要包含第i个元素。
+     * 之所以必须包含第i个元素，是因为每次新增加的数是和nums[i](代码中是j)对比，比如1，2，0，..，4；4>0没有用，必须还要确定0就包含在了LIS里。
+     * 这也是为什么用了一个max，保存每趟最优值，因为dp[dp.length - 1]保存的不一定是最大值，毕竟我们不一定要nums[nums.length - 1]
+     */
     public int lengthOfLIS(int[] nums) {
         if (nums.length == 0) return 0;
         int dp[] = new int[nums.length];
         dp[0] = 1;
         int res = 1;
         for (int i = 1; i < nums.length; i++) {
-            //max不能是全局的
-            int max = 1;
+            int max = 1;//max在第一层循环里
             for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
-                    //这里不能就开始改变dp[i]，否则下一次循环就乱了
                     max = Math.max(dp[j] + 1, max);
                 }
             }
-
             dp[i] = max;
-
-            res = Math.max(dp[i] , res);
-
+            res = Math.max(dp[i], res);
         }
         return res;
     }
 
-
-    public static void main(String args[]){
-//        int [] nums  = {10, 9, 2, 5, 3, 7, 101, 18};
-        int [] nums  = {1,3,6,7,9,4,10,5,6};
+    public static void main(String args[]) {
+        //int [] nums  = {10, 9, 2, 5, 3, 7, 101, 18};
+        int[] nums = {1, 3, 6, 7, 9, 4, 10, 5, 6};
         LongestIncreasingSubsequence longestIncreasingSubsequence = new LongestIncreasingSubsequence();
         System.out.println(longestIncreasingSubsequence.lengthOfLIS(nums));
 
