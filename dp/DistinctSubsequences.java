@@ -1,10 +1,10 @@
-package array;
+package dp;
 
 /**
  * Given a string S and a string T, count the number of distinct subsequences of T in S.
  * <p>
- * A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, "ACE" is a subsequence of "ABCDE" while "AEC" is not).
- * <p>
+ * A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters
+ * without disturbing the relative positions of the remaining characters. (ie, "ACE" is a subsequence of "ABCDE" while "AEC" is not).
  * Here is an example:
  * S = "rabbbit", T = "rabbit"
  * <p>
@@ -33,6 +33,7 @@ public class DistinctSubsequences {
                     //dp[i - 1][j - 1]的意思是，既然s[i]和t[j]相等，那么在同时加上这两个数之前的结果都可以算进去
                     //dp[i - 1][j]的意思是，不考虑加上s[i]，但是加入t[j]，满足条件的个数。
                     //至于为什么不计算dp[i][j - 1]，因为是求s中有多少个子序列可以组成t，t是固定的。
+                    //rabb, rab = rab # ra + rab # rab
                     dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
                 }
             }
