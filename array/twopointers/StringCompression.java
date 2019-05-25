@@ -71,7 +71,7 @@ public class StringCompression {
             }
             chars[pointer++] = cur;
             if (count != 1) {
-                for (char c : Integer.toString(count).toCharArray()) {
+                for (char c : Integer.toString(count).toCharArray()) {//关键
                     chars[pointer++] = c;
                 }
             }
