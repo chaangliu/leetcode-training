@@ -1,7 +1,9 @@
-package tree;
+package dfs.divideandconquer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tree.TreeNode;
 
 
 /**
@@ -13,7 +15,7 @@ import java.util.List;
  * for the right sub tree, we need count how many possible trees are there constructed from {2,3,4,5}, apparently it's the same number as {1,2,3,4}.
  * So the total number of trees under "1" picked as root is dp[0] * dp[4] = 14. (assume dp[0] =1).
  * Similarly, root 2 has dp[1]*dp[3] = 5 trees. root 3 has dp[2]*dp[2] = 4, root 4 has dp[3]*dp[1]= 5 and root 5 has dp[0]*dp[4] = 14. Finally sum the up and it's done.
- *
+ * <p>
  * 20190307review
  */
 
@@ -33,8 +35,8 @@ abstract class UniqueBinarySearchTreesII {
         }
         for (int i = left; i <= right; i++) {
             //左子树由[left,i-1]的节点构成，右子树由[i+1,right]的节点构成
-            List<TreeNode> leftSide = dfs(left, i - 1);
-            List<TreeNode> rightSide = dfs(i + 1, right);
+            List<TreeNode> leftSide = dfs(left, i - 1);//所有可能的左子树
+            List<TreeNode> rightSide = dfs(i + 1, right);//所有可能的右子树
             for (TreeNode lt : leftSide)
                 for (TreeNode rt : rightSide) {
                     TreeNode root = new TreeNode(i);
