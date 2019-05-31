@@ -1,4 +1,4 @@
-package dp;
+package dp.knapsack;
 
 /**
  * In the computer world, use restricted resource you have to generate maximum benefit is what we always want to pursue.
@@ -25,7 +25,8 @@ package dp;
  */
 public class OnesAndZeroes {
     /**
-     * 01背包问题，二维dp
+     * 【题意】使用m个0和n个1，在Array中寻找最多能组成多少个字符串。
+     * 【解法】01背包问题，二维dp。
      * dp[i][j][k]代表对于j个0和k个1，能在前i个资源里面构成的最多的资源数量
      * 转移方程：
      * dp[i][j][k] = Math.max(dp[i - 1][j][k], dp[i - 1][j - count[0]][k - count[1]] + 1)
@@ -37,6 +38,8 @@ public class OnesAndZeroes {
                 for (int k = 0; k <= n; k++) {
                     int[] count = calc(strs[i - 1]);//计算资源中0和1的个数
                     if (count[0] <= j && count[1] <= k) {
+                        //dp[i - 1][j][k]：不使用ith资源，使用j个0和k个1
+                        //dp[i - 1][j - count[0]][k - count[1]] + 1: 必须使用ith资源
                         dp[i][j][k] = Math.max(dp[i - 1][j][k], dp[i - 1][j - count[0]][k - count[1]] + 1);//不使用或必须使用ith资源
                     } else {
                         dp[i][j][k] = dp[i - 1][j][k];
