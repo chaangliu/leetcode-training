@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class OccurrencesAfterBigram {
     /**
-     * took: 24min 出现了忘记写i++之类的错误
+     * took: 24min 出现了忘记写i++之类的错误。感觉easy题唯一的作用就是思维严谨性和手速
      */
     public String[] findOcurrences(String text, String first, String second) {
         String pattern = first + " " + second;
