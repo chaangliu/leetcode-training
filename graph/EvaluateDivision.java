@@ -75,9 +75,9 @@ public class EvaluateDivision {
          */
         for (Map.Entry<String, Double> neighbour : graph.get(start).entrySet()) {
             if (!visited.contains(neighbour.getKey())) {
-                double productWeight = getPathWeight(neighbour.getKey(), end, visited, graph);
+                double productWeight = getPathWeight(neighbour.getKey(), end, visited, graph);// b -> c = 2.0
                 if (productWeight != -1.0)
-                    return neighbour.getValue() * productWeight; // b -> c，2.0， a -> ( b -> c) = 4
+                    return neighbour.getValue() * productWeight; // b -> c = 2.0， a -> ( b -> c) = 4
             }
         }
 

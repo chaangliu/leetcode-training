@@ -1,7 +1,5 @@
 package math;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -63,5 +61,34 @@ public class ConvertToBaseNegative2 {
             n /= 2;
         }
         return res;
+    }
+
+
+    /**
+     * leetcode上比较fancy的解法，按位相与。先看转成二进制：
+     */
+    public String base2(int N) {
+        StringBuilder res = new StringBuilder();
+        while (N != 0) {
+            res.append(N & 1);
+            N = N >> 1;
+        }
+        return res.length() > 0 ? res.reverse().toString() : "0";
+    }
+
+    //         原码           反码        补码         右移一位   结果（原码）
+    //    -1 = 1000 0001，   1111 1110， 1111 1111，  1111 1111   -1
+    //    -2 = 1000 0010，   1111 1101， 1111 1110，  1111 1111   -1
+    //    -3 = 1000 0011，   1111 1100， 1111 1101，  1111 1110   -2
+    //    -4 = 1000 0100，   1111 1011， 1111 1100，  1111 1110   -2
+    //    -5 = 1000 0101，   1111 1010， 1111 1011，  1111 1101   -3
+    //    -6 = 1000 0110，   1111 1001， 1111 1010，  1111 1101   -3
+    public String baseNeg2__(int N) {
+        StringBuilder res = new StringBuilder();
+        while (N != 0) {
+            res.append(N & 1);
+            N = -(N >> 1);
+        }
+        return res.length() > 0 ? res.reverse().toString() : "0";
     }
 }
