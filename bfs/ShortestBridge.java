@@ -1,4 +1,4 @@
-package dfs;
+package bfs;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -30,9 +30,12 @@ public class ShortestBridge {
      * 这题我看到TAG是DFS/BFS,以为两者都能做，就先用DFS做了一下，思路是先flood fill把其中一个岛的颜色变成2，然后从这个岛dfs地去找颜色为1的岛。
      * 这么做的问题是，你不知道从哪个个2开始寻找才能找到shortest的bridge，所以只能从每个2出发去dfs。这样这做法在遇到N = 5左右就TLE了。
      * <p>
-     * 看了DISCUSS第二名答案的做法，也是先flood fill，但是flood fill完了之后bfs有两个操作非常值得学习：
+     * 看了DISCUSS第二名答案的做法，发现这题是DFS + BFS;
+     * 也是先flood fill，但是flood fill完了之后bfs有两个操作非常值得学习：
      * 1. 不要对每个格子做bfs，而是应该在flood fill的时候把颜色2的格子全都加入queue当做bfs的第一层。
      * 2. bfs的过程中遇到0的格子要把它标记为visited（或者颜色涂成2），这样可以节省很多次循环（不然会在N = 7左右的时候TLE）！
+     *
+     * 另，这题也能用UnionFind.
      */
     int res = Integer.MAX_VALUE;
     int[][] dir = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
