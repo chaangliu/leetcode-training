@@ -23,6 +23,7 @@ public class DistributeCoinsInBinaryTree {
     }
 
     //dfs返回值n代表node应该给parent n个金币（负值就代表需要从父母获得-n金币）
+    //post order，自底向上（https://stackoverflow.com/questions/20062527/scan-tree-structure-from-bottom-up）
     private int dfs(TreeNode node) {
         if (node == null) return 0;//空树必须要给parent金币
         int left = dfs(node.left);//left node需要给node多少金币
