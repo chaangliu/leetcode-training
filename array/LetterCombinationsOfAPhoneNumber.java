@@ -11,6 +11,10 @@ import java.util.ArrayList;
  */
 
 public class LetterCombinationsOfAPhoneNumber {
+
+    /**
+     * 经典组合题，这个是迭代方法（最好用DFS做
+     */
     public ArrayList<String> letterCombinations(String digits) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<String> newResult  = new ArrayList<>();
