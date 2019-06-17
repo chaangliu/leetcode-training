@@ -1,5 +1,7 @@
 package basics;
 
+import java.util.Arrays;
+
 /**
  * Edited on 2019/06/17.
  */
@@ -51,13 +53,30 @@ public class LCS {
         return res.reverse().toString();
     }
 
+    /**
+     * 求具体sequence方法二，leetcode1092题看到别人用的；直接用String [][] dp记录当前的LCS。
+     */
+    public String StringOfLCS2(String str1, String str2) {
+        String[][] dp = new String[str1.length() + 1][str2.length() + 1];
+        for (int i = 0; i < dp.length; i++) Arrays.fill(dp[i], "");//把二维数组的所有cell都初始化成空字符串""
+        for (int i = 1; i <= str1.length(); i++) {
+            for (int j = 1; j <= str2.length(); j++) {
+                if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + str1.charAt(i - 1);
+                } else {
+                    dp[i][j] = dp[i - 1][j].length() > dp[i][j - 1].length() ? dp[i - 1][j] : dp[i][j - 1];
+                }
+            }
+        }
+        return dp[str1.length()][str2.length()];
+    }
 
     public static void main(String args[]) {
         LCS lcs = new LCS();
         System.out.println(lcs.LCS("XMJYAUZ", "MZJAWXU"));
         System.out.println(lcs.StringOfLCS("XMJYAUZ", "MZJAWXU"));
+        System.out.println(lcs.StringOfLCS2("XMJYAUZ", "MZJAWXU"));
     }
-
     //        void llcs() {
     //            int i, j, z = 0;
     //            char c[ 1001];
