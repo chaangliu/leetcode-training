@@ -149,33 +149,31 @@ public class TopKFrequentElements {
      * TreeMap可以自定义Comparator，默认是好像是顺序，所以每次pollLastEntry()就是key最大的
      * =========================================================================================================================
      */
-    public class Solution {
-        public List<Integer> topKFrequent_____TREEMAP(int[] nums, int k) {
-            Map<Integer, Integer> map = new HashMap<>();
-            for (int n : nums) {
-                map.put(n, map.getOrDefault(n, 0) + 1);
-            }
-
-            TreeMap<Integer, LinkedList<Integer>> freqMap = new TreeMap<>();
-            for (int num : map.keySet()) {
-                int freq = map.get(num);
-                if (!freqMap.containsKey(freq)) {
-                    freqMap.put(freq, new LinkedList<Integer>());
-                }
-                freqMap.get(freq).add(num);
-            }
-
-            List<Integer> res = new ArrayList<>();
-            while (res.size() < k) {
-                Map.Entry<Integer, LinkedList<Integer>> entry = freqMap.pollLastEntry();
-                res.addAll(entry.getValue());
-            }
-            return res;
+    public List<Integer> topKFrequent_____TREEMAP(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
         }
+
+        TreeMap<Integer, LinkedList<Integer>> freqMap = new TreeMap<>();
+        for (int num : map.keySet()) {
+            int freq = map.get(num);
+            if (!freqMap.containsKey(freq)) {
+                freqMap.put(freq, new LinkedList<Integer>());
+            }
+            freqMap.get(freq).add(num);
+        }
+
+        List<Integer> res = new ArrayList<>();
+        while (res.size() < k) {
+            Map.Entry<Integer, LinkedList<Integer>> entry = freqMap.pollLastEntry();//其实就是想用这个api，否则用普通hashmap也行
+            res.addAll(entry.getValue());
+        }
+        return res;
     }
 
     public static void main(String args[]) {
         int nums[] = {1, 1, 1, 2, 2, 3};
-        new TopKFrequentElements().topKFrequent(nums, 2);
+        new TopKFrequentElements().topKFrequent_____TREEMAP(nums, 2);
     }
 }
