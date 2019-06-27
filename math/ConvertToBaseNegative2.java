@@ -70,7 +70,7 @@ public class ConvertToBaseNegative2 {
     public String base2(int N) {
         StringBuilder res = new StringBuilder();
         while (N != 0) {
-            res.append(N & 1);
+            res.append(N & 1);//判断当前位是否为1，也可理解为模2，模4，模8..(因为要不停右移1bit)
             N = N >> 1;
         }
         return res.length() > 0 ? res.reverse().toString() : "0";
@@ -86,7 +86,7 @@ public class ConvertToBaseNegative2 {
     public String baseNeg2__(int N) {
         StringBuilder res = new StringBuilder();
         while (N != 0) {
-            res.append(N & 1);
+            res.append(N & 1);//判断当前位是否为1，也可理解为模2，模4，模8..(因为要不停右移1bit)
             N = -(N >> 1);
         }
         return res.length() > 0 ? res.reverse().toString() : "0";
