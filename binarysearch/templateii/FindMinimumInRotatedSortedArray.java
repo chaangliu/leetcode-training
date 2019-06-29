@@ -1,4 +1,4 @@
-package binarysearch;
+package binarysearch.templateii;
 
 /**
  * 153. Find Minimum in Rotated Sorted Array
@@ -17,17 +17,23 @@ package binarysearch;
  * 20190105
  */
 public class FindMinimumInRotatedSortedArray {
+    /**
+     * 这题可以看出模板二不一定是连续两个数对比
+     */
     public int findMin(int[] nums) {
         if (nums == null || nums.length == 0) return -1;
         int low = 0, high = nums.length - 1;
         while (low < high) {
             int mid = low + (high - low) / 2;
+            //[low, high]中间无cliff
             if (nums[low] < nums[high])
                 return nums[low];
+            //[low, high]中间有cliff
+            //cliff在mid右边
             if (nums[mid] >= nums[low])//不能是nums[mid] > nums[low]，否则无法通过case: [3,1,2]
                 low = mid + 1;
-            else
-                high = mid;//不能是mid - 1，否则无法通过case: [2,1]
+            else//cliff在mid左边
+                high = mid;//模板二。不能是mid - 1，否则无法通过case: [2,1]
         }
         return nums[low];
     }
