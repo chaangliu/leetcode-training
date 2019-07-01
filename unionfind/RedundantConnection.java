@@ -55,15 +55,22 @@ public class RedundantConnection {
             return rootOf[node];
         }
 
-        //draw a path between x & y
+        /**
+         * draw a path between x & y
+         *
+         * @param x node x
+         * @param y node y
+         * @return 如果x, y已经在一个connected component(cluster)里了，也就是union失败了，返回false;否则返回true。
+         */
         boolean union(int x, int y) {
             int xRoot = findRoot(x);
             int yRoot = findRoot(y);
             if (xRoot == yRoot) {
                 //有相同的root，代表x,y在union之前已经在一个connected component中
                 return false;
-            } else if (rank[xRoot] > rank[yRoot]) {
-                //如果x的Root的等级高，就把yRoot(代表y所在的cluster) merge到xRoot上
+            }
+            if (rank[xRoot] > rank[yRoot]) {
+                //如果x的Root的等级高，就把yRoot(代表root为y的整个cluster) merge到xRoot上
                 rootOf[yRoot] = xRoot;//rootOf[yRoot], not rootOf[y]
             } else if (rank[xRoot] < rank[yRoot]) {
                 rootOf[xRoot] = yRoot;
@@ -74,7 +81,7 @@ public class RedundantConnection {
             return true;
         }
 
-        //union这么写也能AC，不用rank
+        //union这么写也能AC，不用rank，一律把yRoot merge到 xRoot上
         //        boolean union(int x, int y) {
         //            int xRoot = findRoot(x);
         //            int yRoot = findRoot(y);

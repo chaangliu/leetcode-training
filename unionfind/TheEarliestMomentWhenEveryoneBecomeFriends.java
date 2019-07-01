@@ -2,6 +2,8 @@ package unionfind;
 
 import java.util.Arrays;
 
+import test.Test;
+
 /**
  * In a social group, there are N people, with unique integer ids from 0 to N-1.
  * <p>
@@ -46,6 +48,7 @@ public class TheEarliestMomentWhenEveryoneBecomeFriends {
         for (int[] log : logs) {
             int x = log[1], y = log[2];
             uf.union(x, y);
+            //它利用了一个额外数组记录cluster size；每次直接都把y merge到x上了，所以可以这么判断
             if (uf.sz[uf.find(x)] == N) // check if the size of the component including x (or y) reaches N.
                 return log[0];
         }
@@ -79,6 +82,72 @@ public class TheEarliestMomentWhenEveryoneBecomeFriends {
                 id[x] = y;
                 sz[y] += sz[x];
             }
+        }
+    }
+
+    /**
+     * 我的code，复习了一下花花酱的视频和RedundantConnection那题。
+     * 几个个注意点，
+     * 1. 我是用union了N - 1次判断所有node都在一个连通分量里的
+     * 2. sort数组也可以传入lambda comparator，不用转换成PriorityQueue之类的结构
+     * 3. rank可以省去
+     * ----------------------------------------------------------------------------------------------
+     */
+    public int earliestAcq__(int[][] logs, int N) {
+        MAX_EDGE_VAL = N;
+        Arrays.sort(logs, (a, b) -> a[0] - b[0]);
+        DSU dsu = new DSU();
+        int cnt = 0;
+        for (int[] log : logs) {
+            if (dsu.union(log[1], log[2])) {
+                if (++cnt == N - 1) return log[0];
+            }
+        }
+        return -1;
+    }
+
+    int MAX_EDGE_VAL = 100;
+
+    class DSU {
+        int rootOf[] = new int[MAX_EDGE_VAL];
+        int rank[] = new int[MAX_EDGE_VAL];
+
+        DSU() {
+            //初始状态，每个node的root都是自己
+            for (int i = 0; i < MAX_EDGE_VAL; i++) rootOf[i] = i;
+        }
+
+        int findRoot(int node) {
+            //如果根节点不是它自己，就递归寻找最终的根节点，compress；这个过程会把多层的树flatten成两层
+            if (rootOf[node] != node)
+                rootOf[node] = findRoot(rootOf[node]);
+            return rootOf[node];
+        }
+
+        /**
+         * draw a path between x & y
+         *
+         * @param x node x
+         * @param y node y
+         * @return 如果x, y已经在一个connected component(cluster)里了，也就是union失败了，返回false;否则返回true。
+         */
+        boolean union(int x, int y) {
+            int xRoot = findRoot(x);
+            int yRoot = findRoot(y);
+            if (xRoot == yRoot) {
+                //有相同的root，代表x,y在union之前已经在一个connected component中
+                return false;
+            }
+            if (rank[xRoot] > rank[yRoot]) {
+                //如果x的Root的等级高，就把yRoot(代表root为y的整个cluster) merge到xRoot上
+                rootOf[yRoot] = xRoot;//rootOf[yRoot], not rootOf[y]
+            } else if (rank[xRoot] < rank[yRoot]) {
+                rootOf[xRoot] = yRoot;
+            } else {
+                rootOf[yRoot] = xRoot;
+                rank[xRoot]++;//等级不同的情况下，merge不会改变等级关系，所以仅在两者rank相同时做++
+            }
+            return true;
         }
     }
 }
