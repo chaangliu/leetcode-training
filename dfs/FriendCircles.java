@@ -32,6 +32,7 @@ import java.util.HashSet;
  */
 public class FriendCircles {
     /**
+     * Approach1.
      * 我的思路：floodfill，不同的朋友圈用不同颜色染色，最后统计有几种颜色
      * <p>
      * 做的过程中出了两个错误：1. 一开始没把颜色带入递归 2. 忘记用set统计颜色
@@ -57,14 +58,14 @@ public class FriendCircles {
         for (int i = 0; i < M[row].length; i++) {
             if (M[row][i] == 1) {
                 M[row][i] = color;
-                if (i != row) floodFill(M, i, color);
+                if (i != row) floodFill(M, i, color);//一个朋友传给下一个朋友，所以floodFill也不一定是位置连续的区域
             }
         }
     }
 
 
     /**
-     * 网上的解法；用一维数组维护有没有访问过，不改变原来数组的内容；比我的代码💊高一个level
+     * 网上的解法；用一维数组维护有没有访问过（因为朋友是双向的），不改变原来数组的内容；比我的代码💊高一个level
      */
     public int findCircleNum___(int[][] M) {
         int[] visited = new int[M.length];
@@ -85,5 +86,57 @@ public class FriendCircles {
                 dfs(M, visited, j);
             }
         }
+    }
+
+
+    /**
+     * Approach2.
+     * UnionFind方法，N - 交友成功的次数(union成功次数) = 朋友圈的个数
+     */
+    public int findCircleNum___UF(int[][] M) {
+        int N = M.length;
+        DSU dsu = new DSU(N);
+        int cnt = 0;
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++) {
+                if (M[i][j] == 1) {
+                    if (dsu.union(i, j)) cnt++;
+                }
+            }
+        return N - cnt;
+    }
+
+    class DSU {
+        int N, rootOf[];
+
+        DSU(int n) {
+            N = n;
+            rootOf = new int[N];
+            //初始状态，每个node的root都是自己
+            for (int i = 0; i < N; i++) rootOf[i] = i;
+        }
+
+        int findRoot(int node) {
+            //如果根节点不是它自己，就递归寻找最终的根节点，compress；这个过程会把多层的树flatten成两层
+            if (rootOf[node] != node)
+                rootOf[node] = findRoot(rootOf[node]);
+            return rootOf[node];
+        }
+
+        boolean union(int x, int y) {
+            int xRoot = findRoot(x);
+            int yRoot = findRoot(y);
+            if (xRoot == yRoot) {
+                //有相同的root，代表x,y在union之前已经在一个connected component中
+                return false;
+            }
+            rootOf[xRoot] = yRoot;
+            return true;
+        }
+    }
+
+    public static void main(String args[]) {
+        int[][] nums = new int[][]{{1, 0, 1}, {0, 1, 0}, {1, 0, 1}};
+        new FriendCircles().findCircleNum___UF(nums);
     }
 }
