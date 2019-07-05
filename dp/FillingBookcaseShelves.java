@@ -35,45 +35,66 @@ import test.Test;
  */
 public class FillingBookcaseShelves {
 
-
     /**
-     * //dp[i]表示前i本书放在架子上的最小高度
-     * //1. book[i]放在新的一层：dp[i] = dp[i - 1] + height
-     * //2. book[i]放在上一层：dp[i] = min(dp[j] + max(height[j + 1], height[j + 2].. height[i])), where width[j + 1] + widht[j + 2].. +width[i] <= shelf_width
+     * 经典书架问题，问怎么摆放书本需要的书架高度最小。
+     * dp[i]表示前i本书放在架子上的最小高度
+     * 1. book[i]放在新的一层：dp[i] = dp[i - 1] + height
+     * 2. book[i]放在上一层：dp[i] = min(dp[j] + max(height[j + 1], height[j + 2].. height[i])), where width[j + 1] + widht[j + 2].. +width[i] <= shelf_width
      * 这题思路理解起来不难，但是被序号搞死。。仔细体会一下。
-     * 错误代码：
+     * ---------------------------------------------
+     * A. 下标从0开始的错误代码：
      */
     public int minHeightShelves(int[][] books, int shelf_width) {
         int dp[] = new int[books.length + 1];
         dp[0] = 0;
         for (int i = 0; i < books.length; i++) {
-            int width = books[i][0], height = books[i][1];
+            int width = books[i][0];//上一层的累计宽度
+            int height = books[i][1];
             dp[i + 1] = dp[i] + height;//放在新的一层
-            for (int j = i; j > 0 && width + books[j][0] <= shelf_width; j--) {
+            for (int j = i; j > 0; j--) {
                 width += books[j][0];
+                if (width > shelf_width) break;
                 height = Math.max(height, books[j][1]);
-                //if (width > shelf_width) break;
-                System.out.println("加上厚度：" + books[j][0]);
                 dp[i + 1] = Math.min(dp[i + 1], dp[j - 1] + height);
             }
         }
         return dp[dp.length - 1];
     }
 
+    /**
+     * B. 下标从0开始的正确代码：
+     */
+    public int minHeightShelves___(int[][] books, int shelf_width) {
+        int dp[] = new int[books.length + 1];
+        dp[0] = 0;
+        for (int i = 0; i < books.length; i++) {
+            int width = 0;//上一层的累计宽度
+            int height = 0;
+            dp[i + 1] = dp[i] + books[i][1];
+            for (int j = i; j >= 0; j--) {
+                width += books[j][0];
+                if (width > shelf_width) break;
+                height = Math.max(height, books[j][1]);//books[j -1]到books[i]中的最高一本书的高度
+                dp[i + 1] = Math.min(dp[i + 1], dp[j] + height);//dp[j]对应的是books[0]到books[j - 1]这本书为止的最小书架高度
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
+    /**
+     * C. 下标从1开始的正确代码（推荐，更容易理解，大部分人用了这种）：
+     */
     public int minHeightShelves__(int[][] books, int shelf_width) {
         int[] dp = new int[books.length + 1];
-
         dp[0] = 0;
-
         for (int i = 1; i <= books.length; ++i) {
             int width = books[i - 1][0];
             int height = books[i - 1][1];
             dp[i] = dp[i - 1] + height;
             for (int j = i - 1; j > 0 && width + books[j - 1][0] <= shelf_width; --j) {
-                height = Math.max(height, books[j - 1][1]);
+                height = Math.max(height, books[j - 1][1]);//books[j -1]到books[i]中的最高一本书的高度
                 width += books[j - 1][0];
-                System.out.println("*加上厚度：" + books[j - 1][0]);
-                dp[i] = Math.min(dp[i], dp[j - 1] + height);
+                dp[i] = Math.min(dp[i], dp[j - 1] + height);//dp[j - 1]对应的是books[0]到books[j - 2]这本书为止的最小书架高度（重点）
             }
         }
         return dp[books.length];
