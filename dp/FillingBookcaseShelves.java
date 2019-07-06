@@ -104,9 +104,28 @@ public class FillingBookcaseShelves {
         return dp[books.length];
     }
 
+    /**
+     * D. 这题跟maxSumAfterPartitioning很像，思路上，一种是从后往前推，一种是把新的物品放到最后一层。
+     * 以下是我模仿maxSumAfterPartitioning那题的写法：
+     */
+    public int minHeightShelves___(int[][] books, int shelf_width) {
+        int[] dp = new int[books.length];
+        for (int i = 0; i < books.length; ++i) {
+            int width = 0;
+            int height = 0;
+            dp[i] = books[i][1] + (i - 1 >= 0 ? dp[i - 1] : 0);
+            for (int k = 1; i - k + 1 >= 0 && width + books[i - k + 1][0] <= shelf_width; k++) {
+                height = Math.max(height, books[i - k + 1][1]);
+                width += books[i - k + 1][0];
+                dp[i] = Math.min(dp[i], (i - k >= 0 ? dp[i - k] : 0) + height);
+            }
+        }
+        return dp[books.length - 1];
+    }
+
     public static void main(String args[]) {
         int[][] arr = new int[][]{{7, 3}, {8, 7}, {2, 7}, {2, 5}};
         new FillingBookcaseShelves().minHeightShelves_(arr, 10);
-        new FillingBookcaseShelves().minHeightShelves__(arr, 10);
+        new FillingBookcaseShelves().minHeightShelves___(arr, 10);
     }
 }
