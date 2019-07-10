@@ -18,7 +18,7 @@ public class CountingBits {
         int dp[] = new int[num + 1];
         dp[0] = 0;
         for (int i = 1; i <= num; i++) {
-            dp[i] = dp[i / 2] + i % 2;//这里也可以写成i >> 1，理解成右移1位；或者i & (i-1)，理解为把最后一位赋0
+            dp[i] = dp[i / 2] + i % 2;//这里中括号里也可以写成i >> 1，理解成右移1位；或者i & (i-1)，理解为把最后一位赋0
         }
         return dp;
     }
