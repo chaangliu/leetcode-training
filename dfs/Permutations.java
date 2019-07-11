@@ -27,42 +27,12 @@ import java.util.List;
  */
 
 public class Permutations {
-    public static void main(String args[]) {
-        int[] a = {1, 2, 3};
-        Permutations permutations = new Permutations();
-        System.out.println(permutations.permute(a));
-    }
-
-    //############# 2016/12/14 Original #############
-
-//    public List<List<Integer>> permute(int[] num) {
-//        if (num.length == 0) return null;
-//        List<Integer> cell = new ArrayList<>();
-//        Arrays.sort(num);
-//        List<List<Integer>> result = new ArrayList<>();
-//        return backtracking(num, cell, result, new boolean[num.length]);
-//
-//    }
-//
-//    public List<List<Integer>> backtracking(int[] nums, List<Integer> cell, List<List<Integer>> result, boolean[] used) {
-//        if (cell.size() == nums.length) {
-//            result.add(new ArrayList<>(cell));
-//            return null;
-//        }
-//        for (int i = 0; i < nums.length; i++) {
-////            if (!used[i] || i > 0 && !used[i - 1] && nums[i] == nums[i - 1]) continue;
-//            if (!used[i]) {
-//                cell.add(nums[i]);
-//                used[i] = true;
-//                backtracking(nums, cell, result, used);
-//                cell.remove(cell.size() - 1);
-//                used[i] = false;
-//            }
-//        }
-//        return result;
-//    }
-
-    //############# 2018-09-19 Review #############
+    /**
+     * 2019-07-11 Review 今天看到一种新颖的解法，不用visited数组，而是用index传入下一层的方式，
+     * 从每一层的起始数字开始与后面的数字交换。
+     * -----
+     * 2018-09-19 Review
+     */
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         if (nums == null || nums.length == 0) {
@@ -106,4 +76,39 @@ public class Permutations {
             }
         }
     }
+
+    public static void main(String args[]) {
+        int[] a = {1, 2, 3};
+        Permutations permutations = new Permutations();
+        System.out.println(permutations.permute(a));
+    }
+
+    //############# 2016/12/14 Original #############
+
+//    public List<List<Integer>> permute(int[] num) {
+//        if (num.length == 0) return null;
+//        List<Integer> cell = new ArrayList<>();
+//        Arrays.sort(num);
+//        List<List<Integer>> result = new ArrayList<>();
+//        return backtracking(num, cell, result, new boolean[num.length]);
+//
+//    }
+//
+//    public List<List<Integer>> backtracking(int[] nums, List<Integer> cell, List<List<Integer>> result, boolean[] used) {
+//        if (cell.size() == nums.length) {
+//            result.add(new ArrayList<>(cell));
+//            return null;
+//        }
+//        for (int i = 0; i < nums.length; i++) {
+////            if (!used[i] || i > 0 && !used[i - 1] && nums[i] == nums[i - 1]) continue;
+//            if (!used[i]) {
+//                cell.add(nums[i]);
+//                used[i] = true;
+//                backtracking(nums, cell, result, used);
+//                cell.remove(cell.size() - 1);
+//                used[i] = false;
+//            }
+//        }
+//        return result;
+//    }
 }
