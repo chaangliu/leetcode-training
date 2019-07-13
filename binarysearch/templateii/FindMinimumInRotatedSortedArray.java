@@ -29,7 +29,7 @@ public class FindMinimumInRotatedSortedArray {
             if (nums[low] < nums[high])
                 return nums[low];
             //[low, high]中间有cliff
-            //cliff在mid右边
+            //cliff在mid右边(cliff右边的数是要找的数)
             if (nums[mid] >= nums[low])//不能是nums[mid] > nums[low]，否则无法通过case: [3,1,2]
                 low = mid + 1;
             else//cliff在mid左边

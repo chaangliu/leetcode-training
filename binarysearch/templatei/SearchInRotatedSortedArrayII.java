@@ -1,4 +1,4 @@
-package binarysearch;
+package binarysearch.templatei;
 
 /**
  * Total Accepted: 84001
@@ -18,7 +18,7 @@ package binarysearch;
  * The array may contain duplicates.
  */
 
-public class SearchInRotatedSortedArray2 {
+public class SearchInRotatedSortedArrayII {
 
 //    public static boolean search(int nums[], int target) {
 //        int len = nums.length;
