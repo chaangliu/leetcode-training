@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import test.Test;
 import tree.TreeNode;
 
 /**
@@ -84,6 +83,6 @@ public class SmallestSufficientTeam {
         ppl.add(p1);
         ppl.add(p2);
         ppl.add(p3);
-        new Test().smallestSufficientTeam(req, ppl);
+        new SmallestSufficientTeam().smallestSufficientTeam(req, ppl);
     }
 }

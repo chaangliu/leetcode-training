@@ -2,8 +2,6 @@ package unionfind;
 
 import java.util.Arrays;
 
-import test.Test;
-
 /**
  * In a social group, there are N people, with unique integer ids from 0 to N-1.
  * <p>

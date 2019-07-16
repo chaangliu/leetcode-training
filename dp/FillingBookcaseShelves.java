@@ -1,7 +1,5 @@
 package dp;
 
-import test.Test;
-
 /**
  * We have a sequence of books: the i-th book has thickness books[i][0] and height books[i][1].
  * <p>
