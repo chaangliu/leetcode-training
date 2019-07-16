@@ -1,10 +1,14 @@
 package dp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import test.Test;
+import tree.TreeNode;
 
 /**
  * In a project, you have a list of required skills req_skills, and a list of people.  The i-th person people[i] contains a list of skills that person has.
@@ -29,27 +33,28 @@ import java.util.Set;
 public class SmallestSufficientTeam {
     /**
      * 这题据说是经典的状态压缩DP，NP问题，几个大佬都是用bit manipulation做的，很熟练的样子，似乎是固定题型。
+     * Time O(people * 2^skill)
+     * Space O(2^skill)
      */
     public int[] smallestSufficientTeam(String[] skills, List<List<String>> people) {
         int sLen = skills.length, pLen = people.size();
         Map<String, Integer> skmap = new HashMap<>();
-        for (int i = 0; i < sLen; i++)
-            skmap.put(skills[i], i);
+        for (int i = 0; i < sLen; i++) skmap.put(skills[i], i);//把需求技能映射成数字
         Set<Integer>[] dp = new Set[1 << sLen];
         dp[0] = new HashSet<>();
         for (int ppl = 0; ppl < pLen; ppl++) {
             int his_skill = 0;
             for (String sks : people.get(ppl)) {
-                his_skill |= 1 << (skmap.get(sks));
+                his_skill |= 1 << (skmap.get(sks));//计算这个人的技能
             }
             for (int skill_set = 0; skill_set < dp.length; skill_set++) {
                 if (dp[skill_set] == null)
-                    continue;
+                    continue;//比如skill_set:100, ppl:110，没有[reactjs]的班底，那么跟当前这个人就没有可能产生新的班底[这一步一定不能少]
                 Set<Integer> currSkills = dp[skill_set];
                 int with_him = skill_set | his_skill;//with_him:当前的skill_set在有了这个人之后的变化
-                if (with_him == skill_set)//代表有他没他一样，这个人技能多余
+                if (with_him == skill_set)//代表这个人的技能不能叠加现有skill_set以产生新的skill_set
                     continue;
-                if (dp[with_him] == null || dp[with_him].size() > currSkills.size() + 1) {
+                if (dp[with_him] == null || dp[with_him].size() > currSkills.size() + 1) {//dp[with_him].size():新req_skill目前的最少班底人数，currSkills.size():老req_skill目前最少班底人数
                     Set<Integer> cSkills = new HashSet<>(currSkills);
                     cSkills.add(ppl);
                     dp[with_him] = cSkills;//dp[skill_set]代表一个可以cover skill_set这种需求列表的sufficient team
@@ -62,19 +67,23 @@ public class SmallestSufficientTeam {
         return res;
     }
 
-    //    def smallestSufficientTeam(self, req_skills, people):
-    //    n, m = len(req_skills), len(people)
-    //    key = {v: i for i, v in enumerate(req_skills)}
-    //    dp = {0: []}
-    //        for i, p in enumerate(people):
-    //    his_skill = 0
-    //            for skill in p:
-    //            if skill in key:
-    //    his_skill |= 1 << key[skill]
-    //            for skill_set, need in dp.items():
-    //    with_him = skill_set | his_skill
-    //                if with_him == skill_set: continue
-    //            if with_him not in dp or len(dp[with_him]) > len(need) + 1:
-    //    dp[with_him] = need + [i]
-    //            return dp[(1 << n) - 1]
+    public static void main(String args[]) {
+        TreeNode node = new TreeNode(5);
+        node.left = new TreeNode(6);
+        node.right = new TreeNode(1);
+        int[] arr = {1, 1, 2, 3, 4, 4};
+        String req[] = {"java", "nodejs", "reactjs"};
+        List<List<String>> ppl = new ArrayList<>();
+        List<String> p1 = new ArrayList<>();
+        p1.add("java");
+        List<String> p2 = new ArrayList<>();
+        p2.add("nodejs");
+        List<String> p3 = new ArrayList<>();
+        p3.add("nodejs");
+        p3.add("reactjs");
+        ppl.add(p1);
+        ppl.add(p2);
+        ppl.add(p3);
+        new Test().smallestSufficientTeam(req, ppl);
+    }
 }
