@@ -71,8 +71,23 @@ import java.util.StringTokenizer;
 public class B_Books {
     /**
      * 据说是去年青岛站icpc的签到题？
-     * 在纸上画了画，感觉思路没错，给的case都能过，但是过不了PTA的第二个case，不知为何。
+     * 用Scanner稳定TLE，找了个读入挂不超时了，WA十几次，很多case没考虑到，还有要保证结果返回long
      * 借助这题熟悉一下读入挂吧，比Scanner快很多。(https://codeforces.com/contest/1148/submission/54917408)
+     * <p>
+     * 下面的代码996ms AC了(限制1000ms)
+     * <p>
+     * 参考case：
+     * 5
+     * 4 2
+     * 1 2 4 8
+     * 4 0
+     * 100 99 98 97
+     * 2 2
+     * 10000 10000
+     * 5 3
+     * 0 0 0 0 1
+     * 5 4
+     * 100 0 100 100 0
      */
     static class TaskBooks {
         public void solve(InputReader in, PrintWriter out) {
@@ -93,9 +108,12 @@ public class B_Books {
                     out.println("Richman");
                 } else {
                     long remain = bought - zeroCnt;
-                    int k = 0, res = 0;
-                    for (; k < remain; k++) {
+                    int k = 0;
+                    long res = 0;
+                    for (; k < shopSize && remain > 0; k++) {
+                        if (books.get(k) == 0) continue;
                         res += books.get(k);
+                        remain--;
                     }
                     long min = Long.MAX_VALUE;
                     for (; k < shopSize; k++) {
