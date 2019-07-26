@@ -24,7 +24,7 @@ public class Sqrtx {
     /**
      * binary search, 运用模板1
      */
-    public int mySqrt(int x) {
+    public int mySqrt__(int x) {
         long low = 0;
         long high = x;// or high = x/2 +1 ;
 
@@ -41,7 +41,28 @@ public class Sqrtx {
         return 0;
     }
 
+    /**
+     * 花花模板
+     * 花花建议所有题目都用c++ stl的lower_bound/upper_bound那种左闭右开[l,r)的模板，也就是l = 0 r = len(但要考虑溢出问题)
+     * 不要在中途返回，不会出现死循环
+     * 用在这题的思路相当于是找upper_bound，第一个>=target的数，比如sqrt(9)，返回4；sqrt(10)也返回4，最后统一减去1.
+     */
+    public int mySqrt(int x) {
+        long low = 0 + 1; //trick + 1，让low最小 == 1
+        long high = (long) x + 1; //要先把x转为long，否则仍会越界
+        while (low < high) {
+            long mid = low + (high - low) / 2;
+            if (mid > x / mid) {//防止越界
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return (int) (low - 1);
+    }
+
     public static void main(String args[]) {
+        new Sqrtx().mySqrt(2147483647);
         System.out.println(Math.sqrt(10));
         System.out.println(Float.MAX_VALUE);
         System.out.println(Double.MAX_VALUE);
