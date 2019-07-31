@@ -1,4 +1,4 @@
-package graph.mst;
+package graph.minimumspanningtree;
 
 import java.util.ArrayList;
 import java.util.Comparator;
