@@ -1,8 +1,11 @@
 package other;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Implement a SnapshotArray that supports the following interface:
@@ -78,4 +81,34 @@ public class SnapshotArray {
         obj.snap();
         obj.get(0, 2);
     }
+
+    /**
+     * 看到一个从index角度来保存的，snapId做key，但我不知道他用treeMap有什么优势 https://leetcode.com/problems/snapshot-array/discuss/350648/java-o1-snap-ologn-getset-using-treemap/319027
+     */
+    class SnapshotArray__TREEMAP {
+
+        List<TreeMap<Integer, Integer>> arr;
+        int currId = 0;
+
+        public SnapshotArray__TREEMAP(int length) {
+            arr = new ArrayList<>();
+            for (int i = 0; i < length; i++) {
+                arr.add(i, new TreeMap<>());
+                arr.get(i).put(0, 0);
+            }
+        }
+
+        public void set(int index, int val) {
+            arr.get(index).put(currId, val);
+        }
+
+        public int snap() {
+            return currId++;
+        }
+
+        public int get(int index, int snap_id) {
+            return arr.get(index).floorEntry(snap_id).getValue();
+        }
+    }
+
 }
