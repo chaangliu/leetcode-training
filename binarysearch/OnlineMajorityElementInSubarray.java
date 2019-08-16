@@ -45,4 +45,8 @@ public class OnlineMajorityElementInSubarray {
     //            return -1;
     //        }
     //    };
+
+    /**
+     * 方法二，线段树，明天学一下，结合307题
+     */
 }
