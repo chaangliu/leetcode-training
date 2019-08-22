@@ -93,7 +93,8 @@ public class SwapForLongestRepeatedCharacterSubstring {
      * 先把每种字母的index记录下来，然后对每种字母的index进行扫描，允许中间跳过一个。
      * （其实我一开始也想到可以对每种字母进行扫描，但是没有想到可以先对index进行group）
      *
-     * 看b站视频也是针对每个字母进行枚举的，复杂度O(26n)，比这个要高
+     * 看b站视频也是针对每个字母进行枚举的，复杂度O(26n)，比这个要高.
+     * 这么做确实比我那么处理要方便一些。
      */
     //    int maxRepOpt1(string text, int res = 1) {
     //        vector<vector<int>> idx(26);
