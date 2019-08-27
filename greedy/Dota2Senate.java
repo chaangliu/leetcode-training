@@ -1,8 +1,5 @@
 package greedy;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -55,29 +52,48 @@ public class Dota2Senate {
      * 以下是官方题解。
      */
     public String predictPartyVictory(String senate) {
-        Queue<Integer> queue = new LinkedList();
-        int[] people = new int[]{0, 0};
-        int[] bans = new int[]{0, 0};
+        Queue<Character> queue = new LinkedList<>();
+        int[] heads = {0, 0};//{R, D}
+        int[] bans = {0, 0};//{R, D}
 
-        for (char person : senate.toCharArray()) {
-            int x = person == 'R' ? 1 : 0;
-            people[x]++;
-            queue.add(x);
+        for (char c : senate.toCharArray()) {
+            if (c == 'R') heads[0]++;
+            else heads[1]++;
+            queue.offer(c);
         }
-
-        while (people[0] > 0 && people[1] > 0) {
-            int x = queue.poll();
-            if (bans[x] > 0) {//当前阵营欠对方一个人头
+        while (heads[0] != 0 && heads[1] != 0) {
+            char c = queue.poll();
+            int x = c == 'R' ? 0 : 1;
+            if (bans[x] != 0) {//当前阵营欠对方一个人头
                 bans[x]--;
-                people[x]--;//ban掉当前阵营一个人头
+                heads[x]--;//ban掉当前阵营一个人头
             } else {//当前阵营不欠人头
                 bans[x ^ 1]++;//后续可以ban对方一个人
-                queue.add(x);//把当前的人加回去
+                queue.offer(c);//把当前的人加回去，下一轮继续。对于RDD，R会在第二轮被延期处决
             }
         }
-        return people[1] > 0 ? "Radiant" : "Dire";
+        return heads[0] != 0 ? "Radiant" : "Dire";
     }
-    //附上我的iterator思路
+
+    /**
+     * 另一种simulation
+     */
+    public String predictPartyVictory_(String senate) {
+        Queue<Integer> q1 = new LinkedList<>(), q2 = new LinkedList<>();
+        int n = senate.length();
+        for (int i = 0; i < n; i++) {
+            if (senate.charAt(i) == 'R') q1.add(i);
+            else q2.add(i);
+        }
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+            int r_index = q1.poll(), d_index = q2.poll();
+            if (r_index < d_index) q1.add(r_index + n);//+n，表示本轮r的话语权已经没有了(考虑RDD)
+            else q2.add(d_index + n);
+        }
+        return (q1.size() > q2.size()) ? "Radiant" : "Dire";
+    }
+
+    //附上我的iterator思路，我在想怎么一轮之内处理完RDD这种情况，但实际上无序完全模拟一轮，可以延迟执行
     //    public String predictPartyVictory_WA(String senate) {
     //        HashSet<Integer> rSet = new HashSet<>();
     //        HashSet<Integer> dSet = new HashSet<>();
