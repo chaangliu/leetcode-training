@@ -1,5 +1,7 @@
 package graph.minimumspanningtree;
 
+import java.util.PriorityQueue;
+
 /**
  * There are n houses in a village. We want to supply water for all the houses by building wells and laying pipes.
  * <p>
@@ -27,7 +29,11 @@ package graph.minimumspanningtree;
  */
 public class OptimizeWaterDistributioninaVillage {
     /**
-     * 从cui神的youtube视频上抄来的c++代码，思路是把建造井的花费也想象成0到i距离的cost，然后kruskal
+     * 从cui神的youtube视频上抄来的c++代码，思路是把建造井的花费也想象成额外的0号井到i距离的cost，然后kruskal
+     * 具体：
+     * 想象有一口额外的井，连接到每个well，edge的cost是打井的cost。
+     * 【注意】加入了额外的井之后，最后的结束条件是执行了N次而不是N - 1次操作，也就是说最后形成的应该是MST，而不是森林(因为只有一口额外的井)。
+     * 如果有相同权值的edge，取任意一个都是可以的
      */
 //    struct Edge {
 //        int x, y, cost;
@@ -71,4 +77,62 @@ public class OptimizeWaterDistributioninaVillage {
 //            return res;
 //        }
 //    };
+
+    /**
+     * Java version.
+     */
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        int res = 0;
+        PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);
+        for (int i = 0; i < wells.length; i++) {
+            pq.offer(new Edge(0, i + 1, wells[i]));//1 <= n <= 10000
+        }
+        for (int i = 0; i < pipes.length; i++) {
+            pq.offer(new Edge(pipes[i][0], pipes[i][1], pipes[i][2]));
+        }
+        DSU dsu = new DSU(n + 1);
+        while (!pq.isEmpty()) {
+            Edge edge = pq.poll();
+            if (dsu.union(edge.u, edge.v)) {
+                res += edge.cost;
+            }
+        }
+        return res;
+    }
+
+    class Edge {
+        int u, v, cost;
+
+        Edge(int u, int v, int cost) {
+            this.u = u;
+            this.v = v;
+            this.cost = cost;
+        }
+    }
+
+    class DSU {
+        int N;
+        int rootOf[];
+
+        DSU(int n) {
+            N = n;
+            rootOf = new int[N];
+            for (int i = 0; i < N; i++) rootOf[i] = i;
+        }
+
+        private int find(int x) {
+            if (rootOf[x] != x)
+                rootOf[x] = find(rootOf[x]);//这里不要忘记给每个节点赋值
+            return rootOf[x];
+        }
+
+        private boolean union(int x, int y) {
+            int rx = find(x), ry = find(y);
+            if (rx != ry) {
+                rootOf[rx] = ry;//这里是根节点的操作
+                return true;
+            }
+            return false;
+        }
+    }
 }
