@@ -1,4 +1,4 @@
-package dfs;
+package unionfind;
 
 import java.util.HashSet;
 
@@ -106,6 +106,9 @@ public class FriendCircles {
         return N - cnt;
     }
 
+    /**
+     * 这个可以看做DSU简化版模板
+     */
     class DSU {
         int N, rootOf[];
 
@@ -119,7 +122,7 @@ public class FriendCircles {
         int findRoot(int node) {
             //如果根节点不是它自己，就递归寻找最终的根节点，compress；这个过程会把多层的树flatten成两层
             if (rootOf[node] != node)
-                rootOf[node] = findRoot(rootOf[node]);
+                rootOf[node] = findRoot(rootOf[node]);//这里不要忘记赋值
             return rootOf[node];
         }
 
