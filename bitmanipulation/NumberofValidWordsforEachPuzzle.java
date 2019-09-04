@@ -37,6 +37,49 @@ public class NumberofValidWordsforEachPuzzle {
     /**
      * 看了好久好久。。看完我只想说，bit manipulation 太难了，自闭中
      * 思路是压缩words[]数组和puzzles[]数组为一个二进制数字，并且利用位运算实现对比效率O(1)
+     * 以下是花花视频里的代码，看了好久终于看懂了
+     */
+//    class Solution {
+//        public:
+//        vector<int> ans;
+//        unordered_map<int, int> freq;  // 压缩，"字符串word转化为一个数(位运算,比如"bc"->110, "aa"->1): 该模式出现的次数"  的映射。
+//
+//        vector<int> findNumOfValidWords(vector<string> &words, vector<string> &puzzles) {
+//            // 统计每个word模式的数量, map形式保存, 位运算进行操作
+//            for (const string &word : words) {
+//                int mask = 0;
+//                for (char c : word) {
+//                    mask |= 1 << (c - 'a');
+//                }
+//                ++freq[mask];
+//            }
+//
+//            /**
+//             * 对于每个puzzle，枚举的所有subsets, 需要执行2^6 * 6次，省去了每次跟10^5个word对比的过程
+//             **/
+//            for (const string &p : puzzles) {
+//                int total = 0;
+//                for(int i = 0 ; i < (1 << 6); i ++){// [000_000, 111_111]，枚举puzzle的所有subsets,时间2^6 * 7
+//                    int mask = 1 << (p[0] - 'a');
+//                    //例如，i = 110_000，pattern就是x_110_000，选中p的前三个字母。
+//                    //这个内层的for就是从第二位开始(100_000, 010_000)把mask完善成x_110_000的模式
+//                    for(int j = 0 ; j < 6; j ++){
+//                        if(i & (1 << j)) mask |= 1 << (p[j + 1] - 'a');
+//                    }
+//                    // auto entry = freq.find(mask);
+//                    // if(entry != freq.end()) total+= entry->second;
+//                    if(freq.count(mask)>0){
+//                        total+= freq[mask];
+//                        cout << mask << endl;
+//                    }
+//                }
+//                ans.push_back(total);
+//            }
+//            return ans;
+//        }
+//    };
+
+    /**
      * 下面是同事发在讨论区的c++代码
      */
 //    class Solution {
@@ -73,41 +116,6 @@ public class NumberofValidWordsforEachPuzzle {
 //                ans.push_back(num);
 //            }
 //
-//            return ans;
-//        }
-//    };
-
-    /**
-     * 花花视频里的代码，但是似乎有bug
-     */
-//    class Solution {
-//        public:
-//        vector<int> ans;  // 存储答案
-//        unordered_map<int, int> freq;  // "字符串word转化为一个数(位运算): 该模式出现的次数"  的映射
-//
-//        vector<int> findNumOfValidWords(vector<string> &words, vector<string> &puzzles) {
-//            // 统计每个word模式的数量, map形式保存, 位运算进行操作
-//            for (string &word : words) {
-//                int mask = 0;
-//                for (char c : word) {
-//                    mask |= 1 << (c - 'a');
-//                    freq[mask]++;
-//                }
-//            }
-//
-//            for (const string &p : puzzles) {
-//                int total = 0;
-//            const int l = p.length() - 1;
-//                for (int i = 0; i < (1 << l); ++i) {//0~2^7 - 1
-//                    int mask = 1 << (p[0] - 'a');// must contain first char
-//                    for (int j = 0; j < l; ++j) {
-//                        if (i && (1 << j)) mask |= 1 << (p[j + 1] - 'a');//枚举后6位
-//                    }
-//                    auto it = freq.find(mask);
-//                    if (it != freq.end()) total += it->second;
-//                }
-//                ans.push_back(total);
-//            }
 //            return ans;
 //        }
 //    };
