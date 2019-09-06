@@ -3,6 +3,37 @@ package dfs;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The gray code is a binary numeral system where two successive values differ in only one bit.
+ * <p>
+ * Given a non-negative integer n representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+ * <p>
+ * Example 1:
+ * <p>
+ * Input: 2
+ * Output: [0,1,3,2]
+ * Explanation:
+ * 00 - 0
+ * 01 - 1
+ * 11 - 3
+ * 10 - 2
+ * <p>
+ * For a given n, a gray code sequence may not be uniquely defined.
+ * For example, [0,2,3,1] is also a valid gray code sequence.
+ * <p>
+ * 00 - 0
+ * 10 - 2
+ * 11 - 3
+ * 01 - 1
+ * Example 2:
+ * <p>
+ * Input: 0
+ * Output: [0]
+ * Explanation: We define the gray code sequence to begin with 0.
+ * A gray code sequence of n has size = 2n, which for n = 0 the size is 20 = 1.
+ * Therefore, for n = 0 the gray code sequence is [0].
+ * 20190907
+ */
 public class GrayCode {
     /**
      * 题意是按顺序打印长度位n的二进制转换成十进制的值，要求相邻的二进制数bit不同的数量为1
@@ -70,4 +101,33 @@ public class GrayCode {
     //            return res;
     //        }
     //    };
+
+    /**
+     * approach 3. 有点像二叉树中序遍历..
+     * 00,01,11,10
+     * 非典型backtracking，需要看一下CS106B
+     * https://leetcode.com/problems/gray-code/discuss/29880/Backtracking-C++-solution
+     * https://www.youtube.com/watch?v=78t_yHuGg-0
+     */
+    int nums = 0;
+
+    public List<Integer> grayCode_(int n) {
+        List<Integer> res = new ArrayList<>();
+        backTrack(n, res);
+        return res;
+    }
+
+    private void backTrack(int n, List<Integer> res) {
+        if (n == 0) {
+            res.add(nums);
+            return;
+        }
+        backTrack(n - 1, res);
+        nums ^= (1 << n - 1);
+        backTrack(n - 1, res);//从后往前
+    }
+
+    public static void main(String args[]) {
+        new GrayCode().grayCode_(2);
+    }
 }
