@@ -1,7 +1,5 @@
 package dp;
 
-import java.util.Arrays;
-
 /**
  * Given an array arr of positive integers, consider all binary trees such that:
  * <p>
@@ -30,6 +28,10 @@ public class MinimumCostTreeFromLeafValues {
      * 这题是典型的区间DP，经验丰富的人似乎一眼就看出来了。(我参考这个视频写的:https://www.bilibili.com/video/av60100178?t=3460, 类似的答案还有：https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/discuss/340027/Java-DP-easy-to-understand)
      * 我想了一下为什么这个场景适合区间DP，这题是从小的区间(node自底向上)向大的区间扩展。
      * 另外，lee给了一种O(n)的做法，我先不了解了，因为区间DP在大佬们眼里都已经是naive解法了，我还是第一次遇到。。
+     * <p>
+     * 第一个for: 枚举区间长度len
+     * 第二个for: 枚举起点l
+     * 第三个for: 枚举[l, l + len)上的每一个位置
      */
     public int mctFromLeafValues(int[] arr) {
         int size = arr.length;
