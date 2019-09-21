@@ -1,7 +1,7 @@
 package tree;
 
 /**
- * Given preorder and inorder traversal of a tree, construct the binary tree.
+ * Given preorder and inorder traversal of a tree, construct the binary 
  * <p>
  * Created by DrunkPiano on 2017/2/19.
  * <p>
@@ -23,25 +23,25 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
      */
     int preOrderIndex;
 
-    public tree.TreeNode buildTree__2019(int[] preorder, int[] inorder) {
+    public TreeNode buildTree__2019(int[] preorder, int[] inorder) {
         preOrderIndex = 0;
-        tree.TreeNode res = helper(inorder, preorder, 0, inorder.length - 1);
+        TreeNode res = helper(inorder, preorder, 0, inorder.length - 1);
         return res;
     }
 
-    private tree.TreeNode helper(int[] inorder, int[] preorder, int inLow, int inHigh) {
+    private TreeNode helper(int[] inorder, int[] preorder, int inLow, int inHigh) {
         if (inLow > inHigh || preOrderIndex > preorder.length - 1) return null;
-        tree.TreeNode root = new tree.TreeNode(preorder[preOrderIndex]);
+        TreeNode root = new TreeNode(preorder[preOrderIndex]);
         int pivot = -1;
-        for (int i = inLow; i <= inHigh; i++) {//可用Map优化
+        for (int i = inLow; i <= inHigh; i++) {
             if (inorder[i] == preorder[preOrderIndex]) {
                 pivot = i;
                 break;
             }
         }
-        preOrderIndex++;//这个原来写成了递归的参数，后来发现回溯之后index又回去了，显然不是想要的。所以写成全局变量
+        preOrderIndex++;
         root.left = helper(inorder, preorder, inLow, pivot - 1);
-        root.right = helper(inorder, preorder, pivot + 1, inHigh);//观察两个序列想到的，先递归左边
+        root.right = helper(inorder, preorder, pivot + 1, inHigh);
         return root;
     }
 

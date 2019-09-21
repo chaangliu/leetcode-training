@@ -1,5 +1,7 @@
 package dfs;
 
+import java.util.Stack;
+
 /**
  * Given a string s that consists of lower case English letters and brackets.
  * <p>
@@ -58,5 +60,31 @@ public class ReverseSubstringsBetweenEachPairofParentheses {
             }
         }
         return tmp.toString();
+    }
+
+    /**
+     * Approach2, stack
+     * Input: s = "(u(love)i)"
+     * 策略是，左括号和字母都入栈，遇到右括号就出栈到下一个左括号弹出来，把弹出的字母保存一下，再次进栈。比如love,弹出来，成了evol，再装回去，栈中是(uevol,
+     * 继续入栈，uevoli，出栈，直到stack为空
+     */
+    public String reverseParentheses_STA(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (c != ')') {
+                stack.push(c);
+            } else {
+                StringBuilder tmp = new StringBuilder();
+                while (!stack.empty() && stack.peek() != '(') {
+                    tmp.append(c);
+                }
+                if (!stack.empty() && stack.peek() == '(') stack.pop();
+                if (stack.empty()) return tmp.toString();
+                for (char t : tmp.toString().toCharArray()) {
+                    stack.push(t);
+                }
+            }
+        }
+        return null;
     }
 }
