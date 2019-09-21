@@ -64,27 +64,62 @@ public class ReverseSubstringsBetweenEachPairofParentheses {
 
     /**
      * Approach2, stack
-     * Input: s = "(u(love)i)"
-     * 策略是，左括号和字母都入栈，遇到右括号就出栈到下一个左括号弹出来，把弹出的字母保存一下，再次进栈。比如love,弹出来，成了evol，再装回去，栈中是(uevol,
-     * 继续入栈，uevoli，出栈，直到stack为空
+     * 用stack改写了一下，确实比较容易理解，不过容易漏掉一些case，比如
+     * "a(bcdefghijkl(mno)p)q"
+     * "co(de(fight)s)"
      */
-    public String reverseParentheses_STA(String s) {
+    public String reverseParentheses__(String s) {
         Stack<Character> stack = new Stack<>();
-        for (char c : s.toCharArray()) {
+        int i = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            StringBuilder tmp = new StringBuilder();
             if (c != ')') {
                 stack.push(c);
             } else {
-                StringBuilder tmp = new StringBuilder();
                 while (!stack.empty() && stack.peek() != '(') {
-                    tmp.append(c);
+                    tmp.append(stack.pop());
                 }
-                if (!stack.empty() && stack.peek() == '(') stack.pop();
-                if (stack.empty()) return tmp.toString();
-                for (char t : tmp.toString().toCharArray()) {
-                    stack.push(t);
+                if (!stack.empty() && stack.peek() == '(') stack.pop();// pop '('
+                for (int j = 0; j < tmp.length(); j++) {
+                    stack.push(tmp.charAt(j));
                 }
             }
+            if (i == s.length() - 1) {
+                StringBuilder res = new StringBuilder();
+                while (!stack.empty()) res.append(stack.pop());
+                return res.reverse().toString();
+            }
+            i++;
         }
         return null;
+    }
+
+    /**
+     * 看到一个奇怪的recursion写法：https://leetcode.com/problems/reverse-substrings-between-each-pair-of-parentheses/discuss/382358/Simple-Java-Sol(Recursion)
+     * 重复扫描了开头和结尾
+     */
+    public String reverseParentheses_(String s) {
+        int begin = 0;
+        int end;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(')
+                begin = i;
+            if (s.charAt(i) == ')') {
+                end = i;
+                String temp = s.substring(begin + 1, end);
+                return reverseParentheses(s.substring(0, begin) + reverseString(temp) + s.substring(end + 1));
+            }
+        }
+        return s;
+    }
+
+    String reverseString(String s) {
+        char[] temp = s.toCharArray();
+        StringBuilder r = new StringBuilder();
+        for (int i = temp.length - 1; i >= 0; i--)
+            r.append(temp[i]);
+
+        return r.toString();
     }
 }
