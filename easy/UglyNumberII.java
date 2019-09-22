@@ -28,7 +28,7 @@ public class UglyNumberII {
             }
             //注意这里不能加else......
             if (min == factor3) {
-                factor3 = 3 * dp[++index3];
+                factor3 = 3 * dp[++index3];// 3 * 2, 3 * 3..
             }
             if (min == factor5) {
                 factor5 = 5 * dp[++index5];
