@@ -63,6 +63,7 @@ public class ReverseSubstringsBetweenEachPairofParentheses {
     }
 
     /**
+     * Approach2, stack
      * 用stack改写了一下，确实比较容易理解，不过容易漏掉一些case，比如
      * "a(bcdefghijkl(mno)p)q"
      * "co(de(fight)s)"

@@ -85,7 +85,7 @@ public class NetworkDelayTime {
     }
 
     /**
-     * Djikstra/bfs
+     * Djikstra/bfs，推荐这种写法。类似题目787
      * heap实现O(nlogn)
      */
     public int networkDelayTime__(int[][] times, int N, int K) {
