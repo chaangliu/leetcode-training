@@ -39,12 +39,35 @@ public class UglyNumberIII {
      * 容斥原理可以一个数字里有多少个不重叠的能被a,b,c整除的数字。
      * a U b U c = a + b + c - ab - ac - bc + abc
      * 利用这个原理我们，进一步可以利用二分搜索哪一个数字里含有n个不重叠的能被a,b,c整除的数字。
+     * <p>
+     * -------
+     * <p>
+     * 对了，这个题解里提到的二分搜索的模板我觉得很棒，跟我现在习惯用的一样，也就是花花讲解的，lower_bound,upper_bound的那种思路：https://leetcode.com/problems/ugly-number-iii/discuss/387539/cpp-Binary-Search-with-picture-and-Binary-Search-Template
+     * I used to solve the Binary Search problems with this template:
+     * <p>
+     * while(lo < hi) {
+     * int mid = lo + (hi - lo) / 2;
+     * if(Special condition passed)(optional):
+     * return mid;
+     * if(condition passed)
+     * hi = mid;
+     * else
+     * lo = mid + 1;
+     * }
+     * return lo;
+     * The key idea is that the range of searching is monotonic, i.e., If F(a) == true, then for every b > a, F(b) = true. So our goal is to find the leftmost point a that F(a) == true, which can be solved by binary search. In order to find the leftmost point which satisfies the condition, do not break the loop immediately when u find a valid point (There may exist some valid points on the left side). Instead, what u can do is to narrow the searching range, and the lo point will be the answer. In some cases there's no answer and lo will return as the initial hi value, check that case too.
+     * Most of binary search problems can be solved by the template above.
+     * Try 875
+     * 1011
+     * 668
+     * 719
+     * Hope it helps.
      **/
     public int nthUglyNumber(int n, int a, int b, int c) {
         long l = 1, r = 2000000000;
         while (l < r) {
             long mid = l + (r - l) / 2;
-            if (formula(mid, a, b, c) >= n) r = mid;//lower_bound
+            if (formula(mid, a, b, c) >= n) r = mid;//向lower_bound靠拢
             else l = mid + 1;
         }
         return (int) l;
