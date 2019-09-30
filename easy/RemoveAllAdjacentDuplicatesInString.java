@@ -49,4 +49,36 @@ public class RemoveAllAdjacentDuplicatesInString {
         }
         if (res.length() == S.length()) shouldStop = true;
     }
+
+    /**
+     * 高效的解法，无需重复从头遍历
+     */
+    public String removeDuplicates_(String S) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : S.toCharArray()) {
+            int size = sb.length();
+            if (size > 0 && sb.charAt(size - 1) == c) {
+                sb.deleteCharAt(size - 1);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * two pointers
+     */
+    public String removeDuplicates__(String S) {
+        char[] a = S.toCharArray();
+        int end = -1;
+        for (char c : a) {
+            if (end >= 0 && a[end] == c) {
+                --end;
+            } else {
+                a[++end] = c;
+            }
+        }
+        return String.valueOf(a, 0, end + 1);
+    }
 }
