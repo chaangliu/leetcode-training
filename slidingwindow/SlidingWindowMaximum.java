@@ -28,9 +28,11 @@ import java.util.PriorityQueue;
 public class SlidingWindowMaximum {
     /**
      * 《剑指offer》原题
+     * 题意是一个sliding window不停右移，每移动1位就记录当前window中最大的数字记录下来，最后输出。
      * <p>
      * approach1. O(nlogn)解法，slidingWindow + heap(priorityQueue)
-     * 维护一个size为k的最大堆（这个手法在TopKFrequentElements等题也用到）,不停地往里加就完事了，reHeap的复杂度是log n，总时间O(nlogn)
+     * 维护一个size为k的最大堆（这个手法在TopKFrequentElements等题也用到）,不停地往里加就完事了；同时要把移出window的数字remove掉，注意heap是支持remove具体数字的。
+     * reHeap的复杂度是log n，总时间O(nlogn)
      */
     public int[] maxSlidingWindow__HEAP(int[] nums, int k) {
         if (nums == null || nums.length == 0) return new int[0];
