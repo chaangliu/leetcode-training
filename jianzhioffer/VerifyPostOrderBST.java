@@ -103,15 +103,15 @@ public class VerifyPostOrderBST {
 
     private boolean helper(int[] sequence, int start, int end) {
         if (start > end) return true;
-        int pivot = -1;
+        int pivot = -1;//pivot代表右子树的开端
         int i = start;
         for (; i < end; i++) {
             if (pivot == -1) {
                 if (sequence[i] > sequence[end]) {
-                    pivot = i;
+                    pivot = i;//找到右子树的开端
                 }
             } else {
-                if (sequence[i] < sequence[end]) {
+                if (sequence[i] < sequence[end]) {//右子树所有的node都要比root大
                     return false;
                 }
             }

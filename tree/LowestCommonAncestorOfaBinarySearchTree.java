@@ -7,7 +7,7 @@ package tree;
  * Created by DrunkPiano on 2017/3/28.
  */
 
-class LoewestCommonAncestorOfaBinarySearchTree {
+class LowestCommonAncestorOfaBinarySearchTree {
 
     public TreeNode lowestCommonAncestor_OLD(TreeNode root, TreeNode p, TreeNode q) {
 //        if (root.val >= p.val && root.val <= q.val)

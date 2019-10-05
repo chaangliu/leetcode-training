@@ -19,6 +19,37 @@ package quickselect;
 public class KthLargestElementInAnArray {
 
     /**
+     * quick select, 20191005 practice
+     **/
+    public int findKthLargest_(int[] nums, int k) {
+        return sortRange(0, nums.length - 1, k, nums);
+    }
+
+    private int sortRange(int l, int r, int k, int[] nums) {
+        int pivot = partition(l, r, nums);
+        if (pivot + 1 == k) return nums[pivot];
+        if (pivot + 1 > k) return sortRange(l, pivot - 1, k, nums);
+        else return sortRange(pivot + 1, r, k, nums);
+    }
+
+    private int partition(int l, int r, int[] nums) {
+        int pivot = nums[r], slot = l;
+        for (int i = l; i < r; i++) {
+            if (nums[i] > pivot) {
+                swap(i, slot++, nums);
+            }
+        }
+        swap(slot, r, nums);
+        return slot;
+    }
+
+    private void swap(int i, int j, int[] nums) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
+    /**
      * approach 1. quick select算法，每次折半，时间O(n)
      * https://leetcode.com/articles/kth-largest-element-in-an-array/
      */

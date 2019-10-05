@@ -9,10 +9,10 @@ package tree;
  * 20190211 reviewed at pvg airport
  */
 
-class LoewestCommonAncestorOfaBinaryTree {
+class LowestCommonAncestorOfaBinaryTree {
 
 	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-		//如果root就是p , q中的一个，return root
+		//1. 当前子树中没找到p,q 2. 找到了p,q中的一个
 		if (null == root || root == p || root == q)
 			return root;
 
@@ -36,6 +36,6 @@ class LoewestCommonAncestorOfaBinaryTree {
 		root.left.right = new TreeNode(2);
 		root.right.left = new TreeNode(0);
 		root.right.right = new TreeNode(8);
-		new LoewestCommonAncestorOfaBinaryTree().lowestCommonAncestor(root , root.left.right , root.right.left);
+		new LowestCommonAncestorOfaBinaryTree().lowestCommonAncestor(root , root.left.right , root.right.left);
 	}
 }

@@ -27,18 +27,17 @@ public class LongestIncreasingSubsequence {
         if (nums.length == 0) return 0;
         int dp[] = new int[nums.length];
         dp[0] = 1;
-        int res = 1;
+        int max = 1;
         for (int i = 1; i < nums.length; i++) {
-            int max = 1;//max在第一层循环里
+            dp[i] = 1;//don't miss this
             for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
-                    max = Math.max(dp[j] + 1, max);
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
                 }
             }
-            dp[i] = max;
-            res = Math.max(dp[i], res);
+            max = Math.max(dp[i], max);
         }
-        return res;
+        return max;
     }
 
     public static void main(String args[]) {

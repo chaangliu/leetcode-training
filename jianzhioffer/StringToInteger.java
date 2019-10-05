@@ -2,7 +2,11 @@ package jianzhioffer;
 
 public class StringToInteger {
 
-    //这题跟leetcode 8一样。那题差评如潮
+    /**
+     * 把str转换成int。
+     * 这题跟leetcode 8一样。
+     * 总之要考虑很多corner case，空格，符号，越界等等
+     */
     public int StrToInt(String str) {
         int total = 0, sign = 1, index = 0;
         if (str == null || str.length() == 0) return 0;

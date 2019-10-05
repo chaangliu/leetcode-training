@@ -15,7 +15,7 @@ class ReverseLinkedList {
      */
     public ListNode reverseList1(ListNode head) {
         if (head == null) return null;
-        //dummy node 头插法
+        //dummy node 头插法。这题不需要三个node;只需要prev和cur
         ListNode prev = null;
         ListNode curr = head;
         while (curr != null) {

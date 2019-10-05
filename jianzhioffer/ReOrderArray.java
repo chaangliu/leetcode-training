@@ -5,8 +5,11 @@ package jianzhioffer;
  * 并保证奇数和奇数，偶数和偶数之间的相对位置不变。
  */
 public class ReOrderArray {
+    /**
+     * 这题如果不要求稳定的话，可以直接用2 pointers，l指向odd,r指向even，l > r时停止
+     * OJ上要求稳定，那就用下面的整体位移的方法。
+     */
     //考察稳定排序（插入、归并）。空间换时间就不谈了。
-
     //approach1 类似插入排序。稳定。
     //1. 维护一个已经排序好的奇数的index
     //2. 从前往后找到一个奇数(位置k)
