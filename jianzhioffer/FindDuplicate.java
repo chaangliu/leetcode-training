@@ -38,6 +38,7 @@ public class FindDuplicate {
     //# approach3, inplace substitution, 无需额外空间，利用「长度为n的数组里的所有数字都在0到n-1的范围内」这个条件。
     // 剑指offer上的解法是换位，每次不断把nums[i]换到与i相等；
     // 以下是牛客网上的高票解法，思路是把nums[nums[i]]上的数字+length，这样下次如果发现nums[nums[i]]已经＞=length了，说明已经加过一次了。
+    // 其实就是像dfs floodfill那样，把原有格子涂色，不用额外开辟空间
     public boolean duplicate(int numbers[], int length, int[] duplication) {
         for (int i = 0; i < length; i++) {
             int index = numbers[i];

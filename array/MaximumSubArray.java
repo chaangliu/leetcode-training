@@ -55,6 +55,7 @@ public class MaximumSubArray {
 
 
     //second way , Dynamic Programming
+    //dp[i] = dp[i - 1]  > 0 ? : dp[i - 1] + A[i] : A[i]
     public int maxSubArray(int[] nums) {
         int sum = nums[0], maxSum = nums[0];
         for (int i = 0; i < nums.length; i++) {

@@ -32,6 +32,7 @@ void CalculateMin(int i, int j, int dimen[], int **dp);
 
 /**
  * 区间dp(最内层的for循环放到CalculateMin函数里处理)写法
+ * chaangliu
  */
 void matrixChain(int n, int dimen[], int **dp) {
     for (int len = 0; len <= n; ++len) {
@@ -40,14 +41,14 @@ void matrixChain(int n, int dimen[], int **dp) {
             if (i == j) {
                 dp[i][j] = 0;
             } else {
-                CalculateMin(i, j, dimen, dp);//实现转移方程
+                calculateMin(i, j, dimen, dp);//实现转移方程
             }
         }
     }
 }
 
 
-void CalculateMin(int i, int j, int dimen[], int **dp) {
+void calculateMin(int i, int j, int dimen[], int **dp) {
     dp[i][j] = dp[i][i] + dp[i + 1][j] + dimen[i - 1] * dimen[i] * dimen[j];
     for (int k = i + 1; k < j; k++) {//k用于尝试不同的断开位置
         int curr = dp[i][k] + dp[k + 1][j] + dimen[i - 1] * dimen[k] * dimen[j];
@@ -137,7 +138,6 @@ void MatrixChain(int n, int p[], int **m, int **s) {
 
 void CalculateMin(int i, int j, int p[], int **m, int **s) {
     m[i][j] = m[i][i] + m[i + 1][j] + p[i - 1] * p[i] * p[j]; //若i与j不相等，m[i][j]的初值为断开位置为i时的最优值
-
     s[i][j] = i;                    //记录当前断开位置位置为i
     for (int k = i + 1; k < j; k++) //k用于尝试不同的断开位置
     {

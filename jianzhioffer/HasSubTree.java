@@ -8,21 +8,15 @@ import tree.TreeNode;
  * 参考：https://www.jianshu.com/p/2d1703364032
  */
 public class HasSubTree {
-
-//    public boolean HasSubtree(TreeNode root1, TreeNode root2) {
-//        if (root1 == null || root2 == null) return false;
-//        if (root1.val == root2.val) {//错误！！！这样如果node1跟node2不同，那根本没递归下去就结束了，好蠢，找了好久才发现
-//            return helper(root1, root2);
-//        }
-//        return HasSubtree(root1.left, root2) || HasSubtree(root1.right, root2);
-//    }
-
     public boolean HasSubtree(TreeNode root1, TreeNode root2) {
         if (root1 == null || root2 == null)
             return false;
         return helper(root1, root2) || HasSubtree(root1.left, root2) || HasSubtree(root1.right, root2);
     }
 
+    /**
+     * 这个跟leetcode的subtree of another tree不同，那题要判断sameTree
+     */
     private boolean helper(TreeNode root1, TreeNode root2) {
         if (root2 == null) {
             return true;

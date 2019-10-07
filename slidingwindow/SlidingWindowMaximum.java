@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.PriorityQueue;
 
+import linkedlist.SortList;
+
 /**
  * Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position. Return the max sliding window.
  * <p>
@@ -58,6 +60,8 @@ public class SlidingWindowMaximum {
 
     /**
      * approach2. 双端队列O(n)解法，思维难度挺高的，队头保存window中的最大数的index，添加新数的时候不断从队尾移出比新数小的数的index
+     * 是个单调队列（单调下降）
+     * https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation
      */
     public int[] maxSlidingWindow(int[] a, int k) {
         if (a == null || k <= 0) return new int[0];
@@ -68,8 +72,8 @@ public class SlidingWindowMaximum {
         Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < a.length; i++) {
             // remove numbers out of range k
-            while (!q.isEmpty() && q.peek() < i - k + 1) {
-                q.poll();//相当于pollFirst，也就是队列正常的出队顺序
+            if (!q.isEmpty() && q.peek() < i - k + 1) {
+                q.poll();//相当于pollFirst，也就是队列正常的出队顺序，把左边的out of window的index移出
             }
             // remove smaller numbers in k range as they are useless
             while (!q.isEmpty() && a[q.peekLast()] < a[i]) {
@@ -84,6 +88,10 @@ public class SlidingWindowMaximum {
             }
         }
         return res;
+    }
+
+    public static void main(String[] args) {
+        new SlidingWindowMaximum().maxSlidingWindow(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3);
     }
 
 }
