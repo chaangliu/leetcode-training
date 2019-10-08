@@ -8,6 +8,12 @@ import linkedlist.ListNode;
 public class EntryNodeOfLoop {
 
 
+    /**
+     * 题意：找到环的入口结点。
+     * 注意不是判断是否有环，而是要找入口结点。
+     * 方法1. 最简单的方法，第一个重复的内存，需要O(n)空间
+     * 方法2. 剑指offer上的解法， 先用快慢指针判断是否有环，然后计算环的长度n，然后再用两个指针，一个先走n步，一个从头开始走，他们相遇的结点就是entry node。
+     */
     //最简单的方法，第一个重复的内存，需要O(n)空间
     public ListNode EntryNodeOfLoop2(ListNode pHead) {
         ListNode node = pHead;
