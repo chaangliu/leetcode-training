@@ -73,4 +73,39 @@ public class DiceRollSimulation {
         memo[i][count][remain] = res;
         return res;
     }
+
+    /**
+     * bottom up dp，属实抽象，比top down recursion难多了。。
+     * dp[i][j] rolling the ith dice and got j
+     */
+    public int dieSimulator_bottom_up(int n, int[] rollMax) {
+        int mod = (int) 1e9 + 7;
+        //dp[i][j] represents the number of distinct sequences that can be obtained when rolling i times and ending with j
+        //The one more row represents the total sequences when rolling i times
+        int[][] dp = new int[n + 1][7];
+        for (int i = 0; i < 6; i++) {
+            dp[1][i] = 1;
+        }
+        dp[1][6] = 6;
+        for (int i = 2; i <= n; i++) {
+            int total = 0;
+            for (int j = 0; j < 6; j++) {
+                //if without constraints
+                dp[i][j] = dp[i - 1][6];
+                //if for the ith dice, constraint for j is i - 1, meaning that at most i - 1 consecutive dices can have same number, that is to say all previous numbers can be the same, except current number. so we minus one.
+                if (i - 1 == rollMax[j]) {
+                    dp[i][j]--;
+                }
+                //if for the ith dice, constraint for j is < i - 1, meaning that the `i - rollMax[j] - 1`th number can be anything but j(which we have already deducted in the previous step)
+                if (i - 1 > rollMax[j]) {//if for the ith dice, constraint for j is < i - 1
+                    int reduction = dp[i - rollMax[j] - 1][6] - dp[i - rollMax[j] - 1][j];
+                    //must add one more mod because subtraction may introduce negative numbers
+                    dp[i][j] = ((dp[i][j] - reduction) % mod + mod) % mod;
+                }
+                total = (total + dp[i][j]) % mod;
+            }
+            dp[i][6] = total;
+        }
+        return dp[n][6];
+    }
 }

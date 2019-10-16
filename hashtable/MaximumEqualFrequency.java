@@ -37,7 +37,8 @@ import java.util.Map;
 public class MaximumEqualFrequency {
     /**
      * 题意：从一个数字数组中找出前n个数，满足这n个数中去掉一个之后剩下的数字出现次数都相当。返回n。
-     * 刚拿到感觉很容易（其实有很多case要讨论），模拟：每次遍历到所有已有数字occurrence都相等并且当前的下一个位置index时候，更新n = index + 1
+     * 刚拿到感觉很容易（其实有很多case要讨论），这也许就是普通选手和专业选手之间全面的差距么。。这种看似没什么技巧但是需要缜密思维的题目他们也能迅速做出来。
+     * 模拟：每次遍历到所有已有数字occurrence都相等并且当前的下一个位置index时候，更新n = index + 1
      * 关键是怎么用O(1)时间去判断所有已有数字的occurrence都相等？我觉得可以维护两个Map，第一个的k->v是number->occurrence,第二个是occurence->list of numbers，其中第二个map的key对应的list的size是0的时候就remove
      * 这么想着很简单，但是有很多case我都没有考虑到，WA了很多次。能短时间内cover到所有case不容易。
      * 以下是一些满足的情况：
