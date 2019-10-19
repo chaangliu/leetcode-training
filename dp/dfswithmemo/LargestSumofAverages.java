@@ -1,4 +1,4 @@
-package dp;
+package dp.dfswithmemo;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class LargestSumofAverages {
      * 下面先展示我的答案，再展示lee的答案。
      * Approach1 我的答案，TLE
      */
-    public double largestSumOfAverages(int[] A, int K) {
+    public double largestSumOfAverages__TLE(int[] A, int K) {
         int[] prefix = new int[A.length];
         prefix[0] = A[0];
         for (int i = 1; i < A.length; i++) {
@@ -68,5 +68,34 @@ public class LargestSumofAverages {
             dfs(prefix, i, K, A, pivots);
             pivots.remove(pivots.size() - 1);
         }
+    }
+
+
+    /**
+     * 下面是按照lee的思路写的答案，类似割绳子那题；
+     * 一开始写错了好几个地方，检查了很久，尤其是cur / (n - i + 1)写成了cur/(A.length - i)
+     * memo[i][j] represents largest sum of averages of first i elements of A split into at most j groups
+     */
+    public double largestSumOfAverages(int[] A, int K) {
+        double[][] memo = new double[A.length][K + 1];
+        double cur = 0;
+        for (int i = 0; i < A.length; i++) {
+            cur = cur + A[i];
+            memo[i][1] = cur / (i + 1);
+        }
+        return dfs(A, A.length - 1, K, memo);
+    }
+
+    private double dfs(int[] A, int n, int k, double[][] memo) {
+        if (n + 1 < k) return 0;
+        if (memo[n][k] > 0) {
+            return memo[n][k];
+        }
+        double cur = 0;
+        for (int i = n; i > 0; i--) {
+            cur += A[i];//这里不能放到递归函数中，否则会backtrack无法累加..
+            memo[n][k] = Math.max(memo[n][k], cur / (n - i + 1) + dfs(A, i - 1, k - 1, memo));
+        }
+        return memo[n][k];
     }
 }

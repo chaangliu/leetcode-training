@@ -1,4 +1,4 @@
-package dp.dfswithcache;
+package dp.dfswithmemo;
 
 /**
  * There are two types of soup: type A and type B. Initially we have N ml of each type of soup. There are four kinds of operations:
