@@ -30,7 +30,6 @@ public class TossStrangeCoins {
         double[][] dp = new double[len + 1][len + 1];
         dp[1][0] = 1 - prob[0];
         dp[1][1] = prob[0];
-        double allTails = dp[1][0];
         for (int i = 2; i <= len; i++) {
             dp[i][0] = dp[i - 1][0] * (1 - prob[i - 1]);//这里注意prob的index
             for (int j = 1; j <= target; j++) {
@@ -45,7 +44,6 @@ public class TossStrangeCoins {
         double[][] dp = new double[2][len + 1];
         dp[1][0] = 1 - prob[0];
         dp[1][1] = prob[0];
-        double allTails = dp[1][0];
         for (int i = 2; i <= len; i++) {
             int cur = i & 1, prev = cur ^ 1;
             dp[cur][0] = dp[prev][0] * (1 - prob[i - 1]);
