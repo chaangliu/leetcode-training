@@ -19,6 +19,7 @@ public class FindMinimuminRotatedSortedArrayII {
      * 这题主要处理[10,1,10,10,10]这种case
      * 当nums[mid]和nums[high]相等时，无法判断cliff在哪一侧，所以直接从右边缩小范围
      * 跟Search in rotated sorted array ii 一样
+     * 注意这题不能和I一样判断A[low]和A[mid]的关系，无法处理递增的情况，比如[1,2,3]。
      */
     public int findMin(int[] num) {
         int lo = 0;

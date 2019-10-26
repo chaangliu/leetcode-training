@@ -18,7 +18,12 @@ package binarysearch.templateii;
  */
 public class FindMinimumInRotatedSortedArray {
     /**
-     * 这题可以看出模板二不一定是连续两个数对比
+     * 题意：在一个rotated sorted array里寻找最小数字。不存在duplicate。
+     * 这题二分的思路是，
+     * 1. 首先判断A[low]和A[hi]的关系，如果小于，那么直接返回即可。
+     * 2. 判断A[low]和A[mid]的关系（也可以判断A[mid]和A[high]的关系，我们要找的只是断崖的位置），然后我们要让它往断崖的那一侧去找(因为如果有断崖那么最小值肯定在断崖那里)
+     * <p>
+     * 写法1. 通过判断A[low]和A[mid]的关系寻找断崖
      */
     public int findMin(int[] nums) {
         if (nums == null || nums.length == 0) return -1;
@@ -34,6 +39,25 @@ public class FindMinimumInRotatedSortedArray {
                 low = mid + 1;
             else//cliff在mid左边
                 high = mid;//模板二。不能是mid - 1，否则无法通过case: [2,1]
+        }
+        return nums[low];
+    }
+
+    /**
+     * 写法2，通过判断A[mid]和A[high]的关系寻找cliff
+     */
+    public int findMin__(int[] nums) {
+        if (nums == null || nums.length == 0) return -1;
+        int low = 0, high = nums.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            //[low, high]中间无cliff
+            if (nums[low] < nums[high])
+                return nums[low];
+            if (nums[mid] < nums[high])
+                high = mid;
+            else//cliff在mid左边
+                low = mid + 1;
         }
         return nums[low];
     }
