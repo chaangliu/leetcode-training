@@ -15,6 +15,7 @@ package dp.dfswithmemo;
  * Constraints:
  * 1 <= piles.length <= 100
  * 1 <= piles[i] <= 10 ^ 4
+ * TAG:[MINMAX][DP]
  * 20191030
  */
 public class StoneGameII {
@@ -22,6 +23,7 @@ public class StoneGameII {
      * 题意:两个人轮流从一行石头堆里拿石头，每人最多拿2M堆，下一轮的M = max(M, X)。问先手的人最多能拿到多少石头。假设每人都拿全局最优解。
      * 这题我还是模仿StoneGameI的做法，dfs计算从start开始取，先手比后手多拿的数量，最后做一次代数计算。做的过程中才发现，这个dfs返回的值可能是负数的。
      * 另外，这题我在添加memo的时候一开始只申请了一维，也就是存放start的维度，这样会WA的。一定要加上M这个维度。
+     * 稍微总结下， MINMAX类型的题目(两个人轮流选择全局最优解)无序维护当前是谁在选，只要拿当次的和下一次的对比就天然地满足全局最优。
      * 下面是我的代码。
      */
     public int stoneGameII(int[] piles) {

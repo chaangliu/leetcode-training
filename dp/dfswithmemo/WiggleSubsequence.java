@@ -1,19 +1,17 @@
-package dp;
+package dp.dfswithmemo;
 
 /**
- * A sequence of numbers is called a wiggle sequence if the differences between successive numbers strictly alternate between positive and negative. The first difference (if one exists) may be either positive or negative. A sequence with fewer than two elements is trivially a wiggle sequence.
- * <p>
- * For example, [1,7,4,9,2,5] is a wiggle sequence because the differences (6,-3,5,-7,3) are alternately positive and negative. In contrast, [1,4,7,2,5] and [1,7,4,5,5] are not wiggle sequences, the first because its first two differences are positive and the second because its last difference is zero.
- * <p>
- * Given a sequence of integers, return the length of the longest subsequence that is a wiggle sequence. A subsequence is obtained by deleting some number of elements (eventually, also zero) from the original sequence, leaving the remaining elements in their original order.
- * <p>
+ * A sequence of numbers is called a wiggle sequence if the differences between successive numbers strictly alternate between positive and negative.
+ * The first difference (if one exists) may be either positive or negative. A sequence with fewer than two elements is trivially a wiggle sequence.
+ * For example, [1,7,4,9,2,5] is a wiggle sequence because the differences (6,-3,5,-7,3) are alternately positive and negative.
+ * In contrast, [1,4,7,2,5] and [1,7,4,5,5] are not wiggle sequences, the first because its first two differences are positive and the second because its last difference is zero.
+ * Given a sequence of integers, return the length of the longest subsequence that is a wiggle sequence.
+ * A subsequence is obtained by deleting some number of elements (eventually, also zero) from the original sequence, leaving the remaining elements in their original order.
  * Example 1:
- * <p>
  * Input: [1,7,4,9,2,5]
  * Output: 6
  * Explanation: The entire sequence is a wiggle sequence.
  * Example 2:
- * <p>
  * Input: [1,17,5,10,13,15,10,5,16,8]
  * Output: 7
  * Explanation: There are several subsequences that achieve this length. One is [1,17,10,13,10,16,8].
@@ -27,30 +25,30 @@ package dp;
  */
 public class WiggleSubsequence {
     /**
-     * approach1 暴力，回溯，复杂度O(n!)，调用了n!次calculate
+     * approach1 dfs with memo，回溯，如果不加memo：复杂度O(n!)，调用了n!次calculate，会TLE
      */
-    private int calculate(int[] nums, int index, boolean isUp) {
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2) return nums.length;
+        Integer[][] memo = new Integer[nums.length][2];
+        return 1 + Math.max(calculate(nums, 0, true, memo), calculate(nums, 0, false, memo));
+    }
+
+    private int calculate(int[] nums, int start, boolean isUp, Integer[][] memo) {
+        if (memo[start][isUp ? 0 : 1] != null) return memo[start][isUp ? 0 : 1];
         int maxcount = 0;
-        for (int i = index + 1; i < nums.length; i++) {
-            if ((isUp && nums[i] > nums[index]) || (!isUp && nums[i] < nums[index]))
-                maxcount = Math.max(maxcount, 1 + calculate(nums, i, !isUp));
+        for (int i = start + 1; i < nums.length; i++) {
+            if ((isUp && nums[i] > nums[start]) || (!isUp && nums[i] < nums[start]))
+                maxcount = Math.max(maxcount, 1 + calculate(nums, i, !isUp, memo));
         }
+        memo[start][isUp ? 0 : 1] = maxcount;
         return maxcount;
     }
-
-    public int wiggleMaxLength(int[] nums) {
-        if (nums.length < 2)
-            return nums.length;
-        return 1 + Math.max(calculate(nums, 0, true), calculate(nums, 0, false));
-    }
-
 
     /**
      * approach2 O(n^2)dp，反而是最容易理解的一个
      */
     public int wiggleMaxLength__2D(int[] nums) {
-        if (nums.length < 2)
-            return nums.length;
+        if (nums.length < 2) return nums.length;
         int[] up = new int[nums.length];//up[i]:以i结尾的上升的wiggle序列最大长度
         int[] down = new int[nums.length];//down[i]:以i结尾的下降的wiggle序列最大长度
         for (int i = 1; i < nums.length; i++) {
@@ -70,12 +68,10 @@ public class WiggleSubsequence {
      * 与上面不同的是，这里up/down保存的不是end with i的wiggle序列的最大长度，
      * 而是以up/down中间某个位置结尾的wiggle序列最大长度
      * 可以进一步优化成O(1)空间；
-     * <p>
      * 另外，有greedy解法
      */
     public int wiggleMaxLength__DP_1D(int[] nums) {
-        if (nums.length < 2)
-            return nums.length;
+        if (nums.length < 2) return nums.length;
         int[] up = new int[nums.length];
         int[] down = new int[nums.length];
         up[0] = down[0] = 1;
