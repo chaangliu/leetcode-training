@@ -1,4 +1,4 @@
-package array.twopointers;
+package twopointers;
 
 /**
  * Given an array of characters, compress it in-place.

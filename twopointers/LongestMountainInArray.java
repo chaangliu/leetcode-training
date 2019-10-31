@@ -1,4 +1,4 @@
-package array.twopointers;
+package twopointers;
 
 /**
  * Let's call any (contiguous) subarray B (of A) a mountain if the following properties hold:
