@@ -25,16 +25,17 @@ package dp.knapsack;
  * Output: 1
  * <p>
  * 20190129
+ * 20191031
  */
 public class CoinChangeII {
     /**
+     * 题意：给你一些面值的硬币和一个总额，问有多少种组成总额的方式。每种硬币可以使用无限次。
      * 经典背包问题, knapsack problem，DP
+     * dp[i][j] : the number of combinations to make up amount j by using the first i types of coins
      */
     public int change(int amount, int[] coins) {
-        //dp[i][j] : the number of combinations to make up amount j by using the first i types of coins
         int[][] dp = new int[coins.length + 1][amount + 1];
         dp[0][0] = 1;
-
         for (int i = 1; i <= coins.length; i++) {
             dp[i][0] = 1;
             for (int j = 1; j <= amount; j++) {
@@ -46,10 +47,12 @@ public class CoinChangeII {
         return dp[coins.length][amount];
     }
 
-    // 一维DP
-    // if(amount - coin >= 0) dp[amount] += dp[amount - coin]
-    // 例如amount:12, [1,2,5]
-    // 第一趟：使用1元coin时，dp[2] = dp[2 - 1] + dp[2]，意思是amount等于1元时候的combination数量，加上剩下的钱的组合数量
+
+    /**
+     * 一维DP
+     * 可以理解为爬台阶，对于每个coin和每个总金额i，从i - coin那级可以再走coin级台阶就可以来到当前台阶
+     * if(amount - coin >= 0) dp[amount] += dp[amount - coin]
+     */
     public int change____1D(int amount, int[] coins) {
         if (amount == 0 && coins.length == 0) return 1;
         if (amount < 0 || coins == null || coins.length == 0) return 0;
@@ -58,11 +61,9 @@ public class CoinChangeII {
         for (int coin : coins) {
             for (int i = 1; i <= amount; i++) {
                 if (i - coin >= 0) {//如果当前的钱可以用当前硬币来找钱
-                    dp[i] += dp[i - coin];//not dp[i - 1]
-                    System.out.print(dp[i] + " ");
+                    dp[i] += dp[i - coin];//not dp[i - 1]。这里可以理解为爬台阶，从i - coin那级可以再走coin级台阶就可以来到当前台阶
                 }
             }
-            System.out.println();
         }
         return dp[dp.length - 1];
     }
@@ -98,6 +99,6 @@ public class CoinChangeII {
 
     public static void main(String args[]) {
         int[] coins = {1, 2, 5};
-        System.out.println(new CoinChangeII().change(6, coins));
+        System.out.println(new CoinChangeII().change____1D(12, coins));
     }
 }

@@ -31,21 +31,30 @@ import java.util.Set;
  * If the first player choose 1, the second player can only choose integers from 2 up to 10.
  * The second player will win by choosing 10 and get a total = 11, which is >= desiredTotal.
  * Same with other integers chosen by the first player, the second player will always win.
+ * TAG:[MINMAX][DP]
  * 20190919
  */
 public class CanIWin {
+    /**
+     * 题意：两个人从1到maxChoosableInteger轮流选择数字(不放回)，先达到desiredTotal的人赢。问先手的人能否稳赢，能的话返回true。
+     * 这题的关键是，找到一种情况我能赢或者下一层递归所有情况对方都不能赢。这个状态是轮换并且互斥的。
+     */
     public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
         if (desiredTotal <= 0) return true;
         if (maxChoosableInteger * (maxChoosableInteger + 1) / 2 < desiredTotal) return false;
         return helper(desiredTotal, 0, maxChoosableInteger, new HashMap<>());
+        //return helper1(desiredTotal, new int[maxChoosableInteger], new HashMap<>());
     }
 
     /**
-     * 我能赢或者对方不能赢，那么返回true，否则返回false
+     * 我有任意一种方案能赢 或者对方无论如何都不能赢，那么返回true，否则返回false
      * 用一个int来标记visited，map保存每种visited样式能否赢
      */
     private boolean helper(int total, int state, int maxChoosable, HashMap<Integer, Boolean> map) {
-        if (map.containsKey(state)) return map.get(state);
+        //重复子问题出现的情况：比如我和对手分别选了第2和第3个数字这样能保证我稳赢，那么下次再出现这种情形(有可能选择的顺序不一样)直接知道我[可能]赢。
+        //比如我选了99，对手选了1，我选了98，这样state是100..0011，代表我可能赢，但不是一定赢，比如我选了1和98就不赢，但是没关系，不用再继续选下去了：从别的岔路走到这个路口的某一个我，已经有一个赢过了。
+        if (map.containsKey(state))
+            return map.get(state);
         for (int i = 0; i < maxChoosable; i++) {
             if ((state & (1 << i)) == 0) {//不要((state >> i) & 1)
                 if (total <= i + 1 || !helper(total - (i + 1), state | 1 << i, maxChoosable, map)) {//state | 1 << i 不用手动回溯了
@@ -54,6 +63,7 @@ public class CanIWin {
                 }
             }
         }
+        map.put(state, false);
         return false;
     }
 

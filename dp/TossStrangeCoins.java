@@ -22,7 +22,7 @@ public class TossStrangeCoins {
      * 双周赛第三题。
      * 题意：给你一个prob数组存放抛每个硬币出现heads的概率；问把所有硬币抛一遍正好有target个heads朝上的概率。
      * 做法：概率DP。
-     * dp[i][j] 代表抛完第i枚硬币后有j枚朝上的概率。dp[i][j]就等于抛完i-1枚之后有j-1枚朝上的概率 * 抛第i枚的时候朝上的概率 + 抛完i-1枚之后有j枚朝上的概率 * 抛第i枚时朝下的概率
+     * dp[i][j] 代表抛完第i枚硬币后有j枚朝上的概率。dp[i][j]就等于抛完i-1枚之后有j-1枚朝上的概率 * 抛第i枚的时候朝上的概率 + 抛完i-1枚之后有j枚朝上的概率 * 抛第i枚时朝下的概率（也类似于爬台阶，当前状态=前两个状态之和）
      * dp[i][j] = dp[i - 1][j] * (1 - prob[i]) + dp[i - 1][j - 1] * prob[i]
      **/
     public double probabilityOfHeads(double[] prob, int target) {

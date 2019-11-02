@@ -2,34 +2,26 @@ package dp;
 
 /**
  * A sequence of number is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.
- * <p>
  * For example, these are arithmetic sequence:
- * <p>
  * 1, 3, 5, 7, 9
  * 7, 7, 7, 7
  * 3, -1, -5, -9
  * The following sequence is not arithmetic.
- * <p>
  * 1, 1, 2, 5, 7
- * <p>
  * A zero-indexed array A consisting of N numbers is given. A slice of that array is any pair of integers (P, Q) such that 0 <= P < Q < N.
- * <p>
  * A slice (P, Q) of array A is called arithmetic if the sequence:
  * A[P], A[p + 1], ..., A[Q - 1], A[Q] is arithmetic. In particular, this means that P + 1 < Q.
- * <p>
  * The function should return the number of arithmetic slices in the array A.
- * <p>
- * <p>
  * Example:
- * <p>
  * A = [1, 2, 3, 4]
- * <p>
  * return: 3, for 3 arithmetic slices in A: [1, 2, 3], [2, 3, 4] and [1, 2, 3, 4] itself.
  * 20190917
+ * 20191101
  */
 public class ArithmeticSlices {
     /**
-     * 这题我自己写出来了O(n^2解法，但是有O(n)解法的。。)，中途WA了几次。有个case没考虑到[1,2,3,8,9,10]
+     * 题意：给你一个数组，让你找出等差数列slice的个数。P + 1 < Q暗示我们slice最短是3.
+     * 这题我自己写出来了O(n^2)解法，但是有O(n)解法的。。中途WA了几次。有个case没考虑到[1,2,3,8,9,10]
      * 我的思路是：dp[i][j] = j - i == 2 ? [判断A[i,j]是否等差] : dp[i + 1][j] && nums[i] - nums[i + 1] == nums[i + 1] - nums[i + 2]
      */
     public int numberOfArithmeticSlices(int[] nums) {
@@ -56,7 +48,9 @@ public class ArithmeticSlices {
     }
 
     /**
-     * O(n)做法，精髓就是sum += curr，连续的arr里面如果当前加入的num符合，一定会在当前num的等差数列数量里面加1
+     * O(n)做法，
+     * [1, 2, 3, 4, 5]
+     * 连续的arr里面如果当前加入的num符合，一定会在当前num的等差数列数量里面+1；如果当前已经是长度4了，那就要+2（234和1234）；如果长度是5了那就要+3(345,2345,12345); 如果当前数字打断了等差数列就把cur reset到0.
      * Any time we find ith index does not form arith seq, make currently running no of seqs to zero.
      */
     public int numberOfArithmeticSlices_(int[] A) {
