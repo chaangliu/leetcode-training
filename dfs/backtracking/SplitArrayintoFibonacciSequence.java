@@ -1,5 +1,8 @@
 package dfs.backtracking;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Given a string S of digits, such as S = "123456579", we can split it into a Fibonacci-like sequence [123, 456, 579].
  * <p>
@@ -40,8 +43,53 @@ package dfs.backtracking;
  * 1 <= S.length <= 200
  * S contains only digits.
  * 20190905
+ * 20191101
  */
 public class SplitArrayintoFibonacciSequence {
+    /**
+     * 题意：给你一个String，把它分成任意一个Fibonacci序列（长度>=3）。如果不能分，返回空数组。1<=S长度<=200
+     * 因为长度只有200所以可以暴力搜。用start记录当前递归开始位置的这种做法好像做过几题。
+     * 复杂度分析:
+     * Time complexity is O(10^n) => O(branches^depth).
+     * At each level, we branch at most 10 times, as the for-loop will run until Integer.MAX_VALUE is reached (which is maximum 10 digits in length).
+     * Our recursive calls go to a maximum depth of n.
+     * The time complexity of any recursive function is O(branches^depth)
+     * Therefore the upper-bound time complexity is O(10^n)
+     */
+    public List<Integer> splitIntoFibonacci(String S) {
+        List<Integer> res = new ArrayList<>();
+        helper(S, res, 0);
+        return res;
+    }
+
+    public boolean helper(String s, List<Integer> res, int start) {
+        if (start == s.length() && res.size() >= 3) {
+            return true;
+        }
+        for (int i = start; i < s.length(); i++) {
+            if (s.charAt(start) == '0' && i > start) {
+                return false;
+            }
+            long num = Long.parseLong(s.substring(start, i + 1));//从start开始截断一个数
+            if (num > Integer.MAX_VALUE) {
+                return false;
+            }
+            int size = res.size();
+            // early termination
+            if (size >= 2 && num > res.get(size - 1) + res.get(size - 2)) {//本次split已经超过前两个数字之和，本层递归结束，返回上一层。
+                return false;
+            }
+            if (size <= 1 || num == res.get(size - 1) + res.get(size - 2)) {
+                res.add((int) num);
+                //只要找到一个答案就可结束
+                if (helper(s, res, i + 1)) {
+                    return true;
+                }
+                res.remove(res.size() - 1);
+            }
+        }
+        return false;
+    }
 //    public:
 //    /**
 //     * 这题因为长度只有200，所以暴力搜索，做法值得学习。用C++的话，由于substr的第二个参数是步长，所以for循环枚举步长比较方便。用Java的话，可以直接枚举结尾index
