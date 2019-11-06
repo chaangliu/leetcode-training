@@ -82,4 +82,49 @@ public class TreeDiameter {
         System.out.println("rim and dist are " + rim + ", " + dist);
         return new int[]{rim, dist};
     }
+
+
+    /**
+     * Approach2. DFS
+     * 类似求树的高度，但是这里是求某个node向所有末梢dfs，沿途找到最长的两个树枝，和就是结果
+     * https://www.acwing.com/solution/LeetCode/content/5794/
+     */
+    int res = 0;
+
+    public int treeDiameter__DFS(int[][] edges) {
+        if (edges == null || edges.length == 0) return 0;
+        //build tree(邻接表)
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] e : edges) {
+            int u = e[0], v = e[1];
+            if (!graph.containsKey(u)) graph.put(u, new ArrayList<>());
+            if (!graph.containsKey(v)) graph.put(v, new ArrayList<>());
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+        dfs(0, -1, graph);
+        return res;
+    }
+
+    private int dfs(int x, int fa, Map<Integer, List<Integer>> graph) {
+        int max1 = 0, max2 = 0;
+        if (graph.containsKey(x)) {
+            for (int v : graph.get(x))
+                if (v != fa) {
+                    int t = dfs(v, x, graph) + 1;
+                    if (max1 < t) {
+                        max2 = max1;
+                        max1 = t;
+                    } else if (max2 < t) {
+                        max2 = t;
+                    }
+                }
+        }
+        res = Math.max(res, (max1 + max2));
+        return max1;
+    }
+
+    public static void main(String args[]) {
+        new TreeDiameter().treeDiameter__DFS(new int[][]{{0, 1}, {1, 2}, {2, 3}, {1, 4}, {4, 5}});
+    }
 }
