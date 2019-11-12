@@ -34,7 +34,7 @@ package dfs;
  * score.length == 26
  * 0 <= score[i] <= 10
  * words[i], letters[i] contains only lower case English letters.
- * 2019
+ * 20191111
  */
 public class MaximumScoreWordsFormedbyLetters {
     /**
