@@ -81,8 +81,7 @@ class ReverseLinkedList {
         n2.next = n3;
         n3.next = n4;
         n1 = reverseList(n1);
-//        printList(n1);
-
+        printList(n1);
     }
 
     public static void printList(ListNode x) {

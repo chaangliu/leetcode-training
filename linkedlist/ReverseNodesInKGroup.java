@@ -17,38 +17,88 @@ package linkedlist;
 
 class ReverseNodesInKGroup {
 
+    /**
+     * 题意：把node按照k个一组完成倒序。
+     * 解法1，简洁解法, 遍历两次，
+     * 做法和普通的reverse linked list不同，不会中途断开list，相当于每次把一个新的node移到前面完成倒序，写起来不那么容易
+     * 12345, k = 3
+     * 012345
+     * se
+     * 021345
+     * s_e
+     * 032145
+     * s__e
+     * 032145
+     * ___se
+     * ..
+     **/
     public ListNode reverseKGroup(ListNode head, int k) {
-        if (head == null || head.next == null) return head;
-
-        int count = 0;
-        ListNode dummy = new ListNode(-1);
-        dummy.next = head ;
-        //pre永远指向k pairs开始的前一位
-        ListNode pre = dummy ;
-        ListNode cur = head ;
-        while (cur!=null) {
-            ListNode next = cur.next ;
-            count ++ ;
-            if(count == k){
-                pre = reverseList1(pre , next);
+        int cnt = 0;
+        for (ListNode node = head; node != null; node = node.next, cnt++) ;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        for (ListNode s = dummy, e = head; cnt - k >= 0; cnt -= k) {
+            int n = k;
+            while (n-- > 1) {
+                ListNode tmp = e.next.next;
+                e.next.next = s.next;//213=>321，把e后面的那个node指向开头，e.next就是即将加入倒序的node
+                s.next = e.next;//改变s的指向为新的开头，这次操作后s到e完成倒序
+                e.next = tmp;
             }
-            cur = next ;
+            s = e;
+            e = e.next;
         }
-
         return dummy.next;
     }
-    //end 指向k pairs的后一位
-    public ListNode reverseList1(ListNode pre , ListNode end) {
-        if (pre.next == null) return null;
-        //dummy node 头插法
-        ListNode curr = pre.next;
+
+
+    /**
+     * 解法2，只需遍历一次；双指针维护begin和end，每走k步之后就进行普通的单链表翻转，比较清晰。
+     * https://leetcode.com/problems/reverse-nodes-in-k-group/discuss/11440/Non-recursive-Java-solution-and-idea
+     */
+    public ListNode reverseKGroup__(ListNode head, int k) {
+        ListNode begin;
+        if (head == null || head.next == null || k == 1)
+            return head;
+        ListNode dummyhead = new ListNode(-1);
+        dummyhead.next = head;
+        begin = dummyhead;
+        int i = 0;
+        while (head != null) {
+            i++;
+            if (i % k == 0) {
+                begin = reverse(begin, head.next);
+                head = begin.next;
+            } else {
+                head = head.next;
+            }
+        }
+        return dummyhead.next;
+
+    }
+
+    private ListNode reverse(ListNode begin, ListNode end) {
+        ListNode curr = begin.next;
+        ListNode next, first;
+        ListNode prev = begin;
+        first = curr;
         while (curr != end) {
-            ListNode next = curr.next;
-            curr.next = pre;
-            pre = curr;
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
             curr = next;
         }
-        pre.next = end;
-        return pre;
+        begin.next = prev;
+        first.next = curr;
+        return first;
+    }
+
+    public static void main(String args[]) {
+        ListNode node = new ListNode(1);
+        node.next = new ListNode(2);
+        node.next.next = new ListNode(3);
+        node.next.next.next = new ListNode(4);
+        node.next.next.next.next = new ListNode(5);
+        new ReverseNodesInKGroup().reverseKGroup(node, 4);
     }
 }
