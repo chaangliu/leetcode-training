@@ -20,8 +20,9 @@ package dp;
  */
 public class ChampagneTower {
     /**
+     * 题意：模拟倒香槟，问到了n杯后某一行某一列的杯子的香槟占比。
      * 这题我本来想用数学的角度去考虑，计算每层每个杯子里面香槟的比例，但是后来发现想的太天真，思维有漏洞。
-     * 解法还是要用递推,dp[i][j]表示流经i行j个杯子的香槟数量。
+     * 解法还是要用递推,dp[i][j]表示流经i行j个杯子的香槟数量；根据当前的状态去推下一行的状态。
      */
     public double champagneTower(int poured, int query_row, int query_glass) {
         double[][] dp = new double[102][102];
