@@ -1,4 +1,4 @@
-package array;
+package tree.trie;
 
 import java.util.ArrayList;
 import java.util.Arrays;

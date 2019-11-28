@@ -1,4 +1,4 @@
-package tree;
+package tree.trie;
 
 /**
  * Created by DrunkPiano on 2017/4/12.
