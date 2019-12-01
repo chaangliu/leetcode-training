@@ -22,8 +22,11 @@ public class MaximalSquare {
     //Time complexity :O((mn)2)
 
 
-    //approach 2. 2dimensional dp
-    //动态转移方程：dp(i, j)=min(dp(i−1, j), dp(i−1, j−1), dp(i, j−1))+1.
+    /**
+     * approach 2. 2dimensional dp
+     * dp(i,j) represents the side length of the maximum square whose bottom right corner is the cell with index (i,j) in the original matrix.
+     * 状态转移方程：dp(i, j)=min(dp(i−1, j), dp(i−1, j−1), dp(i, j−1))+1.
+     */
     public int maximalSquare(char[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return 0;
         int rows = matrix.length, cols = matrix[0].length;
