@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class LargestSumofAverages {
     /**
-     * 题意：给你一个数组，分成最多三个连续的sub array,每个sub Array求平均数相加得到sum，问sum的最小值。
+     * 题意：给你一个数组，分成最多K个连续的sub array,每个sub Array求平均数相加得到sum，问sum的最小值。
      * 解法：我的想法，用prefix数组，一个dfs去记录目前有几个分割点，当达到k - 1 个的时候返回。每次递归，都按照分割点数组里的位置进行分割计算，由于使用了前缀数组，可以O(1)得到每一段的average sum。
      * 这样的做法是对的，但是仍然会超时。我又想，是否能用dp[i][j]代表前i个数字的subarray中有j个pivot的时候的最小average sum？但是如果这样的话，怎么能把dp[i][j]和dp[i+1][j]挂钩呢？
      * 然后我看答案了。
@@ -76,7 +76,7 @@ public class LargestSumofAverages {
      * 一开始写错了好几个地方，检查了很久，尤其是cur / (n - i + 1)写成了cur/(A.length - i)
      * memo[i][j] represents largest sum of averages of first i elements of A split into at most j groups
      */
-    public double largestSumOfAverages(int[] A, int K) {
+    public double largestSumOfAverages_lee(int[] A, int K) {
         double[][] memo = new double[A.length][K + 1];
         double cur = 0;
         for (int i = 0; i < A.length; i++) {
@@ -86,6 +86,9 @@ public class LargestSumofAverages {
         return dfs(A, A.length - 1, K, memo);
     }
 
+    /**
+     * dfs返回把A的前n个元素分成最多k组的最大平均和
+     */
     private double dfs(int[] A, int n, int k, double[][] memo) {
         if (n + 1 < k) return 0;
         if (memo[n][k] > 0) {
@@ -94,8 +97,38 @@ public class LargestSumofAverages {
         double cur = 0;
         for (int i = n; i > 0; i--) {
             cur += A[i];//这里不能放到递归函数中，否则会backtrack无法累加..
-            memo[n][k] = Math.max(memo[n][k], cur / (n - i + 1) + dfs(A, i - 1, k - 1, memo));
+            memo[n][k] = Math.max(memo[n][k], cur / (n - i + 1) + dfs(A, i - 1, k - 1, memo));//[i, n]分为一组，[0, i - 1]分为最多k - 1组
         }
         return memo[n][k];
+    }
+
+
+    /**
+     * DP写法，思路跟DFS很像，都是把后面的部分分割成一个新的part，跟1278. Palindrome Partitioning III很像。
+     * 但我觉得这种写法不如DFS清晰，而且下标容易错。
+     * dp[n][k] = min{ dp[i][k - 1] + sum(i,n)/(n - i + 1) , 0 <= i < n}
+     */
+    public double largestSumOfAverages(int[] A, int K) {
+        int n = A.length;
+        Double[][] dp = new Double[n][K + 1];
+        double[] prefix = new double[n];
+        double cur = 0;
+        for (int i = 0; i < n; i++) {
+            cur += A[i];
+            prefix[i] = cur;
+            dp[i][1] = cur / (i + 1);
+        }
+        for (int i = 0; i < n; i++) {
+            for (int k = 1; k < K; k++) {
+                if (dp[i][k] == null) break;
+                for (int j = i + 1; j < n; j++) {
+                    //[i + 1 , j]分成1份
+                    double average = (prefix[j] - prefix[i]) / (j - (i + 1) + 1);
+                    if (dp[j][k + 1] == null || dp[j][k + 1] < dp[i][k] + average)
+                        dp[j][k + 1] = dp[i][k] + average;
+                }
+            }
+        }
+        return dp[n - 1][K];
     }
 }

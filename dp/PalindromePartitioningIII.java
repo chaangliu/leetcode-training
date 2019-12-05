@@ -30,7 +30,7 @@ public class PalindromePartitioningIII {
      * 我是模仿WNJXYK的视频写的，他思路还挺清晰的，但这种做法对我还说还是比较陌生。花花的视频介绍了这种题的套路，今天晚些可以看看。
      * 解法：dp，dp[i][j]表示前i个字母分成j个palindrome的最小代价(修改的字母数量)。
      **/
-    public int palindromePartition(String s, int k) {
+    public int palindromePartition__DP(String s, int k) {
         int n = s.length();
         Integer[][] dp = new Integer[n + 1][k + 1];
         dp[0][0] = 0;//前0个字母分成0份
@@ -50,6 +50,7 @@ public class PalindromePartitioningIII {
 
     /**
      * 计算把[i,j]变成palindrome需要的cost
+     * (这个也能用dp来预处理，dp[i + 1][j - 1]可以得到dp[i][j]，见initCost()函数)
      **/
     private int calc(String s, int l, int r) {
         int res = 0;
@@ -59,5 +60,49 @@ public class PalindromePartitioningIII {
             if (s.charAt(l++) != s.charAt(r--)) res++;
         }
         return res;
+    }
+
+
+    /**
+     * DFS with memo,跟largest sum of averages很像，但是超时了
+     */
+    public int palindromePartition(String s, int k) {
+        int[][] memo = new int[s.length()][k + 1];
+        int[][] c = initCost(s);
+        for (int i = 0; i < memo.length; i++)
+            for (int j = 0; j < memo[0].length; j++) memo[i][j] = Integer.MAX_VALUE / 2;
+        for (int i = 0; i < s.length(); i++) {
+            //memo[i][1] = calc(s, 0 + 1, i + 1);
+            memo[i][1] = c[0][i];
+        }
+        return dfs(s, s.length() - 1, k, memo, c);
+    }
+
+    /**
+     * dfs返回s的前n个字符分成K个palindrome需要的最小代价
+     */
+    private int dfs(String s, int n, int K, int[][] memo, int[][] c) {
+        if (memo[n][K] != Integer.MAX_VALUE / 2) return memo[n][K];
+        for (int i = n; i > 0; i--) {
+            //[i, n]之间做成一个palindrome需要的cost
+            int cost = c[i][n];
+            memo[n][K] = Math.min(memo[n][K], dfs(s, i - 1, K - 1, memo, c) + cost);
+        }
+        return memo[n][K];
+    }
+
+    private int[][] initCost(String s) {
+        int n = s.length();
+        int[][] cost = new int[n][n];
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0, j = len - 1; j < n; ++i, ++j) {
+                cost[i][j] = (s.charAt(i) != s.charAt(j) ? 1 : 0) + cost[i + 1][j - 1];
+            }
+        }
+        return cost;
+    }
+
+    public static void main(String args[]) {
+        System.out.println(new PalindromePartitioningIII().palindromePartition("aabbc", 3));
     }
 }
