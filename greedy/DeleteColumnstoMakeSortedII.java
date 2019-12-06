@@ -37,10 +37,11 @@ import java.util.HashSet;
 public class DeleteColumnstoMakeSortedII {
     /**
      * 题意：给你一个字符串数组，让你从每个string里删除最少的几列，让剩下的string变成字典序的。
-     * 思路：似乎没什么套路；思路是贪心思想，最少的列一定是优先删除高位，因为高位有序了就已经是字典序了，低位就无需再管了。
+     * 解法1：贪心思想，最少的列一定是优先删除高位，因为高位有序了就已经是字典序了，低位就无需再管了。
      * 从高到低遍历，如果发现A[i][col] > A[i + 1][col]，说明col这一列肯定要删掉，于是进入col+1列继续;
      * 如果一趟下来发现A[i][col] <= A[i + 1][col]都满足，那么再从中挑选A[i][col] 严格小于 A[i + 1][col]的，下一趟不用对比了。
      * 这个sorted的set是关键点，因为一旦某些pair有序，后续都无需对比。
+     * 时间：O(MN)，无需重头开始。
      **/
     public int minDeletionSize(String[] A) {
         HashSet<Integer> sorted = new HashSet<>();//其中记录的i表示A[i],A[i+1]是有序的
@@ -62,5 +63,26 @@ public class DeleteColumnstoMakeSortedII {
             }
         }
         return res;
+    }
+
+
+    /**
+     * 解法2，模拟，速度可能稍慢些。这个的做法是记录删掉的col，解法1是记录已经有序的pair。
+     * 每次都从头检查，遇到A[i - 1].charAt(j) > A[i].charAt(j)的就把当前col添加到set代表删掉，然后重头开始，跳过col
+     */
+    public int minDeletionSize__(String[] A) {
+        HashSet<Integer> deleted = new HashSet<>();
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A[0].length(); j++) {
+                if (deleted.contains(j) || A[i - 1].charAt(j) == A[i].charAt(j)) continue;
+                if (A[i - 1].charAt(j) > A[i].charAt(j)) {
+                    deleted.add(j);
+                    i = 0;
+                }else {
+                    break;//严格小于，进入下一个Pair
+                }
+            }
+        }
+        return deleted.size();
     }
 }
