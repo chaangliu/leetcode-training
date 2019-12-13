@@ -34,9 +34,9 @@ public class IntegerBreak {
         //dp[i] means output when input = i, e.g. dp[4] = 4 (2*2),dp[8] = 18 (2*2*3)...
         int[] dp = new int[n + 1];
         dp[1] = 1;
-        for (int i = 2; i <= n; i++)
-            for (int m = 1; m <= i / 2; m++) {
-                dp[i] = Math.max(dp[i], Math.max(m, dp[m]) * Math.max(i - m, dp[i - m]));
+        for (int i = 2; i <= n; i++)//枚举区间长度
+            for (int m = 1; m <= i / 2; m++) {//枚举分割点
+                dp[i] = Math.max(dp[i], Math.max(m, dp[m]) * Math.max(i - m, dp[i - m]));//分割与不分割
             }
         return dp[n];
     }
@@ -58,10 +58,42 @@ public class IntegerBreak {
         return product;
     }
 
+
+
     /**
-     * Approach1的 recursion with memo, top down写法。尝试着写了没写出来，这是抄的别人的
-     * 我试着写的借助了一个helper，idx递增，for循环枚举m从1到idx - 1，答案不对；
-     * 观察一下别人的做法，从高到低枚举1~idx中的一个数k，往下分割，比较分割/不分割k的最大数。
+     * Recursion原型:
+     * int result = Math.max(2 * integerBreak(10 - 2) * i, 3 * integerBreak(10 - 3), 4 * integerBreak(10 - 4)...)
+     */
+    public int integerBreak____(int n) {
+        if (n <= 2) return 1;//base case
+        int solution = 0;
+        for (int i = 2; i < n; i++) {
+            solution = Math.max(solution, i * integerBreak____(n - i));
+        }
+        return solution;
+    }
+
+
+    /**
+     * 根据上面的原型，给dfs加上memo：
+     */
+    public int integerBreak_(int n) {
+        return dfs(n, new Integer[n + 1]);
+    }
+
+    public int dfs(int n, Integer[] dp) {
+        if (n <= 2) return 1;//base case
+        if (dp[n] != null) return dp[n];
+        dp[n] = 0;
+        for (int i = 2; i < n; i++) {
+            dp[n] = Math.max(dp[n], i * (n - i));
+            dp[n] = Math.max(dp[n], i * dfs(n - i, dp));
+        }
+        return dp[n];
+    }
+
+    /**
+     * 或者这么写：
      */
     private int solve_topdown(int n, int[] dp) {
         if (n == 2) {
@@ -76,18 +108,5 @@ public class IntegerBreak {
             dp[n] = Math.max(dp[n], solve_topdown(i, dp) * (n - i));// do break
         }
         return dp[n];
-    }
-
-    /**
-     * 上面的recursion的原型:
-     * int result = Math.max(2 * integerBreak(10 - 2) * i, 3 * integerBreak(10 - 3), 4 * integerBreak(10 - 4)...)
-     */
-    public int integerBreak____(int n) {
-        if (n <= 2) return 1;//base case
-        int solution = 0;
-        for (int i = 2; i < n; i++) {
-            solution = Math.max(solution, i * integerBreak(n - i));
-        }
-        return solution;
     }
 }

@@ -31,6 +31,7 @@ public class FindSmallestCommonElementinAllRows {
      [5,7,9]]
      **/
     /**
+     * 题意：找出矩阵的所有row中最小的公共元素。
      * 这题我看到每行是有序的，仍然没条件反射想到二分，很可惜啊。
      * 好的解法，二分搜索。对于第一行中出现的每个数在后面几行中二分搜索，复杂度O(nlogm)
      **/
