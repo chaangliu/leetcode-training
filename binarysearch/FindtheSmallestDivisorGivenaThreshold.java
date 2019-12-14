@@ -27,7 +27,7 @@ package binarysearch;
  */
 public class FindtheSmallestDivisorGivenaThreshold {
     /**
-     * 题意：找出一个数，数组中的每个数除以这个数之后向上取证不超过threshold，求这个数的最大值。
+     * 题意：找出一个数，数组中的每个数除以这个数之后向上取整不超过threshold，求这个数的最大值。
      * 看数据范围很容易想到二分搜索，配合Math.ceil。
      */
     public int smallestDivisor(int[] nums, int threshold) {

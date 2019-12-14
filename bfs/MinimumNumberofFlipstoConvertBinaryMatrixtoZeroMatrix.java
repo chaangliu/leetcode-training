@@ -1,8 +1,11 @@
 package bfs;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -56,7 +59,7 @@ public class MinimumNumberofFlipstoConvertBinaryMatrixtoZeroMatrix {
         return min == Integer.MAX_VALUE ? -1 : min;
     }
 
-    private int dfs(int[][] mat, Set<String> set, Map<String, Integer> memo, int m, int n) {
+    private int dfs(int[][] mat, Set<String> visited, Map<String, Integer> memo, int m, int n) {
         StringBuilder key = new StringBuilder();
         boolean allZero = true;
         for (int i = 0; i < m; i++)
@@ -65,11 +68,9 @@ public class MinimumNumberofFlipstoConvertBinaryMatrixtoZeroMatrix {
                 if (mat[i][j] != 0) allZero = false;
             }
         if (allZero) return 0;
-        if (memo.containsKey(key.toString()))//这个set的过滤很关键，意思是防止循环，0001 => 1111 => 0001 => 1111 ..
-            return memo.get(key.toString());
-        if (set.contains(key.toString()))
-            return Integer.MAX_VALUE;
-        set.add(key.toString());
+        if (memo.containsKey(key.toString())) return memo.get(key.toString());
+        if (visited.contains(key.toString())) return Integer.MAX_VALUE;//这个set的过滤很关键，意思是防止循环，0001 => 1111 => 0001 => 1111 ..
+        visited.add(key.toString());
         int min = Integer.MAX_VALUE;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
@@ -79,9 +80,8 @@ public class MinimumNumberofFlipstoConvertBinaryMatrixtoZeroMatrix {
                 if (i + 1 < m) mat[i + 1][j] = 1 ^ mat[i + 1][j];
                 if (j - 1 >= 0) mat[i][j - 1] = 1 ^ mat[i][j - 1];
                 if (j + 1 < n) mat[i][j + 1] = 1 ^ mat[i][j + 1];
-                int res = dfs(mat, set, memo, m, n);
-                if (res != Integer.MAX_VALUE)
-                    min = Math.min(min, 1 + res);
+                int res = dfs(mat, visited, memo, m, n);
+                if (res != Integer.MAX_VALUE) min = Math.min(min, 1 + res);
                 mat[i][j] = 1 ^ mat[i][j];
                 if (i - 1 >= 0) mat[i - 1][j] = 1 ^ mat[i - 1][j];
                 if (i + 1 < m) mat[i + 1][j] = 1 ^ mat[i + 1][j];
@@ -89,8 +89,44 @@ public class MinimumNumberofFlipstoConvertBinaryMatrixtoZeroMatrix {
                 if (j + 1 < n) mat[i][j + 1] = 1 ^ mat[i][j + 1];
             }
         }
-        set.remove(key.toString());
+        visited.remove(key.toString());
         memo.put(key.toString(), min);
         return min;
+    }
+
+    /**
+     * 解法2. BFS
+     * 看到「最短」应该条件反射想到BFS。BFS的解法跟DFS除了执行顺序上略有差别之外，没什么大差别，都是遍历格子,毕竟数据量小的情况下就是按时你暴力搜索。
+     * 这儿大家都用了bit来记录matrix状态，因为matrix很小，天然地就可以记录matrix状态，不用map成string了。
+     **/
+    int[] dir = new int[]{0, 0, 1, 0, -1, 0};//上下左右四个方向可以这么写
+
+    public int minFlips_(int[][] mat) {
+        int start = 0, m = mat.length, n = mat[0].length;
+        for (int i = 0; i < m; i++)//map the mat => int
+            for (int j = 0; j < n; j++) {
+                start |= mat[i][j] << i * n + j; // convert the matrix to an int.
+            }
+        Queue<Integer> q = new LinkedList<>(Arrays.asList(start));
+        HashSet<Integer> visited = new HashSet<>();
+        for (int res = 0; !q.isEmpty(); res++) {
+            for (int size = q.size(); size > 0; size--) {//bfs技巧，把size放到for循环里声明
+                int cur = q.poll();
+                if (cur == 0) return res;
+                for (int r = 0; r < m; r++) {//traverse, flip [r][c] and its neighborhood
+                    for (int c = 0; c < n; c++) {
+                        int next = cur;
+                        for (int k = 0; k < 5; k++) {
+                            int nr = r + dir[k], nc = c + dir[k + 1];
+                            if (nr < 0 || nr >= m || nc < 0 || nc >= n) continue;//已犯错误，这里nc >= n写成了nc >= c..找了一小时，脑子什么时候能在线呢T_T..
+                            next ^= 1 << n * nr + nc;//flip
+
+                        }
+                        if (visited.add(next)) q.offer(next);//加入q之前就加入visited，这有可以减小q的体积；当然也可以在q.poll()的时候判断，不过那样就需要更多空间
+                    }
+                }
+            }
+        }
+        return -1;
     }
 }
