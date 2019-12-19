@@ -27,6 +27,7 @@ import java.util.Arrays;
  */
 public class MinimumFallingPathSum {
     /**
+     * 题意：一个n * n的square数组，从上到下找一个路径，下一行的字母所在的列数和上一行的偏差不能超过1。
      * 123
      * 456
      * 789
