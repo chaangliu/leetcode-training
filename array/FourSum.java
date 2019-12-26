@@ -30,10 +30,8 @@ import java.util.List;
 
 public class FourSum {
     public static List<List<Integer>> fourSum(int[] nums, int target) {
-
         List<List<Integer>> list_result = new ArrayList<>();
         if (nums == null || nums.length < 4) return list_result;
-
         Arrays.sort(nums);
         for (int i = 0; i < nums.length - 3; i++) {
             if (i > 0 && nums[i] == nums[i - 1]) {
@@ -70,7 +68,7 @@ public class FourSum {
                         while (low < high && nums[high] == nums[high + 1]) high--;
 
 
-                        while (low+1  < high && nums[low] == nums[low + 1]) low++;
+                        while (low + 1 < high && nums[low] == nums[low + 1]) low++;
                     } else if (nums[i] + nums[j] + nums[low] + nums[high] > target) {
                         high--;
                     } else {
@@ -82,8 +80,67 @@ public class FourSum {
         return list_result;
     }
 
+
+    /**
+     * kSum 的通用解法
+     */
+    int len = 0;
+
+    public List<List<Integer>> fourSum_(int[] nums, int target) {
+        len = nums.length;
+        Arrays.sort(nums);
+        return kSum(nums, target, 4, 0);
+    }
+
+    private ArrayList<List<Integer>> kSum(int[] nums, int target, int k, int index) {
+        ArrayList<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (index >= len) {
+            return res;
+        }
+        if (k == 2) {
+            int i = index, j = len - 1;
+            while (i < j) {
+                //find a pair
+                if (target - nums[i] == nums[j]) {
+                    List<Integer> temp = new ArrayList<>();
+                    temp.add(nums[i]);
+                    temp.add(target - nums[i]);
+                    res.add(temp);
+                    //skip duplication
+                    while (i < j && nums[i] == nums[i + 1]) i++;
+                    while (i < j && nums[j - 1] == nums[j]) j--;
+                    i++;
+                    j--;
+                    //move left bound
+                } else if (target - nums[i] > nums[j]) {
+                    i++;
+                    //move right bound
+                } else {
+                    j--;
+                }
+            }
+        } else {
+            for (int i = index; i < len - k + 1; i++) {
+                //use current number to reduce ksum into k-1sum
+                ArrayList<List<Integer>> temp = kSum(nums, target - nums[i], k - 1, i + 1);
+                if (temp != null) {
+                    //add previous results
+                    for (List<Integer> t : temp) {
+                        t.add(0, nums[i]);//把当前数加到第0位。如果不按顺序可以加到末位
+                    }
+                    res.addAll(temp);
+                }
+                while (i < len - 1 && nums[i] == nums[i + 1]) {
+                    //skip duplicated numbers
+                    i++;
+                }
+            }
+        }
+        return res;
+    }
+
     public static void main(String args[]) {
-        int[] nums = {-3,-2,-1,0,0,1,2,3,100};
+        int[] nums = {-3, -2, -1, 0, 0, 1, 2, 3, 100};
         System.out.println(fourSum(nums, 0).toString());
     }
 }

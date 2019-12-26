@@ -26,7 +26,8 @@ import java.util.List;
 public class ThreeSum {
     /**
      * 题意：找出三数之和等于0，任意顺序，不能有重复。
-     * 我的解法，固定一个pivot，然后后两个用2sum的方法找。
+     * 先放我的解法，固定一个pivot，然后后两个用2sum的方法找。
+     * 答案的解法大家一致地选择了先排序，总体O(n^2)。
      */
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
