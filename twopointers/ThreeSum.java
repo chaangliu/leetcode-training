@@ -1,7 +1,9 @@
-package array;
+package twopointers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,49 +20,34 @@ import java.util.List;
  * [-1, -1, 2]
  * ]
  * Created by DrunkPiano on 2016/12/8.
+ * 20191226 review
  */
 
 public class ThreeSum {
-
-
-    public static List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();   //answer
-//        List<Integer> list_cell = new ArrayList<>();
-        Arrays.sort(nums);
-        int low, high, target;
-        for (int i = 0; i < nums.length - 2; i++) {
-            if (i > 0 && nums[i - 1] == nums[i]) continue;
-//            System.out.println("result--->" + i);
-            low = i + 1;
-            high = nums.length - 1;
-            target = 0 - nums[i];
-            while (low < high) {
-                if (nums[low] + nums[high] == target) {
-                    List<Integer> list_cell = new ArrayList<Integer>();//一定要放在这里new。。。而且不能在下面clear，否则连带list_cell没了，list也没了
-
-                    list_cell.add(nums[i]);
-                    list_cell.add(nums[low]);
-                    list_cell.add(nums[high]);
-                    list.add(list_cell);
-//                    list_cell.clear();
-
-                    while (low < high && nums[low + 1] == nums[low]) {
-                        low++;
-                    }
-                    while (low < high && nums[high - 1] == nums[high]) {
-                        high--;
-                    }
-                    low++;//critical
-                    high--;
-                } else if (nums[low] + nums[high] < target) {
-                    low++;
+    /**
+     * 题意：找出三数之和等于0，任意顺序，不能有重复。
+     * 我的解法，固定一个pivot，然后后两个用2sum的方法找。
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null) return res;
+        int n = nums.length;
+        HashSet<String> visited = new HashSet<>();//已犯错误：忘记去重，所以后来加上一个set，总体复杂度仍然是O(n^2)，但跑起来速度较慢
+        for (int i = 0; i < n; i++) {
+            int target = 0 - nums[i];
+            HashSet<Integer> set = new HashSet<>();
+            for (int j = i + 1; j < n; j++) {
+                if (set.contains(target - nums[j])) {
+                    List<Integer> item = Arrays.asList(nums[i], target - nums[j], nums[j]);
+                    Collections.sort(item);
+                    if (visited.add(item.toString()))
+                        res.add(Arrays.asList(nums[i], target - nums[j], nums[j]));
                 } else {
-                    high--;
+                    set.add(nums[j]);
                 }
-//                list_cell.clear();
             }
         }
-        return list;
+        return res;
     }
 
     //20190113review 这题的思路，要以一个pivot为基准，从前往后扫描，在后面找两个合适的数；找两个数的的方法就是sorted 2 sum的方案，难点是去重
@@ -75,12 +62,8 @@ public class ThreeSum {
                 if (num[low] + num[high] + num[i] == 0) {
                     res.add(Arrays.asList(num[i], num[low], num[high]));
                     //下面几行也是为了防止重复的set
-                    while (low < high && num[low] == num[low + 1]) {//low < high 重要，否则[0,0,0]过不了
-                        low++;
-                    }
-                    while (low < high && num[high] == num[high - 1]) {
-                        high--;
-                    }
+                    while (low < high && num[low] == num[low + 1]) low++;//low < high 重要，否则[0,0,0]过不了
+                    while (low < high && num[high] == num[high - 1]) high--;
                     low++;
                     high--;
                 } else if (num[low] + num[high] + num[i] < 0) {
@@ -95,9 +78,8 @@ public class ThreeSum {
 
     public static void main(String args[]) {
         int[] nums = {-1, 0, 1, 2, -1, -4};
-//        int[] nums = {-2, 0, 1, 1, 2};
+        //        int[] nums = {-2, 0, 1, 1, 2};
         List<List<Integer>> list = new ThreeSum().threeSum2(nums);
         System.out.println("result--->" + list.toString());
     }
-
 }

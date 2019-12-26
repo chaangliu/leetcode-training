@@ -52,13 +52,4 @@ public class TwoSum {
 //        }
 //        return new int[]{};
 //    }
-
-    public static void main(String args[]) {
-        int[] nums = {3, 2, 4};
-//        int[] nums = {2, 7, 11, 15};
-//        int target = 9;
-//        result = twoSum(nums, target);
-//        int []result = new TwoSum().twoSum_(nums, 9);
-        System.out.println(result[0] + " , " + result[1]);
-    }
 }
