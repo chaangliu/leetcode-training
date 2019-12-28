@@ -69,9 +69,33 @@ public class LongestPalindromicSubstring {
     /**
      * Approach 2: Expand Around Center，跟647. Palindromic Substrings一样思路
      * O(n2)，Constant Space，思路比较简单，但是其实空间占用还比DP小。
-     *
-     * 代码略。
+     * <p>
+     * 代码如下。不够熟练，WA了一次。
      */
+    String res = "";
+    int maxLen = 0;
+
+    public String longestPalindrome__(String s) {
+        if (s == null || s.length() == 0) return "";
+        for (int i = 0; i < s.length(); i++) {
+            expand(i, i, s);
+            if (i + 1 < s.length() && s.charAt(i) == s.charAt(i + 1))
+                expand(i, i + 1, s);
+        }
+        return res;
+    }
+
+    private void expand(int l, int r, String s) {
+        while (l - 1 >= 0 && r + 1 < s.length() && s.charAt(l - 1) == s.charAt(r + 1)) {
+            l--;
+            r++;
+        }
+        if (r - l + 1 > maxLen) {
+            maxLen = r - l + 1;
+            res = s.substring(l, r + 1);
+            System.out.println(res);
+        }
+    }
 
 
     public static void main(String args[]) {
