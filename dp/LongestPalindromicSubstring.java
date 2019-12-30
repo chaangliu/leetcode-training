@@ -45,6 +45,30 @@ public class LongestPalindromicSubstring {
         return s.substring(start, end + 1);
     }
 
+    /**
+     * dp review 20191230
+     * dp[i][j] = A[i] == A[j] && dp[i + 1][j - 1]，不用处理[i+1][j],[i][j-1]
+     **/
+    public String longestPalindrome___(String s) {
+        int n = s.length();
+        if (n == 0) return "";
+        int maxLen = 1;
+        String res = s.charAt(0) + "";
+        boolean[][] dp = new boolean[n][n];
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i + 1; j < n; j++) {
+                if (s.charAt(i) == s.charAt(j) && (i + 1 == j || i + 2 == j || dp[i + 1][j - 1])) {//已犯错误：忘记i + 2 == j这个条件
+                    dp[i][j] = true;
+                    if (j - i + 1 > maxLen) {
+                        maxLen = j - i + 1;
+                        res = s.substring(i, j + 1);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
     public String longestPalindrome__2017(String s) {
         if (s == null || s.length() <= 1)
             return s;
