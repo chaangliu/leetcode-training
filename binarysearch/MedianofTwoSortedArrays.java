@@ -18,47 +18,46 @@ package binarysearch;
 
 public class MedianofTwoSortedArrays {
     /**
-     * 题意：两个递增的数组，让你找中位数，要求时间是O(log(m+n))。
-     * 解法：leetcode最高赞的解法是，BinarySearch；在A数组和B数组分别找i，j；然后把AB的前半部分和后半部分分成一组。具体做法是，二分寻找i，然后利用i + j = len/2这个公式找j。
-     *       left_part          |        right_part
-     * A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
-     * B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
-     */
+     * 题意：找出两个有序数列的中位数，时间：O(log (m+n))
+     * 解法：中位数的意思是，如果有n个有序的数，n是奇数，就取第n/2个；n是偶数，就取第n/2 - 1 和 n/2 个数的平均值；
+     * 那么，这题是两个有序数列，如何让它等效于一个有序数列？可以把arr1/arr2的前半部分和后半部分分成一组(记为left，right)，假设用i,j来分割arr1和arr2，
+     * 那么只要保证arr1[i-1] <= arr2[j] && arr2[j - 1] <= arr1[i], 就可以保证left部分总小于等于right部分；
+     * 其次就是要保证left部分和right部分的数字数量一样或者相差1，这样接缝处就可以找到中位数。也就是i + j = (m + n) / 2
+     * 操作起来就是相当于两个滑块，如果i需要往左，那j就需要往右；反之亦然。
+     * *       left_part          |        right_part
+     * * A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+     * * B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+     **/
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int m = nums1.length;
-        int n = nums2.length;
+        int m = nums1.length, n = nums2.length;
         if (m > n) return findMedianSortedArrays(nums2, nums1);//保证m <= n
-        int i = 0, j = 0, imin = 0, imax = m, half = (m + n + 1) / 2;
+        int i = 0, j = 0;
+        int lo = 0, hi = m;
         double maxLeft = 0, minRight;
-        while (imin <= imax) {
-            i = (imin + imax) / 2;
-            j = half - i;
-            if (j > 0 && i < m && nums2[j - 1] > nums1[i]) {
-                imin = i + 1;// i is too small, must increase it
-            } else if (i > 0 && j < n && nums1[i - 1] > nums2[j]) {
-                imax = i - 1;// i is too big
-            } else {// i is perfect =>  B[j-1] <= A[i] and A[i-1] <= B[j], ( where j = (m + n + 1)/2 - i )
-                if (i == 0) {
-                    maxLeft = (double) nums2[j - 1];
-                } else if (j == 0) {
-                    maxLeft = (double) nums1[i - 1];
-                } else {
-                    maxLeft = (double) Math.max(nums1[i - 1], nums2[j - 1]);
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            i = mid;
+            j = (m + n + 1) / 2 - i;//(m + n + 1)而不是(m + n)的这种划分是让总数是奇数的时候，左边比右边多一个
+            if (i > 0 && j < n && nums1[i - 1] > nums2[j]) {
+                hi = mid - 1;
+            } else if (j > 0 && i < m && nums2[j - 1] > nums1[i]) {
+                lo = mid + 1;
+            } else {//已经满足条件，但是对于i = 0或者j = 0要特殊处理，这也是为什么把这种情况放在最后一个esle里
+                if (i == 0) maxLeft = (double) nums2[j - 1];
+                else if (j == 0) maxLeft = (double) nums1[i - 1];
+                else {
+                    maxLeft = (double) Math.max(nums1[i - 1], nums2[j - 1]);//左边界较大的那个
                 }
-                break;
+                break;//important
             }
         }
-        if ((m + n) % 2 == 1) {
+        if (((m + n) & 1) == 1) {
             return maxLeft;
         }
-        if (i == m) {
-            minRight = (double) nums2[j];
-        } else if (j == n) {
-            minRight = (double) nums1[i];
-        } else {
-            minRight = (double) Math.min(nums1[i], nums2[j]);
-        }
-        return (maxLeft + minRight) / 2;
+        if (i == m) minRight = nums2[j];//[1,2][3,4]的case，m=2
+        else if (j == n) minRight = nums1[i];
+        else minRight = Math.min(nums1[i], nums2[j]);
+        return (maxLeft + minRight) / 2.0;
     }
 
     /**
