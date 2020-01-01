@@ -7,55 +7,22 @@ package array;
  * Find two lines, which together with x-axis forms a container,
  * such that the container contains the most water.
  * Created by DrunkPiano on 2016/12/7.
+ * 20200101 review
  */
 
 public class ContainerWithMostWater {
-//    public static int maxArea(int[] height) {
-//        int max = 0 ;
-//        for(int i = 0 ;i < height.length ; i ++)
-//            for(int j = i+1 ; j < height.length ; j ++){
-//                int minHeight = height[i]<height[j]? height[i]:height[j];
-//                int tempArea = minHeight * Math.abs(i-j);
-//                if(max < tempArea){
-//                    max = tempArea;
-//                }
-//            }
-//        return max;
-//    }
-    public static int maxArea(int [] height){
-        if(height.length<2)
-            return 0;
-
-        int tempMax = 0 ;
-        int tempArea = 0 ;
-
-        for(int i = 0 , j = height.length-1 ; i<j ;){
-            tempArea  = (j-i) * Math.min(height[i],height[j]);
-            if(height[i]<height[j]){
-                i ++;
-            }
-            else {
-                j--;
-            }
-            if (tempMax<tempArea){
-                tempMax = tempArea;
-            }
+    /**
+     * 题意：给你一些木板，这些木板中能盛的水取决于最外侧两个木板的最小高度*木板间隔。问最大能盛放的水的体积。
+     * 这题O(n^2)会超时，正确做法是two pointers, 不用想得太复杂，每次把短的那个pointer往里面移动就行了。
+     */
+    public int maxArea(int[] height) {
+        int l = 0, r = height.length - 1, res = 0;
+        while (l < r) {
+            res = Math.max(res, (r - l) * Math.min(height[l], height[r]));//这个要放在l++r--的前面，考虑[1,1]的case
+            if (height[l] < height[r]) {
+                l++;
+            } else r--;
         }
-
-//        int left = 0 , right = height.length-1 ;
-//        while (left<right){
-//            tempArea = (right-left) * Math.min(height[left],height[right]);
-//            if (tempMax<tempArea){
-//                tempMax = tempArea;
-//            }
-//            if(height[left]<height[right]){
-//                left ++;
-//            }
-//            else {
-//                right --;
-//            }
-//
-//        }
-        return tempMax;
+        return res;
     }
 }
