@@ -23,7 +23,8 @@ import java.util.List;
 public class NumberofPathswithMaxScore {
     /**
      * 题意：给你一个棋盘，包含数字和字母，从右下角S走到左上角E，X的话不能走；问最大能收集到的数字的sum和能达到sum的路径总数。
-     * 我的做法也比较容易理解，就是用一个dp数组记录当前最大数字，path代表当前路径总数。但是corner case还是有些的。
+     * 我的做法也比较容易理解，就是用一个dp数组记录当前最大数字，path数组记录当前路径总数。但是corner case还是有些的。
+     * 也可以用一个[i][j][2]数组来做，也就是两层，空间一样大的。
      * path的计算方法是取三个来源的和，就像跳台阶那样。
      * 写了将近一个小时才ac。
      */
@@ -68,7 +69,7 @@ public class NumberofPathswithMaxScore {
     }
 
     /**
-     * 摘抄一个别人的答案
+     * 摘抄一个别人的答案，他是从当前格子去左边上边和左上的格子去递推
      */
     private static final int[][] DIRS = new int[][]{{0, -1}, {-1, 0}, {-1, -1}};
 
