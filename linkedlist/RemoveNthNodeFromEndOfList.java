@@ -9,38 +9,23 @@ package linkedlist;
  * Given n will always be valid.
  * Try to do this in one pass.
  * Created by DrunkPiano on 2017/3/4.
+ * 20200102 review
  */
 
 public class RemoveNthNodeFromEndOfList {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
-
+    /**
+     * 题意：删除倒数第n个node
+     * 解法：one pass的方法就是快慢指针，但是要注意特殊case比如[1]1, [1,2]2
+     */
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        if (0 == n) return null;
-
-        ListNode runner = head;
-        ListNode walker = head;
-
-        int i = 0;
-        while (runner.next != null) {
-            if (i < n) {
-                runner = runner.next;
-                i++;
-            } else {
-                break;
-            }
+        ListNode dummy = new ListNode(-1), fast = dummy, slow = dummy;//已犯错误：一开始把fast,slow都指向head了，这样没法处理[1]1
+        dummy.next = head;
+        for (int i = 0; i < n; i++) fast = fast.next;
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
         }
-        while (runner.next != null) {
-            walker = walker.next;
-            runner = runner.next;
-        }
-        walker.next = walker.next.next;
-        return head;
+        slow.next = slow.next.next;
+        return dummy.next;
     }
 }
