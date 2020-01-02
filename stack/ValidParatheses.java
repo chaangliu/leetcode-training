@@ -27,7 +27,7 @@ public class ValidParatheses {
                 if (stack.empty() || stack.pop() != '[') return false;
             }
         }
-        return stack.empty();//不能直接return true，不然'['过不了
+        return stack.empty();//不能直接return true，不然'['过不了 // 20200102又犯了同样错误..
     }
 
 
