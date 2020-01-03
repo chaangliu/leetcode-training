@@ -22,7 +22,7 @@ import java.util.List;
 public class GenerateParentheses {
     /**
      * 题意：给你一个数字n代表n对括号，让你生成所有可能的括号组合
-     * 当左括号出现次数<n时，就可以放置新的左括号。当右括号出现次数小于左括号出现次数时，就可以放置新的右括号。
+     * 解法：backtracking，优先添加左括号，不满足时backtrack地添加右括号。
      * n=3时下面解法生成的括号：["((()))","(()())","(())()","()(())","()()()"]
      */
     public List<String> generateParenthesis(int n) {
