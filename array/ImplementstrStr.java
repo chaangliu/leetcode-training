@@ -6,22 +6,18 @@ package array;
  */
 
 public class ImplementstrStr {
+    /**
+     * 题意：大海捞针；实现c的strStr或者java的indexOf
+     * 解法：O(mn)遍历
+     */
     public int strStr(String haystack, String needle) {
-        if (needle.length() > haystack.length()) return -1;
-        if(needle.length()==0) return 0;
-        for (int i = 0; i <= haystack.length() - needle.length(); i++) {
-            int needleIndex = 0;
-            int haystackIndex = i;
-            while (needle.charAt(needleIndex) == haystack.charAt(haystackIndex)) {
-                needleIndex++;
-                haystackIndex++;
-                if (needleIndex == needle.length()) {
-                    return haystackIndex - needleIndex;
-                }
+        for (int i = 0; ; i++) {
+            for (int j = 0; ; j++) {
+                if (j == needle.length()) return i;
+                if (i + j == haystack.length()) return -1;
+                if (needle.charAt(j) != haystack.charAt(i + j)) break;
             }
         }
-        return -1;
     }
-
 }
 
