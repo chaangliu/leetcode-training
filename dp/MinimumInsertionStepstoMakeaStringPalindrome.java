@@ -34,6 +34,7 @@ public class MinimumInsertionStepstoMakeaStringPalindrome {
      * 最长palindrome subsequence转移方程很经典, dp[i][j] = A[i] == A[j] ? dp[i+1][j-1] + 2 : max(dp[i+1][j],dp[i][j-1])
      * 最直接的方法，把lps那题代码贴过来，return s.length() - longestPalindromeSubseq(s);
      * 权当复习一下，写了个区间dp那样用len来按步长计算的，结果一开始在外面多写了个for。记住，区间dp的len一定是最外层。
+     * 方法1，n - lps
      **/
     public int minInsertions(String s) {
         int n = s.length();
@@ -46,5 +47,28 @@ public class MinimumInsertionStepstoMakeaStringPalindrome {
             }
         }
         return n - dp[0][n - 1];
+    }
+
+    /**
+     * 方法2，如果A[i] == A[j], 那么不用insert；否则可以在i处insertA[j]或者在j处insertA[i]，基于这样的想法可以写出下面的top down solution
+     */
+
+    public int minInsertions_(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) dp[i][j] = -1;
+        }
+        return func(s, 0, n - 1, dp);
+    }
+
+    private int func(String s, int start, int end, int[][] dp) {
+        if (start >= end) return 0;
+        if (dp[start][end] != -1) return dp[start][end];
+        if (s.charAt(start) == s.charAt(end))
+            return dp[start][end] = func(s, start + 1, end - 1, dp);
+        int x1 = func(s, start + 1, end, dp);
+        int x2 = func(s, start, end - 1, dp);
+        return dp[start][end] = 1 + Math.min(x1, x2);
     }
 }
