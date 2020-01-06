@@ -6,13 +6,14 @@ package binarysearch.templatei;
  * You are given a target value to search. If found in the array return its index, otherwise return -1.
  * You may assume no duplicate exists in the array.
  * Created by DrunkPiano on 2016/12/24.
+ * //20181027 review
+ * //20190629 review
+ * //20200104 review
  */
 
 public class SearchInRotatedSortedArray {
-    //20181027 review
-    //20190629 review
-
     /**
+     * 题意：在一个发生翻折的sorted array里搜索一个数。
      * 这题要找到一个ascending的区间进行搜索。
      */
     public int search(int[] nums, int target) {
@@ -21,12 +22,13 @@ public class SearchInRotatedSortedArray {
         while (lo <= hi) {
             int mid = lo + (hi - lo) / 2;
             if (nums[mid] == target) return mid;
-            if (nums[mid] >= nums[lo]) {//这个条件说明[low, mid]之间是递增的
-                //target在[low,mid]之间
+            if (nums[mid] >= nums[lo]) {// 这个条件说明[low, mid]之间是递增的；不能是>，否则无法通过[3,1]，因为只有>的话，3,1会被认为是递增的
+                // 关键，这里跟普通的二分搜索的区别是，你需要把target的两端都限定
+                // 这个if必须在前，因为只有一段是固定的，else才能去不确定的那另一边搜
                 if (target >= nums[lo] && target < nums[mid]) hi = mid - 1;
-                    //target在[low,mid]之外，那么target一定落在mid右边
+                    // target在[low,mid]之外，那么target一定落在mid右边
                 else lo = mid + 1;
-            } else {//否则说明[mid,high]之间是递增的
+            } else {// 否则说明(mid,high]之间是递增的，开区间
                 if (target > nums[mid] && target <= nums[hi]) lo = mid + 1;
                 else hi = mid - 1;
             }
