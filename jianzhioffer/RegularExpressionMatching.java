@@ -92,6 +92,7 @@ public class RegularExpressionMatching {
                         dp[i + 1][j + 1] = dp[i + 1][j - 1];
                     } else {
                         //a*如果满足 single a (a * 1) || multiple a (a * n) || empty a 即可。multi a这里这么理解：相当于s[i]忽略掉，*可以cover。
+                        //举个例子，s=bbb,p=b*，i=2 j=1的时候，满足s[i-1]=p[j-1], 但是dp[i][j-2]和dp[i-1][j-1]都是false，但是dp[i-1][j]是true，所以dp[i][j]是true，这里的multi就代表两个b
                         dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1] || dp[i + 1][j - 1]);
                     }
                 }
