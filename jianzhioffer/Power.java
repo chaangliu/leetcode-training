@@ -4,19 +4,9 @@ package jianzhioffer;
  * 给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
  */
 public class Power {
-    //approach 1. straightforward, time = O(n)
-//    public double Power(double base, int exponent) {
-//        double res = 1;
-//        if (exponent < 0 && base == 0) {
-//            return Integer.MAX_VALUE;
-//        } else {
-//            for (int i = 0; i < Math.abs(exponent); i++) {
-//                res *= base;
-//            }
-//            return exponent > 0 ? res : 1 / res;
-//        }
-//    }
-
+    /**
+     * 可参考leetcode 50. Pow(x, n)
+     */
     //递归：n为偶数，a^n=a^n/2*a^n/2;n为奇数，a^n=（a^（n-1）/2）*（a^（n-1/2））*a, time = O(log n)
     //a. 我的代码（AC）
     public double Power(double base, int exponent) throws Exception {
