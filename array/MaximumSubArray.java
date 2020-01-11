@@ -14,12 +14,31 @@ package array;
  */
 
 public class MaximumSubArray {
-//    way1:binary search + recursion
-//    public int maxSubArray(int[] nums) {
-//        int maxValue = Integer.MIN_VALUE;
-//        return findMaxSubArray(nums, 0, nums.length - 1, maxValue);
-//    }
+    /**
+     * 题意：求最大连续子序列的和。
+     * 解法：DP。
+     * dp[i] = dp[i - 1] > 0 ? dp[i - 1] + A[i] : A[i]
+     */
+    public int maxSubArray(int[] A) {
+        int n = A.length;
+        int[] dp = new int[n];
+        dp[0] = A[0];
+        int res = dp[0];// 已犯错误: 写成了Integer.MIN_VALUE，对于[1] WA
+        for (int i = 1; i < n; i++) {
+            dp[i] = dp[i - 1] > 0 ? dp[i - 1] + A[i] : A[i];
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
 
+
+    /**
+     * //    approach2: binary search + recursion
+     * //    public int maxSubArray(int[] nums) {
+     * //        int maxValue = Integer.MIN_VALUE;
+     * //        return findMaxSubArray(nums, 0, nums.length - 1, maxValue);
+     * //    }
+     */
     public int findMaxSubArray(int nums[], int left, int right, int maxValue) {
 
         if (left > right)
@@ -52,56 +71,4 @@ public class MaximumSubArray {
 
         return maxValue;
     }
-
-
-    //second way , Dynamic Programming
-    //dp[i] = dp[i - 1]  > 0 ? : dp[i - 1] + A[i] : A[i]
-    public int maxSubArray(int[] nums) {
-        int sum = nums[0], maxSum = nums[0];
-        for (int i = 0; i < nums.length; i++) {
-            if (sum < 0) {
-                sum = 0;
-            }
-            sum += nums[i];
-            maxSum = Math.max(maxSum, sum);
-        }
-        return maxSum;
-    }
-
-    public static void main(String args[]) {
-        int nums[] = {-2, -5, -3, -4, -8, -2, -6, -5, -4};
-        MaximumSubArray maximumSubArray = new MaximumSubArray();
-        int max = maximumSubArray.maxSubArray(nums);
-        System.out.println(max);
-
-
-        System.out.println(maximumSubArray);
-    }
-
-
-//    public int maxSubArray(int[] nums) {
-//        if (nums.length == 0) return 0;
-//        int local = nums[0];
-//        int global = nums[0];
-//        //local[i] = local[i-1] < 0 ? nums[i]: local[i-1]+nums[i]
-//
-//        for (int i = 1; i < nums.length; i++) {
-//            local = local > 0 ? local + nums[i] : nums[i];
-//            global = Math.max(local, global);
-//        }
-//        return global;
-//    }
-
-//    public int maxSubArray(int[] nums) {
-//        if (nums.length == 0) return 0;
-//        int dp[] = new int[nums.length];
-//        dp[0] = nums[0];
-//        //local[i] = local[i-1] < 0 ? nums[i]: local[i-1]+nums[i]
-//
-//        for (int i = 1; i < nums.length; i++) {
-//            dp[i] = dp[i-1]  > 0 ?nums[i] :
-//        }
-//    }
-
-
 }
