@@ -39,11 +39,58 @@ import basics.Interval;
  */
 public class NonoverlappingIntervals {
     /**
+     * 题意：在一个数组里移除最小个数的区间，让剩下的区间都不重叠
+     * 【官方解法】经典的interval scheduling问题，贪心做法，按照end排序，顺序地统计没有overlap的interval个数（https://en.wikipedia.org/wiki/Interval_scheduling#Interval_Scheduling_Maximization）
+     * 相当于要先求最大的不重叠的interval的个数。
+     * Actually, the problem is the same as "Given a collection of intervals, find the maximum number of intervals that are non-overlapping."
+     * (the classic Greedy problem: Interval Scheduling). With the solution to that problem, guess how do we get the minimum number of intervals to remove? : )
+     * Sorting Interval.end in ascending order is O(nlogn), then traverse intervals array to get the maximum number of non-overlapping intervals is O(n). Total is O(nlogn).
+     * <p>
+     * - Selecting the intervals that start earliest is not an optimal solution, because if the earliest interval happens to be very long, accepting it would make us reject many other shorter requests.
+     * - The following greedy algorithm does find the optimal solution:
+     * Select the interval, x, with the earliest finishing time.
+     * Remove x, and all intervals intersecting x, from the set of candidate intervals.
+     * Repeat until the set of candidate intervals is empty.
+     * 20200115 review
+     * 这题两个要点：
+     * 1. 按照finish time排序，这样才能保证greedy生效
+     * 2. 统计的是【不重合的个数】，而非重合的个数；否则会fails [[1,100],[11,22],[1,11],[2,12]], output 3, expected 2
+     * 对于2，可以想象如果有N个连续重合的interval，但是每相隔1个interval都彼此不重合，那么显然不能统计重合的个数。
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        if (intervals.length == 0) return 0;
+        Arrays.sort(intervals, (a, b) -> a[1] - b[1]);
+        int end = Integer.MIN_VALUE, nonOverlaps = 0;
+        for (int i = 0; i < intervals.length; i++) {
+            int[] iv = intervals[i];
+            if (iv[0] >= end) {
+                nonOverlaps++;// 统计不重合的个数
+                end = iv[1];
+            }
+        }
+        return intervals.length - nonOverlaps;
+    }
+
+    public int eraseOverlapIntervals(Interval[] intervals) {
+        if (intervals.length == 0) return 0;
+        Arrays.sort(intervals, (a, b) -> a.end - b.end);
+        int end = intervals[0].end;
+        int count = 1;
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i].start >= end) {
+                end = intervals[i].end;
+                count++;// 统计不重合的个数
+            }
+        }
+        return intervals.length - count;
+    }
+
+    /**
      * 这题是说，在一个数组里移除最小个数的区间，让剩下的区间都不重叠
      * 我在纸上画了很多情况试图找规律，最后找到一个规律: 在一个区间内如果包含了其它区间的结尾，就把当前区间remove掉。
      * 【我的解法】
      */
-    public int eraseOverlapIntervals(int[][] intervals) {
+    public int eraseOverlapIntervals_(int[][] intervals) {
         Arrays.sort(intervals, (o1, o2) -> o1[0] != o2[0] ? o1[0] - o2[0] : o2[1] - o1[1]);
         List<Pair> list = new ArrayList<>();
         int res = 0;
@@ -81,26 +128,5 @@ public class NonoverlappingIntervals {
             this.start = start;
             this.end = end;
         }
-    }
-
-
-    /**
-     * 【官方解法】经典的interval scheduling问题，贪心做法，按照end排序，顺序地统计没有overlap的interval个数（https://en.wikipedia.org/wiki/Interval_scheduling#Interval_Scheduling_Maximization）
-     * Actually, the problem is the same as "Given a collection of intervals, find the maximum number of intervals that are non-overlapping."
-     * (the classic Greedy problem: Interval Scheduling). With the solution to that problem, guess how do we get the minimum number of intervals to remove? : )
-     * Sorting Interval.end in ascending order is O(nlogn), then traverse intervals array to get the maximum number of non-overlapping intervals is O(n). Total is O(nlogn).
-     */
-    public int eraseOverlapIntervals(Interval[] intervals) {
-        if (intervals.length == 0) return 0;
-        Arrays.sort(intervals, (a, b) -> a.end - b.end);
-        int end = intervals[0].end;
-        int count = 1;
-        for (int i = 1; i < intervals.length; i++) {
-            if (intervals[i].start >= end) {
-                end = intervals[i].end;
-                count++;//统计不重合的个数
-            }
-        }
-        return intervals.length - count;
     }
 }
