@@ -15,32 +15,59 @@ package array;
  */
 
 public class SortColors {
-    public void sortColors(int[] nums) {
-        int redIndex = 0, blueIndex = nums.length - 1;
-        int i = 0;
-        int tmp;
-        while (i < blueIndex+1) {
-            if (nums[i] == 0) {
-//                swap(nums[i], nums[redIndex]);
-                tmp = nums[redIndex];
-                nums[redIndex] = nums[i];
-                nums[i] = tmp;
-                redIndex++;
-                //swap之后，i位置必定是1，所以跟1同样的处理:i++。
-                i++;
-                continue;
+    /**
+     * 题意：一个字符串里有乱序排列的0，1，2；把0，1，2 in place排序。
+     * 解法：这种要求in place的题一般就是swap。这题的技巧是，
+     */
+    public void sortColors(int[] A) {
+        int left = 0, right = A.length - 1, n = A.length;
+        for (int i = 0; i <= right; i++) {
+
+            // 如果先把0换到前面去，过不了case：[1,2,0] -> [1,0,2], 挺难想的，大致就是因为是从左往右遍历的
+            while (A[i] == 2 && i < right) {
+                swap(right, i, A);
+                right--;
             }
-            if (nums[i] == 2) {
-//                swap(nums[i], nums[blueIndex]);
-                tmp = nums[blueIndex];
-                nums[blueIndex] = nums[i];
-                nums[i] = tmp;
-                blueIndex--;
-                continue;
+            while (A[i] == 0 && i > left) {
+                swap(left, i, A);
+                left++;
             }
-            i++;
         }
     }
+
+    private void swap(int a, int b, int[] A) {
+        int tmp = A[a];
+        A[a] = A[b];
+        A[b] = tmp;
+    }
+
+    /**
+     * 第二种方法，i是iterator，low,high指向0，2
+     */
+    public void sortColors_(int[] A) {
+        if (A == null || A.length < 2) return;
+        int low = 0;
+        int high = A.length - 1;
+        for (int i = low; i <= high; ) {
+            if (A[i] == 0) {
+                // swap A[i] and A[low] and i,low both ++
+                int temp = A[i];
+                A[i] = A[low];
+                A[low] = temp;
+                i++;
+                low++;
+            } else if (A[i] == 2) {
+                //swap A[i] and A[high] and high--;
+                int temp = A[i];
+                A[i] = A[high];
+                A[high] = temp;
+                high--;
+            } else {
+                i++;
+            }
+        }
+    }
+
 
     public static void main(String args[]) {
         int a[] = {2};
