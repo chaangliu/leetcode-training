@@ -14,11 +14,8 @@ import java.util.Map;
  * <p>
  * If there is no such window in S that covers all characters in T, return the empty string "".
  * If there is such window, you are guaranteed that there will always be only one unique minimum window in S.
- * <p>
- * <p>
- *
- * <p>
  * 20190314
+ * 20200118 review
  */
 
 
@@ -33,7 +30,45 @@ public class MinimumWindowSubstring {
      * * https://leetcode.com/problems/find-all-anagrams-in-a-string/
      * 模板可参考：https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem.
      */
+
+    /**
+     * 题意：给你一个字符串s，让你找到最短的包含t中所有字母的substring。
+     * 解法：sliding window，不满足时就expand, 满足时(set.size() == 0)就contract。
+     * 做的过程中发现这题有个要点在于，不能用set，而要用map，即便题目没有要求子串要包含t中字母出现的次数也要用map，
+     * 如果用了map，在左边contract的时候你无法判断这时候substring里是否还有其他即将出窗的那个字母。
+     **/
     public String minWindow(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0) + 1);
+        int l = 0, r = 0, n = s.length(), min = n, match = 0;
+        String res = "";
+        while (r < n) {
+            char c = s.charAt(r);
+            if (map.containsKey(c)) {
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) == 0) match++;
+            }
+
+            while (match == map.size()) {
+                if (r - l < min) {
+                    res = s.substring(l, r + 1);
+                    min = r - l;
+                }
+                char lChar = s.charAt(l);
+                if (map.containsKey(lChar)) {
+                    map.put(lChar, map.getOrDefault(lChar, 0) + 1);
+                    if (map.get(lChar) > 0) {// 缺少t中的lChar了
+                        match--;
+                    }
+                }
+                l++; //已犯错误：忘记l++
+            }
+            r++;
+        }
+        return res;
+    }
+
+    public String minWindow_(String s, String t) {
         if (s == null || t == null || s.length() == 0 || t.length() == 0) return "";
         String res = "";
         Map<Character, Integer> map = new HashMap<>();
