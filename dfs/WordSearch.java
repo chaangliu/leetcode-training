@@ -18,15 +18,15 @@ package dfs;
  * word = "ABCB", -> returns false.
  * <p>
  * Created by DrunkPiano on 2017/2/9.
+ * 20190404 review
+ * 20200118 review
  */
 
 public class WordSearch {
     /**
-     * 20190404update
+     * 20190404 review
      * 不用visited[][]空间
-     * ------------------------------------------------------------------------------------------------------------------------------------------------------
      */
-
     public boolean exist__(char[][] board, String word) {
         int m = board.length, n = board[0].length;
         boolean[][] visited = new boolean[m][n];
@@ -48,6 +48,42 @@ public class WordSearch {
         if (dfs__(board, word, index + 1, x, y - 1)) return true;
         if (dfs__(board, word, index + 1, x, y + 1)) return true;
         board[x][y] = tmp;
+        return false;
+    }
+
+    /**
+     * 题意：一个二维数组里搜索单词，字母之间只能垂直或者水平相邻。同一个cell不能用多次。能找到就返回true。
+     * 解法：回溯。我以为这题我分分钟就能A掉，但是写了之后TLE好几次。一开始忘了剪枝；另外还用了额外空间，这题可以直接in pace标记visited的，v过就没有利用价值了，所以可以标记成任何东西。
+     **/
+    public boolean exist_(char[][] board, String word) {
+        if (word == null || word.length() == 0) return false;
+        int m = board.length, n = board[0].length;
+        int[][] dirs = new int[][]{{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        boolean[][] visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (word.charAt(0) != board[i][j]) continue;
+                visited[i][j] = true;
+                if (dfs(board, word, visited, board[i][j] + "", i, j, dirs)) return true;
+                visited[i][j] = false;
+            }
+
+        }
+        return false;
+    }
+
+    private boolean dfs(char[][] board, String word, boolean[][] visited, String cur, int i, int j, int[][] dirs) {
+        if (cur.length() == word.length() && word.equals(cur)) return true;
+        int m = board.length, n = board[0].length;
+        for (int[] d : dirs) {
+            int x = i + d[0], y = j + d[1];
+            if (x < m && x >= 0 && y < n && y >= 0 && !visited[x][y]) {
+                if (word.length() > cur.length() && board[x][y] != word.charAt(cur.length())) continue;
+                visited[x][y] = true;
+                if (dfs(board, word, visited, cur + board[x][y], x, y, dirs)) return true;
+                visited[x][y] = false;
+            }
+        }
         return false;
     }
 
