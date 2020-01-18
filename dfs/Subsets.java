@@ -3,31 +3,53 @@ package dfs;
 import java.util.ArrayList;
 import java.util.List;
 
-//Given a set of distinct integers, nums, return all possible subsets (the power set).
-//
-//        Note: The solution set must not contain duplicate subsets.
-//
-//        Example:
-//
-//        Input: nums = [1,2,3]
-//        Output:
-//        [
-//        [3],
-//        [1],
-//        [2],
-//        [1,2,3],
-//        [1,3],
-//        [2,3],
-//        [1,2],
-//        []
-//        ]
-//https://www.jianshu.com/p/287050afdab4
-//https://segmentfault.com/a/1190000006910777
+/**
+ * Given a set of distinct integers, nums, return all possible subsets (the power set).
+ * <p>
+ * Note: The solution set must not contain duplicate subsets.
+ * <p>
+ * Example:
+ * <p>
+ * Input: nums = [1,2,3]
+ * Output:
+ * [
+ * [3],
+ * [1],
+ * [2],
+ * [1,2,3],
+ * [1,3],
+ * [2,3],
+ * [1,2],
+ * []
+ * ]
+ * 20200118 review
+ */
 
 public class Subsets {
 
-    //############# 2018-09-21 Review #############
+    /**
+     * 题意：求一个数组所有数字的组合，包含空组合。顺序无所谓。
+     * 解法：general approach to backtracking。
+     */
     public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(res, new ArrayList<>(), 0, nums);
+        return res;
+    }
+
+    private void dfs(List<List<Integer>> res, List<Integer> cell, int start, int[] A) {
+        res.add(new ArrayList<>(cell));// 这个dfs不需要终止条件，跟permutations不一样，因为这个是一直从start往后traverse的。
+        for (int i = start; i < A.length; i++) {
+            cell.add(A[i]);
+            dfs(res, cell, i + 1, A);
+            cell.remove(cell.size() - 1);
+        }
+    }
+
+}
+
+    //############# 2018-09-21 Review #############
+    public List<List<Integer>> subsets_(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         res.add(new ArrayList<Integer>());
         if (nums == null || nums.length == 0) {
