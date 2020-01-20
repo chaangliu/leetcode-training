@@ -1,53 +1,60 @@
 package array;
 
 /**
+ * A message containing letters from A-Z is being encoded to numbers using the following mapping:
+ * <p>
+ * 'A' -> 1
+ * 'B' -> 2
+ * ...
+ * 'Z' -> 26
+ * Given a non-empty string containing only digits, determine the total number of ways to decode it.
+ * <p>
+ * Example 1:
+ * <p>
+ * Input: "12"
+ * Output: 2
+ * Explanation: It could be decoded as "AB" (1 2) or "L" (12).
+ * Example 2:
+ * <p>
+ * Input: "226"
+ * Output: 3
+ * Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
  * Created by DrunkPiano on 2017/4/9.
  */
 
 public class DecodeWays {
 
-    //dp[i]
-    // = dp[i-1] , if nums[i] == 0
-    // = dp[i-1] + dp[i-2] , if '1' <=nums[i-1]<='2'  && '1'<=nums[i]<='6'
-
-//    public int numDecodings(String s) {
-//        if (s.length() == 0) return 0;
-//        if (s.length() == 1) return 1;
-//        int dp[] = new int[s.length()];
-//        dp[0] = 1;
-//        dp[1] = s.charAt(0) == '1' || s.charAt(0) == '2' && '0' < s.charAt(1) && s.charAt(1) < '6' ? 2 : 1;
-//        for (int i = 2; i < s.length(); i++) {
-//            if (s.charAt(i) == '0') {
-//                dp[i] = dp[i - 1];
-//            } else if (s.charAt(i - 1) == '1' || s.charAt(i - 1) == '2' && s.charAt(i) < '6') {
-//                dp[i] = dp[i - 1] + dp[i - 2];
-//            }
-//        }
-//        return dp[s.length() - 1];
-//    }
-
+    /**
+     * 题意：给你一个数，1~26分别映射A-Z，问一一共有多少种解码方式。
+     * 解法：dfs with memo/ dp，类似
+     * 62. Unique Paths
+     * 70. Climbing Stairs
+     * 509. Fibonacci Number
+     * <p>
+     * DFS with memo:
+     */
     public int numDecodings(String s) {
-        if (s.length() == 0 || s.charAt(0) == '0') return 0; //0开头直接无法解码
-        //s[i-1] has r1 decode ways , s[i-2] has r2 decode ways
-        int r1 = 1;
-        int r2 = 1;
-
-        for (int i = 1; i < s.length(); i++) {
-            if (s.charAt(i) == '0') {
-                r1 = 0;
-            } else if (s.charAt(i - 1) == '1' || s.charAt(i - 1) == '2' && s.charAt(i) <= '6') {
-                r1 = r1 + r2;
-                r2 = r1 - r2;
-            }
-            //新加入的一位>6
-            else {
-                r2 = r1;
-            }
-        }
-        return r1;
+        return dfs(s, new Integer[s.length()], 0);
     }
 
     /**
+     * dfs返回从i开始的string有多少种decode方式。
+     */
+    private int dfs(String s, Integer[] memo, int i) {
+        if (i >= s.length()) return 1; //注意这儿对于越界，要返回1而非0；考虑dfs(s,memo,i+2),i+2==length的时候，应该有一种
+        if (s.charAt(i) == '0') return 0;
+        if (i == s.length() - 1) return 1;
+        if (memo[i] != null) return memo[i];
+        if (i + 2 <= s.length()) {
+            int num = Integer.parseInt(s.substring(i, i + 2));
+            memo[i] = (num <= 26 ? dfs(s, memo, i + 2) : 0) + dfs(s, memo, i + 1);//226可以从2 26和22 6得出，227只能从22 7得出，也就是i+2不一定成立，i+1一定成立
+            return memo[i];
+        }
+        return 0;
+    }
+
+    /**
+     * DP：
      * 20190412 review
      * 两年后这题的思路跟两年前一样，做了20分钟发现corner case不停出现于是放弃
      * <p>

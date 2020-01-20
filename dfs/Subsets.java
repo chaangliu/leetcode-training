@@ -46,8 +46,6 @@ public class Subsets {
         }
     }
 
-}
-
     //############# 2018-09-21 Review #############
     public List<List<Integer>> subsets_(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
