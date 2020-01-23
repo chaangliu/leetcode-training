@@ -14,21 +14,12 @@ import java.util.Stack;
 
 public class BinaryTreeInorderTraversal {
 
-    //approach 1 经典解法
-//	public ArrayList<Integer> inorderTraversal(TreeNode root) {
-//		ArrayList<Integer> res = new ArrayList<>();
-//		dfs(res, root);
-//		return res;
-//	}
-//
-//	private void dfs(List<Integer> res, TreeNode node) {
-//		if (node == null) return;
-//		dfs(res, node.left);
-//		res.add(node.val);
-//		dfs(res, node.right);
-//	}
 
-    //approach 2 思路和递归一样，但是是用stack
+    /**
+     * 题意：中序遍历二叉树。要求中序遍历。
+     * 思路：用stack，但是这题的while条件比较复杂，还有最后node=node.right没写出来（我以为还要push进去）
+     */
+    //stack解法
     //20181018 review
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
@@ -64,23 +55,25 @@ public class BinaryTreeInorderTraversal {
         return res;
     }
 
+    //20200121没写出来
 
-//	public ArrayList<Integer> inorderTraversal(TreeNode root) {
-//		ArrayList<Integer> res = new ArrayList<>();
-//		int pre = -1;
-//		LinkedList<TreeNode> stack = new LinkedList<>();
-//		while (root != null || !stack.isEmpty()) {
-//			if (root != null) {
-//				stack.push(root);
-//				root = root.left;
-//			} else {
-//				root = stack.pop();
-//				res.add(root.val);
-//				root = root.right;
-//			}
-//		}
-//		return res;
-//	}
+
+    //	public ArrayList<Integer> inorderTraversal(TreeNode root) {
+    //		ArrayList<Integer> res = new ArrayList<>();
+    //		int pre = -1;
+    //		LinkedList<TreeNode> stack = new LinkedList<>();
+    //		while (root != null || !stack.isEmpty()) {
+    //			if (root != null) {
+    //				stack.push(root);
+    //				root = root.left;
+    //			} else {
+    //				root = stack.pop();
+    //				res.add(root.val);
+    //				root = root.right;
+    //			}
+    //		}
+    //		return res;
+    //	}
 
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> result = new ArrayList<>();
@@ -115,5 +108,19 @@ public class BinaryTreeInorderTraversal {
         }
         return result;
     }
+
+    //approach 1 经典dfs解法
+    //	public ArrayList<Integer> inorderTraversal(TreeNode root) {
+    //		ArrayList<Integer> res = new ArrayList<>();
+    //		dfs(res, root);
+    //		return res;
+    //	}
+    //
+    //	private void dfs(List<Integer> res, TreeNode node) {
+    //		if (node == null) return;
+    //		dfs(res, node.left);
+    //		res.add(node.val);
+    //		dfs(res, node.right);
+    //	}
 
 }

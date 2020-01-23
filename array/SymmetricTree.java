@@ -9,19 +9,18 @@ import tree.TreeNode;
  */
 
 class SymmetricTree {
+    /**
+     * 题意：判断两棵树是不是对称树
+     * 观察，发现对称tree的子树不一定是对称的。所以需要双管齐下去traverse
+     **/
     public boolean isSymmetric(TreeNode root) {
-        if (root == null) return true;
-        return recursion(root.left, root.right);
+        return root == null || dfs(root.left, root.right);
     }
 
-    private boolean recursion(TreeNode left, TreeNode right) {
+    private boolean dfs(TreeNode left, TreeNode right) {
         if (left == null || right == null) return left == right;
-
-//        if (left.val == right.val) return true;
-        if (left.val != right.val) return false;
-        return recursion(left.right, right.left) && recursion(left.left, right.right);
+        return left.val == right.val && dfs(left.right, right.left) && dfs(left.left, right.right);
     }
-
 
     /**
      * //20190207 REVIEW
