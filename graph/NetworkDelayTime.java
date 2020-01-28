@@ -9,17 +9,9 @@ import java.util.Queue;
 
 /**
  * There are N network nodes, labelled 1 to N.
- * <p>
  * Given times, a list of travel times as directed edges times[i] = (u, v, w), where u is the source node, v is the target node, and w is the time it takes for a signal to travel from source to target.
- * <p>
  * Now, we send a signal from a certain node K. How long will it take for all nodes to receive the signal? If it is impossible, return -1.
- * <p>
- * <p>
- * <p>
  * Example 1:
- * <p>
- * <p>
- * <p>
  * Input: times = [[2,1,1],[2,3,1],[3,4,1]], N = 4, K = 2
  * Output: 2
  * <p>
@@ -27,6 +19,7 @@ import java.util.Queue;
  */
 public class NetworkDelayTime {
     /**
+     * 题意：给你N个网络结点，问从任意一个node发出信号，最早需要多少时间可以让所有node都收到信号。
      * 这题其实是求「最小」网络时延，因为不同路径时延不一样。
      * 可以转换成求K到其他所有节点的最短路径中最大的那个路径，也就是至少需要的时间。
      * 可以用单源最短路径算法解决，比如Bellman-Ford，Dijkstra；Floyd是任意两点最短路径的算法在这里似乎不适用。
@@ -85,8 +78,15 @@ public class NetworkDelayTime {
     }
 
     /**
-     * Djikstra/bfs，推荐这种写法。类似题目787
-     * heap实现O(nlogn)
+     * Dijkstra/bfs，推荐这种写法。类似题目787
+     * 最小堆存放二元组[node到K的distance，node]，每轮遍历临接点
+     * dijkstra的bfs和普通bfs的显著区别是，dijkstra不是严格按照层数bfs，而是每次add之后从队列中取出最小的，
+     * 两点不同：
+     * 1. 这个queue不是linkedlist，而是priorityqueue，
+     * 2. 不能像普通bfs一样先判断visited再add，而要先把当前层全部加进去。比如case：
+     * [[1,2,1],[2,3,2],[1,3,4]]，3，1；如果不把当前层都加进去排序，就会造成3已经被v过，2，3这条更短的路就没法v了。
+     * <p>
+     * 时间：O(nlogn)
      */
     public int networkDelayTime__(int[][] times, int N, int K) {
         Map<Integer, Map<Integer, Integer>> map = new HashMap<>();
@@ -103,12 +103,12 @@ public class NetworkDelayTime {
             int[] cur = pq.remove();
             int curNode = cur[1];
             int curDist = cur[0];
-            if (visited[curNode]) continue;
+            if (visited[curNode]) continue;//v过就跳过，这样能保证res是minDist
             visited[curNode] = true;
             res = curDist;
             N--;
             if (map.containsKey(curNode)) {
-                for (int next : map.get(curNode).keySet()) {
+                for (int next : map.get(curNode).keySet()) {// 每次从neighbours里挑最近的
                     pq.add(new int[]{curDist + map.get(curNode).get(next), next});
                 }
             }
