@@ -83,7 +83,7 @@ public class NetworkDelayTime {
      * dijkstra的bfs和普通bfs的显著区别是，dijkstra不是严格按照层数bfs，而是每次add之后从队列中取出最小的，
      * 两点不同：
      * 1. 这个queue不是linkedlist，而是priorityqueue，
-     * 2. 不能像普通bfs一样先判断visited再add，而要先把当前层全部加进去。比如case：
+     * 2. 不能像普通bfs一样在加入queue之前就标记visited，而要先把当前层全部加进去，取出来之后再判断是否v过。比如case：
      * [[1,2,1],[2,3,2],[1,3,4]]，3，1；如果不把当前层都加进去排序，就会造成3已经被v过，2，3这条更短的路就没法v了。
      * <p>
      * 时间：O(nlogn)
@@ -108,7 +108,7 @@ public class NetworkDelayTime {
             res = curDist;
             N--;
             if (map.containsKey(curNode)) {
-                for (int next : map.get(curNode).keySet()) {// 每次从neighbours里挑最近的
+                for (int next : map.get(curNode).keySet()) {// 每次从neighbours里挑最近的；这儿不用判断或添加visited
                     pq.add(new int[]{curDist + map.get(curNode).get(next), next});
                 }
             }
