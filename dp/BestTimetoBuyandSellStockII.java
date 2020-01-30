@@ -16,11 +16,13 @@ package dp;
  * In this case, no transaction is done, i.e. max profit = 0.
  * <p>
  * Created by DrunkPiano on 2017/4/8.
+ * 20200130 review
  */
 
 public class BestTimetoBuyandSellStockII {
 
     /**
+     * 题意：给你一串股价，你可以交易任意次，前提是买新的之前手上没有其他股票。问最大收益。
      * 官方题解III，也是solutions的高票解法。用[1, 7, 2, 3, 6, 7, 6, 7]可以看出道理。
      * 比如2-3的那天，3的那天我卖掉，就可以获利1，可以理解为3那天我卖掉了但是同时又买回来了（因为根据上帝视角知道后一天是6）。
      */
@@ -36,8 +38,8 @@ public class BestTimetoBuyandSellStockII {
     /**
      * 以下是解决股票问题模板那个回答里面提到的通用做法(https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/yi-ge-fang-fa-tuan-mie-6-dao-gu-piao-wen-ti-by-lab/)；
      * 0代表当天结束不持有股票，1代表持有股票，转移方程：
-     * dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
-     * dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])
+     * dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])//不持有==卖掉，所以+price[i]
+     * dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])//持有==买回，所以-price[i]
      */
 
     public int maxProfit__(int[] prices) {
