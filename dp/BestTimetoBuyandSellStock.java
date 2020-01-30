@@ -19,43 +19,18 @@ package dp;
  */
 
 public class BestTimetoBuyandSellStock {
-
-//    public int maxProfit(int[] prices) {
-//        int res = 0;
-//        for (int i = 1; i < prices.length; i++)
-//            for (int j = 0; j < i; j++) {
-//                res = prices[i] - prices[j] > res ? prices[i] - prices[j] : res;
-//            }
-//        return res ;
-//    }
-
-//    public int maxProfit(int[] prices) {
-//        if (prices.length < 2) return 0;
-//        if (prices.length == 2) return prices[1] - prices[0] > 0 ? prices[1] - prices[0]:0 ;
-//        int dp[] = new int[prices.length];
-//        // dp[i+1] = dp[i] +  prices[i+1] - prices[i]
-//        dp[0] = 0;
-//        int maxProfit = prices[1] - prices[0] > 0 ? prices[1] - prices[0] : 0;
-//        int bestDaysPrice = prices[1];
-//        for (int i = 2; i < prices.length; i++) {
-//            //如果当天的price比取得最大收益那天的price还要高
-//            if (prices[i] > bestDaysPrice) {
-//                maxProfit = maxProfit + prices[i] - bestDaysPrice;
-//                bestDaysPrice = prices[i];
-//            }
-//        }
-//        return maxProfit;
-//    }
-
-
+    /**
+     * 题意：给你一串股票价格，问你买入一次和卖出一次的最大收益。
+     * 解法：假设当天一定要卖，维护当前最大收益和全局最大收益。
+     * 类似题目：maximum subarray
+     */
     public int maxProfit(int[] prices) {
         if (prices.length < 2) return 0;
-        //当天卖出的最大profit
-        int local = 0;
+        int local = 0;//当天卖出的最大profit
         int global = 0;
         for (int i = 1; i < prices.length; i++) {
             //今天必须要卖呀
-            local = Math.max(local + prices[i] - prices[i - 1], 0);
+            local = Math.max(local + prices[i] - prices[i - 1], 0);//如果某天卖出发现收益是负的，置0，代表我可以从当天开始买
             global = Math.max(global, local);
         }
         return global;
