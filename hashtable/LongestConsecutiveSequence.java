@@ -1,5 +1,6 @@
 package hashtable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -45,5 +46,27 @@ public class LongestConsecutiveSequence {
 
         }
         return maxStreak;
+    }
+
+    /**
+     * 十月份用的是hashset，也是O(n)但不是One pass。讨论区看到一个One pass的，用map。
+     * For example, as a result, for sequence {1, 2, 3, 4, 5}, map.get(1) and map.get(5) should both return 5.
+     */
+    public int longestConsecutive_(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int res = 0;
+        for (int n : nums) {
+            if (map.containsKey(n)) continue;
+            int left = map.containsKey(n - 1) ? map.get(n - 1) : 0;
+            int right = map.containsKey(n + 1) ? map.get(n + 1) : 0;
+            int streak = left + right + 1;
+            res = Math.max(res, streak);
+            map.put(n, streak);
+            //if(map.containsKey(n-1))// 不需要contain
+            map.put(n - left, streak);// n - left，不是n - 1
+            //if(map.containsKey(n+1))
+            map.put(n + right, streak);
+        }
+        return res;
     }
 }
