@@ -1,7 +1,5 @@
 package array;
 
-import java.util.LinkedList;
-
 /**
  * Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
  * <p>
@@ -20,90 +18,43 @@ import java.util.LinkedList;
  * X O X X
  * <p>
  * Created by DrunkPiano on 2017/4/21.
+ * 20200202 --review
  */
 
 public class SurroundRegions {
-
-    public void solve(char[][] board) {
-        if (board == null || board.length == 0) return;
-        int row = board.length;
-        int col = board[0].length;
-        for (int i = 0; i < row; i++) {
-            if (board[i][0] == 'O')
-                dfs(board, i, 0, row, col);
-            if (col > 1)
-                if (board[i][col-1] == 'O')
-                    //这样的话只有一列的情况不用单独处理了
-                    dfs(board, i, col - 1, row, col);
+    /**
+     * 题意：把2D棋盘上的被X围住的O都标记成X。
+     * 思路：从border是O的cell开始DFS或BFS，标记成T，然后把所有O标记成X，最后把T变回O。
+     **/
+    public void solve(char[][] A) {
+        if (A == null || A.length == 0 || A[0] == null || A[0].length == 0) return;
+        int m = A.length, n = A[0].length;
+        for (int i = 0; i < m; i++) {
+            int j = 0, k = n - 1;
+            if (A[i][j] == 'O') floodFill(i, j, A);
+            if (A[i][k] == 'O') floodFill(i, k, A);
         }
-        //这里可以掐头去尾
-        for (int i = 1; i < col - 1; i++) {
-            if (board[0][i] == 'O')
-                dfs(board, 0, i, row, col);
-            if (row > 1)
-                if (board[row-1][i] == 'O')
-                    dfs(board, row - 1, i, row, col);
+        for (int j = 1; j < n - 1; j++) {
+            int i = 0, k = m - 1;
+            if (A[i][j] == 'O') floodFill(i, j, A);
+            if (A[k][j] == 'O') floodFill(k, j, A);
         }
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < col; j++) {
-                if (board[i][j] == 'O') {
-                    board[i][j] = 'X';
-                }
-            }
-
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < col; j++) {
-                if (board[i][j] == 'Y') {
-                    board[i][j] = 'O';
-                }
-            }
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                if (A[i][j] == 'O') A[i][j] = 'X';
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                if (A[i][j] == 'T') A[i][j] = 'O';
     }
 
-    private void dfs(char[][] board, int i, int j, int row, int col) {
-
-        //泛型只能有一个参数
-        LinkedList<Pair> queue = new LinkedList<>();
-        Pair pair = new Pair(i, j);
-        queue.add(pair);
-        while (!queue.isEmpty()) {
-            Pair p = queue.poll();
-            int x = p.x;
-            int y = p.y;
-            //因为floodfill向四个方向扩散，所以可能回到刚才蔓延过的地方
-            if (board[x][y] == 'Y') continue;
-            if (board[x][y] == 'O') {
-                board[x][y] = 'Y';
-            }
-
-            if (x - 1 >= 0 && board[x - 1][y] == 'O') {
-                queue.add(new Pair(x - 1, y));
-            }
-            if (x + 1 < row && board[x + 1][y] == 'O') {
-                queue.add(new Pair(x + 1, y));
-            }
-            if (y - 1 >= 0 && board[x][y - 1] == 'O') {
-                queue.add(new Pair(x, y - 1));
-            }
-            if (y + 1 < col && board[x][y + 1] == 'O') {
-                queue.add(new Pair(x, y + 1));
-            }
+    private void floodFill(int i, int j, char[][] A) {
+        int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        A[i][j] = 'T';//已犯错误 这行写在了确定x,y之后，那样就谁能改变当前的格子了
+        for (int[] d : dirs) {
+            int x = i + d[0], y = j + d[1], m = A.length, n = A[0].length;
+            if (x < 0 || x >= m || y < 0 || y >= n || A[x][y] != 'O') continue;
+            floodFill(x, y, A);
         }
-    }
-
-    class Pair {
-        int x;
-        int y;
-
-        Pair(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    public static void main(String args[]) {
-        char[][] matrix = {{'X', 'X', 'X', 'X'}, {'X', 'O', 'O', 'X'}, {'X', 'X', 'O', 'X'}, {'X', 'O', 'X', 'X'}};
-        new SurroundRegions().solve(matrix);
-        System.out.println(matrix);
     }
 }
 
