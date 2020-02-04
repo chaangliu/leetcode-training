@@ -3,31 +3,39 @@ package linkedlist;
 /**
  * A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
  * Return a deep copy of the list.
+ * 20200204 --review
  */
 
 class RandomListNode {
-    int label;
+    int val;
     RandomListNode next, random;
 
     RandomListNode(int x) {
-        this.label = x;
+        this.val = x;
     }
 }
 
 public class CopyListWithRandomPointer {
-    //A -> A' -> B -> B'
+    /**
+     * 题意：一个链表，每个node有个random pointer指向任意node。让你deep copy这个链表。
+     * 这题是剑指offer原题，难点是，你如果先直接复制一套，没办法立刻定位random的位置。
+     * 所以解法是，第一轮在每个node后面赋值一份，第二轮遍历再复制random的指向，第三轮把他们剥离。
+     * A->B
+     * A->A'->B->B'
+     * 详细可见solutions里的图https://leetcode.com/problems/copy-list-with-random-pointer/discuss/43491/A-solution-with-constant-space-complexity-O(1)-and-linear-time-complexity-O(N)
+     */
     public RandomListNode copyRandomList(RandomListNode head) {
         if (head == null) return null;
         RandomListNode cruiser = head;
-        //1. INSERT
+        //1. INSERT，A->A'->B->B'
         while (cruiser != null) {
             RandomListNode tmp = cruiser.next;
-            cruiser.next = new RandomListNode(cruiser.label);
+            cruiser.next = new RandomListNode(cruiser.val);
             cruiser.next.next = tmp;
             cruiser = cruiser.next.next;
         }
 
-        //2. INIT RANDOM
+        //2. 安排RANDOM的指向
         cruiser = head;
         while (cruiser != null && cruiser.next != null) {
             if (cruiser.random != null) {
@@ -47,20 +55,5 @@ public class CopyListWithRandomPointer {
             cruiser = cruiser.next;
         }
         return res;
-    }
-
-
-    public static void main(String args[]) {
-        RandomListNode node1 = new RandomListNode(1);
-        RandomListNode node2 = new RandomListNode(2);
-        RandomListNode node3 = new RandomListNode(3);
-
-        node1.next = node2;
-        node1.random = node3;
-        node2.next = node3;
-        node2.random = node1;
-        node3.random = node1;
-
-        new CopyListWithRandomPointer().copyRandomList(node1);
     }
 }
