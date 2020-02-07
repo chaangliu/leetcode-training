@@ -11,47 +11,17 @@ package linkedlist;
  */
 
 public class LinkedListCycle {
-    //快慢指针
-    //    Use two pointers, walker and runner.
-    //    walker moves step by step. runner moves two steps at time.
-    //    if the Linked List has a cycle walker and runner will meet at some point.
-    public static boolean hasCycle(ListNode head) {
-        if (head == null) return false;
-        ListNode walker = head;
-        ListNode runner = head;
-        while (walker.next != null && runner.next.next != null) {
-            walker = walker.next;
-            runner = runner.next.next;
-            if (walker == runner) return true;
+    /**
+     * 题意：判断链表是否有环
+     * 解法：快慢指针
+     */
+    public boolean hasCycle(ListNode head) {
+        ListNode dummy = head;
+        while (head != null && dummy != null && dummy.next != null) {// head != null可以省略，dummy!=null不能省略
+            head = head.next;
+            dummy = dummy.next.next;
+            if (head == dummy) return true;
         }
         return false;
     }
-
-//    public static boolean hasCycle(ListNode head) {
-//        if (head == null) return false;
-//        ArrayList<ListNode> list = new ArrayList<>();
-//
-//        while (head != null) {
-//            if (list.contains(head)) {
-//                return true;
-//            }
-//            head = head.next;
-//            list.add(head);
-//        }
-//        return false;
-//    }
-
-    public static void main(String args[]){
-        ListNode n1 = new ListNode(1);
-        ListNode n2 = new ListNode(2);
-//        ListNode n3 = new ListNode(1);
-//        ListNode n4 = new ListNode(2);
-//        ListNode n5 = new ListNode(3);
-
-        n1.next = n2;
-        n2.next = n1;
-
-        System.out.println(hasCycle(n1));
-    }
-    
 }
