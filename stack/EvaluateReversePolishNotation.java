@@ -15,6 +15,10 @@ import java.util.Stack;
  */
 
 public class EvaluateReversePolishNotation {
+    /**
+     * 题意：求逆波兰表达式的值。
+     * 解法：stack。计算公式类型的题目很多都要用到stack。
+     */
     public int evalRPN(String[] tokens) {
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < tokens.length; i++) {
