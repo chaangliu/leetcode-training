@@ -1,6 +1,7 @@
 package linkedlist;
 
 /**
+ * * 剑指offer原题。先搞清楚，两个节点相等（也就是内存地址相同）就代表这是同一个节点，也就是intersection point。
  * Write a program to find the node at which the intersection of two singly linked lists begins.
  * <p>
  * <p>
@@ -20,17 +21,42 @@ package linkedlist;
  * The linked lists must retain their original structure after the function returns.
  * You may assume there are no cycles anywhere in the entire linked structure.
  * Your code should preferably run in O(n) time and use only O(1) memory.
+ * 20200211 review
  */
 
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/**
- * 剑指offer原题。先搞清楚，两个节点相等（也就是内存地址相同）就代表这是同一个节点，也就是intersection point。
- */
 public class IntersectionOfTwoLinkedLists {
+    /**
+     * 题意：找出两个链表的交汇点。要求O(1)SPACE O(N)TIME
+     * 想了一会儿就觉得可以先让长的走delta步然后一起走。
+     */
+    public ListNode getIntersectionNode_(ListNode a, ListNode b) {
+        ListNode ah = a, bh = b;
+        int len1 = 0, len2 = 0;
+        while (a != null) {
+            len1++;
+            a = a.next;
+        }
+        while (b != null) {
+            len2++;
+            b = b.next;
+        }
+        if (len1 < len2) {
+            ListNode t = ah;
+            ah = bh;
+            bh = t;
+        }
+        for (int i = 0; i < Math.abs(len1 - len2); i++) {
+            ah = ah.next;
+        }
+        while (ah != null) {
+            if (ah == bh) return ah;
+            ah = ah.next;
+            bh = bh.next;
+        }
+        return null;
+    }
+
+
     //approach 1, brute force, 对于a中的每个节点都去b中比较，时间O(m*n)。
 
     //approach 2, hashmap。key是内存地址，value是任意值。存储第一个map，然后在第二个map里的每个节点都去map里找。时间O(m*n)空间O(m)或者O(n)

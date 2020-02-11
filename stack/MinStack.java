@@ -18,10 +18,16 @@ import java.util.Stack;
  * minStack.pop();
  * minStack.top();      --> Returns 0.
  * minStack.getMin();   --> Returns -2.
+ * 20190216review
  */
 class MinStack {
-    //20190216review 除了用2个stack，这题也可以只用一个stack做, 思路来自leetcode:
-    //如果将要push的元素比当前min小，就把oldMin也push进去，这样，在最小的数下面就维护了一个第二小的元素
+    /**
+     * 题意：实现一个能O(1)获取最小元素的Stack。
+     * 解法：辅助单调栈。
+     * 除了用2个stack，这题也可以只用一个stack做, 思路来自leetcode:
+     * 如果将要push的元素比当前min小，就把oldMin也push进去，这样，在最小的数下面就维护了一个第二小的元素
+     * 但是这么做并没有什么优点，不容易理解而且占用的空间也是O(n)
+     */
     class MinStack__ONSTACK {
         int min = Integer.MAX_VALUE;
         Stack<Integer> stack = new Stack<Integer>();
