@@ -1,6 +1,8 @@
 package array;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,7 +21,23 @@ import java.util.List;
  */
 
 public class LargestNumber {
-    //my version
+    /**
+     * 题意：给你一个整数数组，让你把数字排列起来，让最后的数字最大。
+     * 解法：排序。corner case是大数和00这样的case。可以用string.compare来排序
+     */
+    public String largestNumber_(int[] nums) {
+        ArrayList<Long> list = new ArrayList<>();
+        for (int n : nums) list.add((long) n);
+        Collections.sort(list, (a, b) -> (int) (Long.parseLong(b + "" + a) - Long.parseLong(a + "" + b)));
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            if (i != list.size() - 1 && list.get(i) == 0 && res.length() == 0) continue;
+            res.append(list.get(i));
+        }
+        return res.toString();
+    }
+
+    //my old version
     public String largestNumber(int[] nums) {
         if (nums == null || nums.length == 0) return "";
         Comparator comparator = new Comparator() {
@@ -42,7 +60,7 @@ public class LargestNumber {
         }
 
         String res = sb.toString();
-        if (res .startsWith("0")){//00的corner case
+        if (res.startsWith("0")) {//00的corner case
             return "0";
         }
         return res;
