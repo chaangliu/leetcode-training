@@ -28,6 +28,10 @@ import java.util.Queue;
  */
 
 public class NumberOfIslands {
+    /**
+     * 题意：二维数组包含1，0；1是陆地0是水域。可以假设数组之外都是水。问岛屿的数量有多少。
+     * 解法：DFS或者BFS。
+     */
     private int mRow;
     private int mCol;
     private char[][] mGrid;
