@@ -36,23 +36,53 @@ import java.util.Queue;
  * 20190117
  */
 public class CourseSchedule {
+    /**
+     * 题意：给你0~n-1一共n节课的一些前置课程关系[课程，前置课程]，问能否上完所有n节课。
+     * 解法：就是寻找是否有冲突的课程，比如[a,b][b,c][c,a]，也就是寻找图中是否有环。
+     * 用拓扑排序可以判断图中是否有环。
+     */
+    // BFS 邻接矩阵(adjacent matrix) 2020 review
+    public boolean canFinish(int n, int[][] prerequisites) {
+        int[] indegree = new int[n];
+        int[][] m = new int[n][n];
+        for (int[] p : prerequisites) {
+            int cur = p[0], pre = p[1];
+            if (m[pre][cur] == 0) indegree[cur]++;
+            m[pre][cur] = 1;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+        int cnt = 0;
+        while (!q.isEmpty()) {
+            int node = q.poll(); //取出当前入度为0的node
+            cnt++;
+            for (int i = 0; i < n; i++) {
+                if (m[node][i] > 0 && --indegree[i] == 0) {
+                    q.offer(i);
+                }
+            }
+        }
+        return cnt == n;
+    }
 
-    //BFS 邻接矩阵(adjacent matrix)
+    // BFS 邻接矩阵(adjacent matrix)
     public boolean canFinish____0(int numCourses, int[][] prerequisites) {
         if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
         int[][] matrix = new int[numCourses][numCourses];
-        int[] indegree = new int[numCourses];
+        int[] indegree = new int[numCourses];// 保存每个node的入度数量，这么做是为了后面把入度为0的node加入队列
         for (int i = 0; i < prerequisites.length; i++) {
             //当前课程
-            int ready = prerequisites[i][0];
+            int cur = prerequisites[i][0];
             //当前课程的前驱课程
             int pre = prerequisites[i][1];
-            if (matrix[pre][ready] == 0) {
-                //pre->ready, 完成当前课程的前驱课程（入度）+1；这个if是防止prerequisites数组有重复
-                indegree[ready]++;
+            if (matrix[pre][cur] == 0) {
+                //pre->cur, 完成当前课程的前驱课程（入度）+1；这个if是防止prerequisites数组有重复
+                indegree[cur]++;
             }
             //用邻接矩阵描述有向图；matrix的指向：需要先上的课指向后上的课
-            matrix[pre][ready] = 1;
+            matrix[pre][cur] = 1;
         }
         int count = 0;
         //把所有没有前驱课程的课加入队列
