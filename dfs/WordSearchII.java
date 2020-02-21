@@ -21,17 +21,20 @@ import java.util.List;
  * ['i','f','l','v']
  * ]
  * words = ["oath","pea","eat","rain"]
- * <p>
  * Output: ["eat","oath"]
- * <p>
  * 20190404
  */
 public class WordSearchII {
     /**
+     * 题意：跟第一题不一样的地方在于，这次给了一个list of words。
+     * 这样如果再从每个格子开始DFS的话就肯定超时了。
      * 这题我知道用普通dfs会很慢所以要借助Trie；
      * 试着写了一下，用Trie也有很多技巧，比如我的想法是使用Subset那种方式从board里没找到一个字符串就insert到trie里，然后对words数组里的每个词search，果然TLE；
      * 然后用一个set判断如果已经insert过就不再insert，仍然TLE；
-     * 然后我就想是否有办法一边dfs一边插入，不过没有想通，就看了答案；答案是反过来，使用words数组来build Trie，然后在dfs的时候顺便检查node是否isWord，这样不需要实现trie的search方法
+     * 然后我就想是否有办法一边dfs一边插入，不过没有想通，就看了答案；
+     * 答案是反过来，使用words数组来build Trie，然后在dfs的时候顺便检查node是否isWord，这样不需要实现trie的search方法
+     * 其实就是匹配关键词啦，利用Trie，跟DFA算法思想一样。
+     * 这样一来，本来需要对words里面每个word都来一遍dfs，现在只要从每个格子开始dfs一遍就能找到所有单词。
      */
     public List<String> findWords(char[][] board, String[] words) {
         List<String> res = new ArrayList<>();
