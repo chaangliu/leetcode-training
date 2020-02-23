@@ -36,7 +36,26 @@ public class NumberofSubstringsContainingAllThreeCharacters {
         return res;
     }
 
+    /**
+     * 另一种方法，在abc都出现过之后，记录abc中每个数最后一次出现的index中最小的那个，加到结果集里
+     * 因为for every sub-string starting from index 0, 1, 2, 3, ......min-index and ending at curr-index is valid, (So how many are these......
+     * So there are min-index + 1 sub-strings
+     */
+    public int numberOfSubstrings_(String s) {
+        int n = s.length(), count = 0;
+        int l1 = -1, l2 = -1, l3 = -1;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == 'a') l1 = i;
+            else if (s.charAt(i) == 'b') l2 = i;
+            else l3 = i;
+            if (l1 == -1 || l2 == -1 || l3 == -1) continue;
+            int min = Math.min(l1, Math.min(l2, l3));
+            count += min + 1;
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
-        new NumberofSubstringsContainingAllThreeCharacters().numberOfSubstrings("aaabc");
+        new NumberofSubstringsContainingAllThreeCharacters().numberOfSubstrings_("abcabc");
     }
 }
