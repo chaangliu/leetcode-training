@@ -5,13 +5,43 @@ import java.util.Stack;
 import tree.TreeNode;
 
 /**
+ * Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+ *
+ * Note:
+ * You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+ *
+ * Example 1:
+ *
+ * Input: root = [3,1,4,null,2], k = 1
+ *    3
+ *   / \
+ *  1   4
+ *   \
+ *    2
+ * Output: 1
+ * Example 2:
+ *
+ * Input: root = [5,3,6,2,4,null,null,1], k = 3
+ *        5
+ *       / \
+ *      3   6
+ *     / \
+ *    2   4
+ *   /
+ *  1
+ * Output: 3
+ * Follow up:
+ * What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
  * Created by DrunkPiano on 2017/3/25.
  */
 
 public class KthSmallestElementInaBST {
 
 
-    //20181019 review. 思路就是BST的遍历。用traversal或者stack
+    /**
+     * 题意：求BST中第k小的node。
+     * 解法一：常规解法: BST的遍历。用traversal或者stack
+     */
     public int kthSmallest3(TreeNode root, int k) {
         Stack<TreeNode> stack = new Stack<>();
         while (root != null || !stack.empty()) {
@@ -65,6 +95,10 @@ public class KthSmallestElementInaBST {
     }
 
 
+    /**
+     * 解法二：O(height of tree)，先构造一个TreeNodeWithCount，就是每个node都有一个额外的字段叫做count，记录当前子树有多少个node。
+     * 这样一来就可以根据当前node的左右子树的count关系来向左或向右搜索。
+     */
     public int kthSmallest(TreeNode root, int k) {
         int left = countNode(root.left);
         if (left + 1 == k) return root.val;
@@ -87,26 +121,42 @@ public class KthSmallestElementInaBST {
         System.out.println(k);
     }
 
-//
-//	public boolean judgeCircle(String moves) {
-//		if (moves == null || moves.length() == 0) return true;
-//		int up = 0, down = 0, left = 0, right = 0;
-//		for (int i = 0; i < moves.length(); i++) {
-//			switch (moves.charAt(i)) {
-//				case 'U':
-//					up++;
-//					break;
-//				case 'D':
-//					down++;
-//					break;
-//				case 'L':
-//					left++;
-//					break;
-//				case 'R':
-//					right++;
-//					break;
-//			}
-//		}
-//		return up == down && left == right;
-//	}
+    public int kthSmallest__(TreeNode root, int k) {
+        TreeNodeWithCount rootWithCount = buildTreeWithCount(root);
+        return kthSmallest(rootWithCount, k);
+    }
+
+    private TreeNodeWithCount buildTreeWithCount(TreeNode root) {
+        if (root == null) return null;
+        TreeNodeWithCount rootWithCount = new TreeNodeWithCount(root.val);
+        rootWithCount.left = buildTreeWithCount(root.left);
+        rootWithCount.right = buildTreeWithCount(root.right);
+        if (rootWithCount.left != null) rootWithCount.count += rootWithCount.left.count;
+        if (rootWithCount.right != null) rootWithCount.count += rootWithCount.right.count;
+        return rootWithCount;
+    }
+
+    private int kthSmallest(TreeNodeWithCount rootWithCount, int k) {
+        if (k <= 0 || k > rootWithCount.count) return -1;
+        if (rootWithCount.left != null) {
+            if (rootWithCount.left.count >= k) return kthSmallest(rootWithCount.left, k);
+            if (rootWithCount.left.count == k - 1) return rootWithCount.val;
+            return kthSmallest(rootWithCount.right, k - 1 - rootWithCount.left.count);
+        } else {
+            if (k == 1) return rootWithCount.val;
+            return kthSmallest(rootWithCount.right, k - 1);
+        }
+    }
+
+    class TreeNodeWithCount {
+        int val;
+        int count;
+        TreeNodeWithCount left;
+        TreeNodeWithCount right;
+
+        TreeNodeWithCount(int x) {
+            val = x;
+            count = 1;
+        }
+    }
 }
