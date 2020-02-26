@@ -20,32 +20,18 @@ package tree;
   */
 
 class LowestCommonAncestorOfaBinaryTree {
-
+    /**
+     * 题意:找两个node的最早公共祖先LCA。
+     * 解法:top down
+     * 设想一个只有3个node的完全二叉树。
+     */
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        //1. 当前子树中没找到p,q 2. 找到了p,q中的一个
-        if (null == root || root == p || root == q)
-            return root;
-
-        //在左右子树分别寻找p,q的LCA，我疑惑的是这个left，right分别是什么呢？从上面的return结果可以看出来就是null或者p或者q啊。
-        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        if (null == root || root == p || root == q) return root;
+        TreeNode left = lowestCommonAncestor(root.left, p, q);// 只要在root.left找到p/q中的一个就返回root.left，无需把两个都找到
         TreeNode right = lowestCommonAncestor(root.right, p, q);
-
-        //在左子树，右子树都找到了p，q，说明这个root就是我们要找的node，p, q分别在root两侧
         if (left != null && right != null) {
             return root;
         }
-        //只有一个为空，或者两个都为空的情况
         return left == null ? right : left;
-    }
-
-    public static void main(String args[]) {
-        TreeNode root = new TreeNode(3);
-        root.left = new TreeNode(5);
-        root.right = new TreeNode(1);
-        root.left.left = new TreeNode(6);
-        root.left.right = new TreeNode(2);
-        root.right.left = new TreeNode(0);
-        root.right.right = new TreeNode(8);
-        new LowestCommonAncestorOfaBinaryTree().lowestCommonAncestor(root, root.left.right, root.right.left);
     }
 }
