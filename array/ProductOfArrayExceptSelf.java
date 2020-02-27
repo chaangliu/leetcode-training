@@ -15,33 +15,13 @@ package array;
  * ref: https://blog.csdn.net/wzy_1988/article/details/46916179
  */
 public class ProductOfArrayExceptSelf {
-
-
-    //    [a,b,c,d]
-    //    [1, a, ab, abc]
-    //  ->[bcd, cd, d, 1]
-    //    #1 两个数组相乘
-//    public int[] productExceptSelf(int[] nums) {
-//        if (nums == null) return null;
-//        int len = nums.length;
-//        int[] res1 = new int[len];
-//        int[] res2 = new int[len];
-//        res1[0] = 1;
-//        res2[len - 1] = 1;
-//        for (int i = 1; i < len; i++) {
-//            res1[i] = nums[i - 1] * res1[i - 1];
-//        }
-//        for (int i = len - 2; i >= 0; i--) {
-//            res2[i] = nums[i + 1] * res2[i + 1];
-//        }
-//
-//        for (int i = 0; i < len; i++) {
-//            res1[i] = res1[i] * res2[i];
-//        }
-//        return res1;
-//    }
-
-    //     follow up(optimization), using one array
+    /**
+     * 题意：给你一个数组，计算每个index上除了这个index之外所有数字的乘积。不许用除法，不能用额外空间（但可以申请一个O(n)的res数组返回）
+     * 解法：从左往右计算左边所有数字的乘积，再从右往左计算右边所有数字的乘积
+     * Numbers:     2    3    4     5
+     * Lefts:            2  2*3 2*3*4
+     * Rights:  3*4*5  4*5    5
+     */
     public int[] productExceptSelf(int[] nums) {
         if (nums == null) return null;
         int len = nums.length;
