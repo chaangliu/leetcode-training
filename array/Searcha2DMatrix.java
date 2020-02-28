@@ -20,14 +20,12 @@ package array;
 
 public class Searcha2DMatrix {
 
-    public static void main(String args[]) {
-        int[][] a = {{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 50}};
-        Searcha2DMatrix searcha2DMatrix = new Searcha2DMatrix();
-        System.out.println(searcha2DMatrix.searchMatrix(a, 3));
-    }
-
-    //20190123 review
-    //Don't treat it as a 2D matrix, just treat it as a sorted list，这题跟240. Search a 2D Matrix II的区别是，这题可以当做一个折行的list，时间是O(log n)；240那题时间是O(m + n)
+    /**
+     * 题意：一个二维矩阵，它每一行都是递增的，并且下一行第一个比上一行最后一个大。问target是否在matrix里。
+     * 解法：BinarySearch。
+     * Don't treat it as a 2D matrix, just treat it as a sorted list，
+     * 这题跟240. Search a 2D Matrix II的区别是，这题可以当做一个折行的list，时间是O(log n)；240那题时间是O(m + n)
+     */
     public boolean searchMatrix(int[][] matrix, int target) {
         if (matrix.length == 0) return false;
         int length = matrix.length * matrix[0].length;
