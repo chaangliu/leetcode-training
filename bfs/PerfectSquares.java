@@ -22,6 +22,10 @@ import java.util.Queue;
  */
 public class PerfectSquares {
 
+    /**
+     * 题意：给你一个n，问最少由几个数的平方和能组成n。
+     * 解法：DP或者BFS，思路都是从[1,sqrt(n)]去凑n。BFS凑了几层就代表最少需要几个。
+     */
     //1. dp
     //状态转移方程： //dp[i] = min(dp[i - j * j] + 1)
     public int numSquares___DP(int n) {
@@ -37,32 +41,7 @@ public class PerfectSquares {
         return dp[n];
     }
 
-    //https://leetcode.com/problems/perfect-squares/discuss/71475/Short-Python-solution-using-BFS
-    //2. bfs解法，想象成树的bfs，res是最早node.val是0的那个level
-    public int numSquares___BFS(int n) {
-        if (n <= 0) return 0;
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(n);
-        int level = 1;
-        int curNum = 1, nextNum = 0;
-        while (!queue.isEmpty()) {
-            int remain = queue.poll();
-            curNum--;
-            for (int i = 1; i * i <= remain; i++) {//已犯错误1：<=, NOT <
-                if (remain - i * i == 0) return level;//已犯错误2：remain - i * i, NOT n - i * i
-                queue.add(remain - i * i);
-                nextNum++;
-            }
-            if (curNum == 0) {
-                level++;
-                curNum = nextNum;
-                nextNum = 0;
-            }
-        }
-        return -1;
-    }
-
-    //bfs还有种写法，跟tree bfs一样，每次while开始时，保持queue里面只是同一层的元素
+    //2. BFS
     public int numSquares___BFS2(int n) {
         if (n <= 0) return 0;
         Queue<Integer> queue = new LinkedList<>();
@@ -80,9 +59,5 @@ public class PerfectSquares {
             }
         }
         return -1;
-    }
-
-    public static void main(String args[]) {
-        System.out.println(new PerfectSquares().numSquares___BFS(13));
     }
 }
