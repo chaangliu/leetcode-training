@@ -21,22 +21,23 @@ package array;
  * 20190126
  */
 public class FindTheDuplicateNumber {
-
-    //前两个approach不满足给出的限制条件
-    //Approach #1 Sorting [Accepted]
-    //Approach #2 Set [Accepted]
-
-    //Approach #3 Floyd's Tortoise and Hare (Cycle Detection) [Accepted]
-    //我以为这题给出1~n+1的限定条件是提示可以用位运算，或者除法运算来解决；然而是为了方便指针指向
-
-    //而是模拟快慢指针，于是把这题变成了142题，寻找环的入口节点（剑指offer也有这题）
+    /**
+     * 题意：一个数组里的数字在[1,n]范围内，但是里面有n+1个数字，也就是里面至少有2个数字是相同的。请用O(n)时间O(1)空间找出这个数。数组read only。
+     * //前两个approach不满足给出的限制条件
+     * //Approach #1 Sorting [Accepted]
+     * //Approach #2 Set [Accepted]
+     * //Approach #3 Floyd's Tortoise and Hare (Cycle Detection) [Accepted]
+     * //我以为这题给出1~n+1的限定条件是提示可以用位运算，或者除法运算来解决；然而是为了方便指针指向
+     * 如果快慢指针指向的两个数字相同，相当于两个node指向了同一个node，也就是出现了环；
+     * 于是把这题变成了142题，寻找环的入口节点（剑指offer也有这题）
+     */
     public int findDuplicate(int[] nums) {
         // Find the intersection point of the two runners.
         int tortoise = nums[0];
         int hare = nums[0];
         do {
-            tortoise = nums[tortoise];
-            hare = nums[nums[hare]];
+            tortoise = nums[tortoise]; // slow = slow.next
+            hare = nums[nums[hare]]; // fast = fast.next.next
         } while (tortoise != hare);
 
         // Find the "entrance" to the cycle. 因为相遇的节点不一定是重复节点
@@ -46,7 +47,7 @@ public class FindTheDuplicateNumber {
         //fast一次走2步，slow一次走一步，如果该链表有环，两个指针必然在【环内】相遇
         //此时只需要把其中的一个指针重新指向链表头部，另一个不变（还在环内），
         //这次两个指针一次走一步，相遇的地方就是入口节点。
-        //这个定理可以自己去网上看看证明。
+        //这个定理的证明可以去Linked List Cycle II那题去看。
         int ptr1 = nums[0];
         int ptr2 = tortoise;
         while (ptr1 != ptr2) {
@@ -54,11 +55,5 @@ public class FindTheDuplicateNumber {
             ptr2 = nums[ptr2];
         }
         return ptr1;
-    }
-
-    public static void main(String args[]) {
-//        int [] num = {3,1,3,4,2};
-        int[] num = {2, 5, 9, 6, 9, 3, 8, 9, 7, 1};
-        new FindTheDuplicateNumber().findDuplicate(num);
     }
 }
