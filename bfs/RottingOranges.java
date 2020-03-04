@@ -35,6 +35,7 @@ import java.util.Queue;
  */
 public class RottingOranges {
     /**
+     * 题意：和腐烂橘子相邻的句子会腐烂。问最早都腐烂的是什么时候。
      * 此题在群内WanYing等朋友的指导下才AC（感觉这题标easy是因为queue bfs这种题大家都已经做烂了，默认是基本功了）
      * 我一开始想着每次for循环遇到的2都加入到queue，然后再维持一个全局最小的时间；这样的问题是，
      * 没法做到2-end/multi-end bfs，比如左下角和右下角同时开始rot，这样速度是大大缩短的；而且就算用我那种方案实施起来，还要把grid的状态还原回去
@@ -42,6 +43,8 @@ public class RottingOranges {
      */
     public int orangesRotting(int[][] grid) {
         if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        int[] dx = {0, 0, 1, -1};
+        int[] dy = {1, -1, 0, 0};
         Queue<int[]> queue = new LinkedList<>();
         int row = grid.length;
         int col = grid[0].length;
@@ -54,25 +57,14 @@ public class RottingOranges {
             }
         while (!queue.isEmpty()) {
             res++;
-            int size = queue.size();
-            for (int k = 0; k < size; k++) {
+            for (int i = queue.size(); i > 0; i--) {
                 int[] cord = queue.poll();
                 int x = cord[0], y = cord[1];
-                if (x - 1 >= 0 && grid[x - 1][y] == 1) {
-                    grid[x - 1][y] = 2;//已犯错误：忘记更新已经visit的状态
-                    queue.offer(new int[]{x - 1, y});
-                }
-                if (x + 1 < row && grid[x + 1][y] == 1) {
-                    grid[x + 1][y] = 2;
-                    queue.offer(new int[]{x + 1, y});
-                }
-                if (y - 1 >= 0 && grid[x][y - 1] == 1) {
-                    grid[x][y - 1] = 2;
-                    queue.offer(new int[]{x, y - 1});
-                }
-                if (y + 1 < col && grid[x][y + 1] == 1) {
-                    grid[x][y + 1] = 2;
-                    queue.offer(new int[]{x, y + 1});
+                for (int j = 0; j < 4; j++) {
+                    int nx = x + dx[j], ny = y + dy[j];
+                    if (nx < 0 || nx >= row || ny < 0 || ny >= col || grid[nx][ny] != 1) continue;
+                    grid[nx][ny] = 2;
+                    queue.offer(new int[]{nx, ny});
                 }
             }
         }
