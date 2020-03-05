@@ -21,6 +21,8 @@ package linkedlist;
  */
 public class OddEvenLinkedList {
     /**
+     * 题意：把链表的偶数位放到奇数位后面，要求时间是O(nodes)。
+     * 既然是O(nodes)也就是要One pass。
      * 我的代码，
      * head向前走，分发到两个链表上，最后拼接起来
      */
@@ -57,6 +59,24 @@ public class OddEvenLinkedList {
             odd.next = even.next;
             odd = odd.next;
             even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenHead;
+        return head;
+    }
+
+    /**
+     * 错误写法：如果不用one pass，而是遍历两次，会出现问题，比如[1,2,3,4,5]，even后处理，2会指向变化后的4，也就是5
+     */
+    public ListNode oddEvenList_WA(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode odd = head, even = head.next, evenHead = even;
+        while (odd != null && odd.next != null) {
+            odd.next = odd.next.next;
+            odd = odd.next;
+        }
+        while (even != null && even.next != null) {
+            even.next = even.next.next;
             even = even.next;
         }
         odd.next = evenHead;
