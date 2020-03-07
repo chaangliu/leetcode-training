@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
+ * 341. Flatten Nested List Iterator
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
  * public interface NestedInteger {
@@ -22,6 +23,11 @@ import java.util.Stack;
  * }
  */
 public class NestedIterator implements Iterator<Integer> {
+	/**
+	 * 题意：给你一个nested list，里面包含NestedInteger对象，实现next()和hashNext()功能。
+	 * 解法：这题容易想到是dfs或者stack，stack容易；我一开始把循环查找放在了next()里，
+	 * 但是这题要放到hashNext()去安排下一个Integer，否则无法通过case[[]]，因为一旦进入next()你就必须返回Integer，所以hasNext不能简单地判断stack.empty()。
+	 */
 	Stack<NestedInteger> stack = new Stack<>();
 
 	public NestedIterator(List<NestedInteger> nestedList) {
