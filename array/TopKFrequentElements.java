@@ -29,6 +29,72 @@ import java.util.TreeMap;
  * 20190131
  */
 public class TopKFrequentElements {
+    /**
+     * 题意：给你一个数组，找出出现频率最高的k个数字。要求时间复杂度低于O(n log n)。
+     * 解法：低于O(n log n)，可以是O(n)；也可以是O(n log k), 也就是维持一个size为k的heap。
+     */
+    /**
+     * =========================================================================================================================
+     * 很简单的BucketSort，每个桶的长度是1，很巧妙，同样是先取得一个FrequencyMap，
+     * 取得Map之后根据frequency来散列到一个一些桶里（把出现次数同样多的放到一个桶里），在从桶从后往前加入到结果集。
+     * Idea is simple. Build a array of list to be buckets with length 1 to sort.
+     * Time: O(n)
+     * =========================================================================================================================
+     */
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        List<Integer>[] bucket = new List[nums.length + 1];
+        Map<Integer, Integer> frequencyMap = new HashMap<Integer, Integer>();
+        for (int n : nums) {
+            frequencyMap.put(n, frequencyMap.getOrDefault(n, 0) + 1);
+        }
+        for (int key : frequencyMap.keySet()) {
+            int frequency = frequencyMap.get(key);
+            if (bucket[frequency] == null) {
+                bucket[frequency] = new ArrayList<>();
+            }
+            bucket[frequency].add(key);
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
+            if (bucket[pos] != null) {
+                res.addAll(bucket[pos]);
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * =========================================================================================================================
+     * leetcode的official solution，最后还有用一次heap的遍历，跟KSmallestNumbers那题一个操作
+     * Time complexity : O(Nlog(k))
+     * =========================================================================================================================
+     */
+    public List<Integer> topKFrequent____LeetCode(int[] nums, int k) {
+        // build hash map : character and how often it appears
+        HashMap<Integer, Integer> count = new HashMap();
+        for (int n : nums) {
+            count.put(n, count.getOrDefault(n, 0) + 1);
+        }
+
+        // init heap 'the less frequent element first'
+        PriorityQueue<Integer> heap =
+                new PriorityQueue<Integer>((n1, n2) -> count.get(n1) - count.get(n2));
+
+        // keep k top frequent elements in the heap
+        for (int n : count.keySet()) {
+            heap.add(n);
+            if (heap.size() > k)
+                heap.poll();
+        }
+
+        // build output list
+        List<Integer> top_k = new LinkedList();
+        while (!heap.isEmpty())
+            top_k.add(heap.poll());
+        Collections.reverse(top_k);
+        return top_k;
+    }
 
     /**
      * =========================================================================================================================
@@ -74,73 +140,6 @@ public class TopKFrequentElements {
 //        }
 //        return res;
 //    }
-
-    /**
-     * =========================================================================================================================
-     * leetcode的official solution，最后还有用一次heap的遍历，跟KSmallestNumbers那题一个操作
-     * =========================================================================================================================
-     */
-//    public List<Integer> topKFrequent____LeetCode(int[] nums, int k) {
-//        // build hash map : character and how often it appears
-//        HashMap<Integer, Integer> count = new HashMap();
-//        for (int n : nums) {
-//            count.put(n, count.getOrDefault(n, 0) + 1);
-//        }
-//
-//        // init heap 'the less frequent element first'
-//        PriorityQueue<Integer> heap =
-//                new PriorityQueue<Integer>((n1, n2) -> count.get(n1) - count.get(n2));
-//
-//        // keep k top frequent elements in the heap
-//        for (int n : count.keySet()) {
-//            heap.add(n);
-//            if (heap.size() > k)
-//                heap.poll();
-//        }
-//
-//        // build output list
-//        List<Integer> top_k = new LinkedList();
-//        while (!heap.isEmpty())
-//            top_k.add(heap.poll());
-//        Collections.reverse(top_k);
-//        return top_k;
-//    }
-
-
-    /**
-     * =========================================================================================================================
-     * BucketSort，每个桶的长度是1，很巧妙，同样是先取得一个FrequencyMap，取得Map之后根据frequency来散列到一个一些桶里，在从桶从后往前加入到结果集。
-     * <p>
-     * Idea is simple. Build a array of list to be buckets with length 1 to sort.
-     * =========================================================================================================================
-     */
-    public List<Integer> topKFrequent(int[] nums, int k) {
-
-        List<Integer>[] bucket = new List[nums.length + 1];
-        Map<Integer, Integer> frequencyMap = new HashMap<Integer, Integer>();
-
-        for (int n : nums) {
-            frequencyMap.put(n, frequencyMap.getOrDefault(n, 0) + 1);
-        }
-
-        for (int key : frequencyMap.keySet()) {
-            int frequency = frequencyMap.get(key);
-            if (bucket[frequency] == null) {
-                bucket[frequency] = new ArrayList<>();
-            }
-            bucket[frequency].add(key);
-        }
-
-        List<Integer> res = new ArrayList<>();
-
-        for (int pos = bucket.length - 1; pos >= 0 && res.size() < k; pos--) {
-            if (bucket[pos] != null) {
-                res.addAll(bucket[pos]);
-            }
-        }
-        return res;
-    }
-
 
     /**
      * =========================================================================================================================
