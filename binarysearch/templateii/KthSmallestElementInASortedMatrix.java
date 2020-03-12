@@ -25,6 +25,8 @@ import java.util.PriorityQueue;
  */
 public class KthSmallestElementInASortedMatrix {
     /**
+     * 题意：给你一个每行、每列都排好序的数组，求第k小元素。
+     * 非常好的一道题，两种方法都很值得学习。
      * Approach1. 最小堆
      * 这题一看就是二分搜索了，O(n)肯定超时。
      * 但是先看一种最小堆的解法。做法有点像BFS，
@@ -74,6 +76,7 @@ public class KthSmallestElementInASortedMatrix {
      * k = 11
      * Result = 7
      * 这种情况会发现执行一次后count = 11，k = 11；high = mid = 7,之后low不停向hi靠拢
+     * 再看就发现是标准的二分模板，这里lo，hi分别取的是左上角和右下角的数字。
      */
     public int kthSmallest__(int[][] matrix, int k) {
         int lo = matrix[0][0], hi = matrix[matrix.length - 1][matrix[0].length - 1] + 1;//[lo, hi), binary search Template II，这里我试了不+1也能AC
@@ -85,6 +88,30 @@ public class KthSmallestElementInASortedMatrix {
                 count += (j + 1);
             }
             if (count < k) lo = mid + 1;//显然，如果比<=mid的数 < k个，要找的数比mid大
+            else hi = mid;
+        }
+        return lo;
+    }
+
+    /**
+     * 两次二分, beats 71.62%
+     */
+    public int kthSmallest_(int[][] matrix, int k) {
+        int n = matrix.length;
+        int lo = matrix[0][0], hi = matrix[n - 1][n - 1];
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            int count = 0;
+            for (int i = 0; i < matrix.length; i++) {
+                int l = 0, r = n;
+                while (l < r) {
+                    int m = l + (r - l) / 2;
+                    if (matrix[i][m] > mid) r = m;
+                    else l = m + 1;
+                }
+                count += l;
+            }
+            if (count < k) lo = mid + 1;
             else hi = mid;
         }
         return lo;
