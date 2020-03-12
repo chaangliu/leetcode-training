@@ -8,15 +8,11 @@ package tree;
  */
 
 class LowestCommonAncestorOfaBinarySearchTree {
-
+    /**
+     * 题意：在BST中寻找两个node的LCA。
+     * 由于BST隐含的条件是root比left大比right小，所以这题跟第一题的区别在于，对于pq在一左一右的情况下，不需要往下递归找了。
+     */
     public TreeNode lowestCommonAncestor_OLD(TreeNode root, TreeNode p, TreeNode q) {
-//        if (root.val >= p.val && root.val <= q.val)
-//            return root;
-//        else if (root.val > p.val)
-//            return lowestCommonAncestor(root.left, p, q);
-//        else
-//            return lowestCommonAncestor(root.right, p, q);
-
         return (root.val - p.val) * (root.val - q.val) < 1 ? root : lowestCommonAncestor(p.val < root.val ? root.left : root.right, p, q);
     }
 

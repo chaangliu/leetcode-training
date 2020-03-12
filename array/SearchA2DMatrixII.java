@@ -23,7 +23,10 @@ package array;
  * 20190123
  */
 public class SearchA2DMatrixII {
-    //O(m+n)，这题跟剑指offer第一题一样
+    /**
+     * 题意：一个二维矩阵，每一行每一列都是递增的，在里面搜索target。
+     * O(m+n)，这题跟剑指offer第一题一样
+     */
     public boolean searchMatrix(int[][] matrix, int target) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
         //左下角(array[length - 1][0])

@@ -2,11 +2,8 @@ package tree;
 
 /**
  * Given a non-empty binary tree, find the maximum path sum.
- * <p>
  * For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
- * <p>
  * Example 1:
- * <p>
  * Input: [1,2,3]
  * <p>
  * 1
@@ -23,46 +20,29 @@ package tree;
  * 9  20
  * /  \
  * 15   7
- * <p>
  * Output: 42
- * <p>
  * 20190116
+ * 20200131 review
  */
 public class BinaryTreeMaximumPathSum {
-    int res = Integer.MIN_VALUE;//node.val可能negative
+    /**
+     *  题意：给你一个tree，问最大的路径和是多少。可以拐弯，但是不能出现岔路。
+     */
+    int res = Integer.MIN_VALUE;
 
     public int maxPathSum(TreeNode root) {
-        if (root == null) return 0;
-        maxPathDown(root);
+        dfs(root);
         return res;
     }
 
     /**
-     * 这个函数求从node这个点出发到向下某个child为止的最大路径的值(包含当前节点。)
-     * 为了帮助理解，可以打印例2里的数据:
-     * 0 0 9 9
-     * 0 0 15 15
-     * 0 0 7 15
-     * 15 7 20 42
-     * 9 35 -10 42
-     */
-    private int maxPathDown(TreeNode node) {
+     * dfs返回从当前node开始向左或者向右的branch的最大path sum
+     **/
+    private int dfs(TreeNode node) {
         if (node == null) return 0;
-        int left = Math.max(0, maxPathDown(node.left));
-        int right = Math.max(0, maxPathDown(node.right));
-        res = Math.max(res, left + right + node.val);
-        System.out.println(left + " " + right + " " + node.val + " " + res);
-        return node.val + Math.max(left, right);
-    }
-
-
-    public static void main(String args[]) {
-        TreeNode node = new TreeNode(-10);
-        node.left = new TreeNode(9);
-        node.right = new TreeNode(20);
-        node.right.left = new TreeNode(15);
-        node.right.right = new TreeNode(7);
-
-        new BinaryTreeMaximumPathSum().maxPathSum(node);
+        int left = Math.max(0, dfs(node.left));//已犯错误：没有取0作为下限
+        int right = Math.max(0, dfs(node.right));
+        res = Math.max(res, node.val + left + right);
+        return Math.max(left, right) + node.val;
     }
 }

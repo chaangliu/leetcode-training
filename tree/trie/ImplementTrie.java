@@ -1,17 +1,36 @@
 package tree.trie;
 
 /**
+ * Implement a trie with insert, search, and startsWith methods.
+ * Example:
+ * Trie trie = new Trie();
+ * trie.insert("apple");
+ * trie.search("apple");   // returns true
+ * trie.search("app");     // returns false
+ * trie.startsWith("app"); // returns true
+ * trie.insert("app");
+ * trie.search("app");     // returns true
+ * Note:
+ * <p>
+ * You may assume that all inputs are consist of lowercase letters a-z.
+ * All inputs are guaranteed to be non-empty strings.
  * Created by DrunkPiano on 2017/4/12.
  */
 
 public class ImplementTrie {
-
+    /**
+     * 题意：实现前缀树的insert、search、startWith接口。
+     * 解法：用一个空节点以及26叉树节点buildTree。
+     * 后来我发现，DFA算法用的就是类似思想。
+     * DFA简介
+     * 在实现文字过滤的算法中，DFA是唯一比较好的实现算法。DFA即Deterministic Finite Automaton，也就是确定有穷自动机
+     */
     class TrieNode {
         public char val;
         public boolean isWord;
         public TrieNode[] children = new TrieNode[26];
 
-		TrieNode() {
+        TrieNode() {
         }
 
         TrieNode(char c) {
@@ -44,6 +63,7 @@ public class ImplementTrie {
             }
             node.isWord = true;
         }
+
         /**
          * Returns if the word is in the trie.
          */
@@ -76,7 +96,7 @@ public class ImplementTrie {
         }
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         Trie trie = new ImplementTrie().new Trie();
         trie.insert("abc");
         trie.startsWith("ab");

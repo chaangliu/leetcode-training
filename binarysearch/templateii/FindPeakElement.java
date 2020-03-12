@@ -21,10 +21,16 @@ package binarysearch.templateii;
  * Explanation: Your function can return either index number 1 where the peak element is 2,
  * or index number 5 where the peak element is 6.
  * 20190624 review
+ * 20200212 review
  */
 public class FindPeakElement {
 
     /**
+     * 题意：一个数组先上升再下降，求峰index。如果峰值重复，可以返回任意峰index。
+     * 20200212 review
+     * 今天又做了一下，有好几个case错了，比如[1,2]甚至[1,2,3]；因为右边越界。
+     * 于是给右边加了判断。但是再看之前写的答案恍然大悟，我不应该把r定义成n，而应该是n-1,这样就不会越界了。
+     *
      * 20190624 review
      * 今天又看这道题，发现就是利用模板二的一道标准题；
      * 给定一个多峰的array，求其中任意一个峰；
@@ -40,6 +46,22 @@ public class FindPeakElement {
                 l = mid + 1;
             else
                 r = mid;
+        }
+        return l;
+    }
+
+    /**
+     * 20190624 review
+     * (You may imagine that nums[-1] = nums[n] = -∞.)
+     **/
+    public int findPeakElement_(int[] A) {
+        int n = A.length, l = 0, r = n;
+        // if(n==1)return 0;
+        // if(n==2)return A[0]<A[1] ? 1 : 0;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (A[mid] < (mid + 1 == n ? Integer.MIN_VALUE : A[mid + 1])) l = mid + 1;
+            else r = mid;
         }
         return l;
     }

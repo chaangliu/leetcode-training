@@ -24,6 +24,7 @@ package dfs;
 
 public class WordSearch {
     /**
+     * 题意：给你一个board和一个word，返回word是否在board里能找到。
      * 20190404 review
      * 不用visited[][]空间
      */

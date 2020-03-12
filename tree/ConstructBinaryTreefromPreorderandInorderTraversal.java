@@ -1,32 +1,34 @@
 package tree;
 
 /**
- * Given preorder and inorder traversal of a tree, construct the binary 
- * <p>
+ * Given preorder and inorder traversal of a tree, construct the binary tree.
+ * Note:
+ * You may assume that duplicates do not exist in the tree.
+ * For example, given
+ * preorder = [3,9,20,15,7]
+ * inorder = [9,3,15,20,7]
+ * Return the following binary tree:
+ * 3
+ * / \
+ * 9  20
+ * /  \
+ * 15   7
  * Created by DrunkPiano on 2017/2/19.
- * <p>
- * <p>
- * <p>
- * * Definition for a binary tree node.
- * public class TreeNode {
- * int val;
- * TreeNode left;
- * TreeNode right;
- * TreeNode(int x) { val = x; }
- * }
+ * 20190211 review @ PVG airport
+ * 20200123 review @ SZ
  */
 
 public class ConstructBinaryTreefromPreorderandInorderTraversal {
 
     /**
-     * 20190211 review @ PVG airport
+     * 题意：给你一个前序遍历和中序遍历的数组，让你还原一棵树。
+     * 解法：维护preOrder的index和inorder的左右子树的起始和结束index。
      */
     int preOrderIndex;
 
     public TreeNode buildTree__2019(int[] preorder, int[] inorder) {
         preOrderIndex = 0;
-        TreeNode res = helper(inorder, preorder, 0, inorder.length - 1);
-        return res;
+        return helper(inorder, preorder, 0, inorder.length - 1);
     }
 
     private TreeNode helper(int[] inorder, int[] preorder, int inLow, int inHigh) {
@@ -34,12 +36,12 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
         TreeNode root = new TreeNode(preorder[preOrderIndex]);
         int pivot = -1;
         for (int i = inLow; i <= inHigh; i++) {
-            if (inorder[i] == preorder[preOrderIndex]) {
+            if (inorder[i] == preorder[preOrderIndex]) {//关键：在inorder里找root所在的index，这里就能确定左右子树的范围
                 pivot = i;
                 break;
             }
         }
-        preOrderIndex++;
+        preOrderIndex++;//这儿是另一个关键，如果这儿不写成全局变量，那左边root变为preOrderIndex+1；而右边root变为preStart + pivot - inStart + 1
         root.left = helper(inorder, preorder, inLow, pivot - 1);
         root.right = helper(inorder, preorder, pivot + 1, inHigh);
         return root;

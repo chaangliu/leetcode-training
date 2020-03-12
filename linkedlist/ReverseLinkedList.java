@@ -11,6 +11,7 @@ package linkedlist;
 class ReverseLinkedList {
 
     /**
+     * 题意：反转单链表。尤其注意递归解法。
      * approach1. iteration
      */
     public ListNode reverseList1(ListNode head) {

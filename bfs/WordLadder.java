@@ -1,13 +1,22 @@
 package bfs;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import test.Test;
+
 public class WordLadder {
     /**
+     * 题意：给你一个beginWord和endWord，以及一个wordlist,每次只能变一个字母，问最少需要多少次可以从beginWord变到endWord。
      * 这题跟open the lock那题很像，但是我一开始没想到用bfs，而是想用两个循环把word对其他word的距离都求出来。
-     * 那题可以用2-end bfs，这题也一样。2-end bfs就是用两个set来替代queue。
-     * 不过我看题解里有人在beginSet.size>endSet.size()才时候才switch，也算一种优化。
+     * TAG是BFS，我一开始想，普通BFS目测是不行的，为什么，因为BFS需要每一层标记visited，那么如果当前层的某个词被标记了，那下一层就没法再变回来了，难道要backtrack?
+     * 这个想法是错误的！因为A和B/C相邻的话，B,C的dist一定是大于1的。比如hit him wit。
+     * 那么这题用普通BFS的问题就是会TLE。所以有两种策略，一种就是2-end BFS，也就是最快的方法；
+     * 第二种是枚举len * 26种变换，这种看似慢，其实在数据量大的时候比在wordList中找要快；当然也比不上2-end bfs
+     * <p>
+     * open the lock那题可以用2-end bfs，这题也一样。2-end bfs，用两个set来替代queue（其实普通BFS也可以用SET，这里用SET是方便检测两端是否互相包含）。
+     * 我看题解里有人在beginSet.size>endSet.size()才时候才switch，也算一种优化。
      */
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         boolean found = false;
@@ -39,8 +48,8 @@ public class WordLadder {
     }
 
     private void getNextStepWords(HashSet<String> visited, HashSet<String> temp, String s, List<String> wordList) {
-        int diff = 0;
         for (String word : wordList) {
+            int diff = 0;
             if (visited.contains(word)) continue;
             for (int i = 0; i < word.length(); i++) {
                 if (s.charAt(i) != word.charAt(i)) diff++;
@@ -48,7 +57,10 @@ public class WordLadder {
             if (diff == 1) {
                 temp.add((word));
             }
-            diff = 0;
         }
+    }
+
+    public static void main(String args[]) {
+        new WordLadder().ladderLength("hit", "cog", Arrays.asList(new String[]{"hot", "dot", "dog", "lot", "log", "cog"}));
     }
 }

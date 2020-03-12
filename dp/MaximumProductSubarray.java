@@ -17,7 +17,36 @@ package dp;
  * 20190427
  */
 public class MaximumProductSubarray {
-    //这题brute force是O(n2)，用DP可以把它降到O(n)；因为是连续的很容易想到存储【必须包含】当前位数字时的最优值，因为后面负数可能变成正数，所以保存最大值和最小值
+    /**
+     * 题意：求最长乘积子串。
+     * 解法：对A[i]正负分情况讨论。
+     **/
+    public int maxProduct_(int[] A) {
+        int res = A[0];
+        int[] pos = new int[A.length];
+        int[] neg = new int[A.length];
+        pos[0] = Math.max(0, A[0]);
+        neg[0] = Math.min(0, A[0]);
+        for (int i = 1; i < A.length; i++) {
+            int p, n;
+            if (A[i] > 0) {
+                p = A[i] * pos[i - 1];
+                n = A[i] * neg[i - 1];
+            } else {
+                p = A[i] * neg[i - 1];
+                n = A[i] * pos[i - 1];
+            }
+            pos[i] = Math.max(p, A[i]);
+            neg[i] = Math.min(n, A[i]);
+            res = Math.max(res, pos[i]);
+        }
+        return res;
+    }
+
+    /**
+     * O(1) space写法
+     * 连续subarray，很容易想到存储【必须包含】当前位数字时的最优值，因为后面负数可能变成正数，所以保存最大值和最小值
+     */
     public int maxProduct(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         int res = nums[0], min = res, max = res;

@@ -36,7 +36,8 @@ import java.util.Queue;
  */
 public class CourseScheduleII {
     /**
-     * 跟第一题一样，用拓扑排序。我用了邻接表+BFS
+     * 题意：跟第一题一样，不过要打印出一个order。
+     * 解法：跟第一题一样，用拓扑排序。我用了邻接表+BFS
      */
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         ArrayList<Integer>[] adjList = (ArrayList<Integer>[]) new ArrayList[numCourses];

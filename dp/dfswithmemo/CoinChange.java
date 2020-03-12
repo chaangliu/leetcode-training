@@ -20,8 +20,75 @@ public class CoinChange {
 
     /**
      * 题意：给你一些不同硬币的面值(每种面值可以用无数次)，一个总数，问你最少用多少个硬币可以达到总数。
-     * 解法1. dfs + pruning， AC
-     * 逆序排列，然后从大额硬币开始用，暴力搜。
+     * 方法1，DFS WITH MEMO
+     */
+    public int coinChange_(int[] coins, int amount) {
+        int res = dfs(coins, amount, new Integer[amount + 1]);
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+
+    /**
+     * 返回组成amount数量最少需要多少硬币，情况需要特别注意。比如[2] 3这样的case
+     **/
+    private int dfs(int[] coins, int amount, Integer[] memo) {
+        if (amount == 0) return 0;
+        if (memo[amount] != null) return memo[amount];
+        int res = Integer.MAX_VALUE;
+        for (int c : coins) {
+            if (amount - c < 0) continue;
+            int r = dfs(coins, amount - c, memo);
+            if (r != -1)
+                res = Math.min(res, 1 + r);
+        }
+        memo[amount] = res == Integer.MAX_VALUE ? -1 : res;
+        return memo[amount];
+    }
+
+    /**
+     * 方法1. dfs with memo, top down, code from leetcode solutions
+     */
+    public int coinChange__(int[] coins, int amount) {
+        if (amount < 1) return 0;
+        return coinChange(coins, amount, new int[amount]);
+    }
+
+    private int coinChange(int[] coins, int rem, int[] count) {
+        if (rem < 0) return -1;
+        if (rem == 0) return 0;
+        if (count[rem - 1] != 0) return count[rem - 1];
+        int min = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            int res = coinChange(coins, rem - coin, count);
+            if (res >= 0 && res < min)
+                min = 1 + res;
+        }
+        count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
+        return count[rem - 1];
+    }
+
+    /**
+     * 方法2. dp, bottom up
+     * dp[i]表示金额i时的最小硬币数。
+     * dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+     */
+    public int coinChange___(int[] coins, int amount) {
+        if (coins == null || coins.length == 0 || amount < 0) return -1;
+        if (amount == 0) return 0;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE - 1);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++)
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] >= 0)
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);//这里是滚动数组，二维转一维；另外这里隐含了一个条件，如果已经计算出dp[i - coins[j]]的话才加以利用
+            }
+        return dp[amount] == Integer.MAX_VALUE - 1 ? -1 : dp[amount];
+    }
+
+
+    /**
+     * * 方法3. dfs + pruning， AC
+     * * 逆序排列，然后从大额硬币开始用，暴力搜。
      */
     int res = Integer.MAX_VALUE;
 
@@ -48,106 +115,5 @@ public class CoinChange {
                 helper(index + 1, coins, curCount + k, remain - k * coins[index]);
             }
         }
-    }
-
-    /**
-     * 解法2. dfs with memo, top down, code from leetcode solutions
-     * memo[i]记录剩下金额i时的最小硬币数。跟上一种解法不同的是，这里每次同种面额只取一个硬币。
-     */
-    public int coinChange__(int[] coins, int amount) {
-        if (amount < 1) return 0;
-        return coinChange(coins, amount, new int[amount]);
-    }
-
-    private int coinChange(int[] coins, int rem, int[] count) {
-        if (rem < 0) return -1;
-        if (rem == 0) return 0;
-        if (count[rem - 1] != 0) return count[rem - 1];
-        int min = Integer.MAX_VALUE;
-        for (int coin : coins) {
-            int res = coinChange(coins, rem - coin, count);
-            if (res >= 0 && res < min)
-                min = 1 + res;
-        }
-        count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
-        return count[rem - 1];
-    }
-
-    /**
-     * 解法3. dp, bottom up
-     * dp[i]表示金额i时的最小硬币数。
-     * dp[i] = min(dp[i], dp[i - coins[j]] + 1);
-     */
-    public int coinChange___(int[] coins, int amount) {
-        if (coins == null || coins.length == 0 || amount < 0) return -1;
-        if (amount == 0) return 0;
-        int[] dp = new int[amount + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE - 1);
-        dp[0] = 0;
-        for (int i = 1; i <= amount; i++)
-            for (int j = 0; j < coins.length; j++) {
-                if (i - coins[j] >= 0)
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);//这里是滚动数组，二维转一维；另外这里隐含了一个条件，如果已经计算出dp[i - coins[j]]的话才加以利用
-            }
-        return dp[amount] == Integer.MAX_VALUE - 1 ? -1 : dp[amount];
-    }
-
-//我的解法，DFS，有些case通不过，比如[186,419,83,408]，6249；其实就是的brute force解法，但是我不太清楚自己哪里写错了为什么通不过这个case
-//    int count = 0;
-//    boolean found = false;
-//
-//    public int coinChange(int[] coins, int amount) {
-//        if (coins == null || amount < 0) return -1;
-//        if (amount == 0) return 0;
-//        Arrays.sort(coins);
-//        for (int i = coins.length - 1; i >= 0; i--) {
-//            count = 0;
-//            dfs(coins, i, amount);
-//            if (found) return count;
-//        }
-//        return -1;
-//    }
-//
-//    private void dfs(int[] coins, int index, int remaining) {
-//        if (index < 0) return;
-//        if (remaining - coins[index] > 0) {
-//            count++;
-//            dfs(coins, index, remaining - coins[index]);
-//        } else if (remaining - coins[index] < 0) {
-//            dfs(coins, index - 1, remaining);
-//        } else {
-//            count++;
-//            found = true;
-//        }
-//    }
-
-//    //1. brute force (dfs)
-//    public int coinChange(int[] coins, int amount) {
-//        return coinChange(0, coins, amount);
-//    }
-//
-//    private int coinChange(int idxCoin, int[] coins, int amount) {
-//        if (amount == 0)
-//            return 0;
-//        if (idxCoin < coins.length && amount > 0) {
-//            int maxVal = amount / coins[idxCoin];
-//            int minCost = Integer.MAX_VALUE;
-//            for (int x = 0; x <= maxVal; x++) {
-//                if (amount >= x * coins[idxCoin]) {
-//                    int res = coinChange(idxCoin + 1, coins, amount - x * coins[idxCoin]);
-//                    if (res != -1)
-//                        minCost = Math.min(minCost, res + x);
-//                }
-//            }
-//            return (minCost == Integer.MAX_VALUE) ? -1 : minCost;
-//        }
-//        return -1;
-//    }
-
-
-    public static void main(String args[]) {
-        int[] coins = {1, 2, 5};
-        int amount = 11;
-        System.out.print(new CoinChange().coinChange(coins, amount));
     }
 }

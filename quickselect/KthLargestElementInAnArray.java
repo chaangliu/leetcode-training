@@ -2,7 +2,6 @@ package quickselect;
 
 /**
  * //Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
- * //
  * //        Example 1:
  * //
  * //        Input: [3,2,1,5,6,4] and k = 2
@@ -17,6 +16,47 @@ package quickselect;
  */
 
 public class KthLargestElementInAnArray {
+    /**
+     * 题意：找出第K大元素（不是第K小）。
+     * 解法：经典做法quick select，可以逆序排列找第k个，也可以正序排序找倒数第k个。这个解法是O(n)的。
+     * 也可以维持一个大小为k的小顶堆。不过复杂度高，O(Nlogk)。
+     * 20200222 review
+     */
+    public int findKthLargest__(int[] A, int k) {
+        return helper(0, A.length - 1, A, k);
+    }
+
+    private int helper(int lo, int hi, int[] A, int k) {
+        if (lo > hi) return -1;
+        int pivot = partition_(lo, hi, A);
+        if (pivot == A.length - 1 - (k - 1)) return A[pivot];
+        int left = helper(lo, pivot - 1, A, k);
+        if (left >= 0) return left;
+        int right = helper(pivot + 1, hi, A, k);
+        if (right >= 0) return right;
+        return -1;
+    }
+
+    /**
+     * 进行一次partiotion，把A[hi]替换到[lo,hi)某个位置，使得A[i]就在排序后该有的位置
+     **/
+    private int partition_(int lo, int hi, int[] A) {
+        int p = A[hi];
+        int slot = lo;
+        for (int i = lo; i < hi; i++) {
+            if (A[i] < p) {
+                swap(A, slot++, i);
+            }
+        }
+        swap(A, slot, hi);
+        return slot;
+    }
+
+    private void swap(int[] A, int a, int b) {
+        int t = A[a];
+        A[a] = A[b];
+        A[b] = t;
+    }
 
     /**
      * quick select, 20191005 practice
