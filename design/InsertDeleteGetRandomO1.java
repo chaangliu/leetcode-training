@@ -42,6 +42,8 @@ import java.util.Random;
 public class InsertDeleteGetRandomO1 {
     /**
      * 题意：实现一个数据结构，支持O(1)地插入，删除和随机返回一个数。
+     * 这题的关键在于如何Delete，而不是如何GetRandom（因为可以直接用rand.nextInt()）。
+     * <p>
      * 下面是我的做法，后面附上讨论区的做法。
      * 我的思路：首先set是没有index概念的，所以可以用一个list来记录输入的这些数字，random的时候就利用list的index来做随机。
      * 但是这种思路有个问题，就是remove的时候，list是无法做到O1删除的（ArrayList要移动后面的数字，我这里用了LinkedList，但是由于搜索也需要O(n)，我觉得也达不到O(1)）
@@ -128,7 +130,7 @@ public class InsertDeleteGetRandomO1 {
             int loc = locs.get(val);
             if (loc < nums.size() - 1) { // not the last one than swap the last one with this val
                 int lastone = nums.get(nums.size() - 1);
-                nums.set(loc, lastone);
+                nums.set(loc, lastone);// list.set()函数
                 locs.put(lastone, loc);
             }
             locs.remove(val);
