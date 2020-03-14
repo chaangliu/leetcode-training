@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class LongestIncreasingSubsequence {
     /**
-     * 题意：求最长公共子序列长度。
+     * 题意：求最长上升子序列长度。
      * Approach1. DP
      * Time/Space : O(n^2)
      * dp[i]表示[0,i]范围的LIS，但是一定要包含第i个元素。
