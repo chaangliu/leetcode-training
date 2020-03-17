@@ -37,7 +37,8 @@ public class MaximumPerformanceofaTeam {
     /**
      * 题意：给你一些人和一些速度，从里面选k个人，团队表现 = 速度和 * 最小效率；求最大效率。
      * 解法：我一开始用暴力去做，但是后来发现，3个人的情况不一定包含2个人的情况时候的所有人。。
-     * 看了答案，先按照效率降序排序，然后用heap保存最小速度，遍历一遍就行了，不过不是很好证明
+     * 看了答案，先按照效率降序排序，然后用heap保存最小速度，遍历一遍就行了，需要理解，不是很好证明，可以参考MaximumPerformanceofaTeam那题。
+     * similar: MaximumPerformanceofaTeam
      */
     public int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
         int[][] ess = new int[n][2];
