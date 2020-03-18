@@ -32,6 +32,13 @@ public class RectangleOverlap {
      * x1'< x2
      * y1 < y2'
      * y1'< y2
+     *
+     * X轴上：
+     * A的左下角 < B的右上角
+     * B的左下角 < A的右上角
+     * Y轴上：
+     * A的左下角 < B的右上角
+     * B的左下角 < A的右上角
      */
     public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
         return rec1[0] < rec2[2] && rec2[0] < rec1[2] && rec1[1] < rec2[3] && rec2[1] < rec1[3];

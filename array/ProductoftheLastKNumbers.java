@@ -45,7 +45,7 @@ import java.util.Map;
 public class ProductoftheLastKNumbers {
     /**
      * 题意：实现一个类，包含两个接口，一个是添加数字，另一个是返回最后k个数字的乘积。
-     * 解法：prefix product，类似前缀和..每次add都加入截至当前的乘积，然后就可以通过除法得到最后k个数字的乘积。
+     * 解法：prefix product，类似前缀和..每次add都加入截至当前的乘积，然后就可以通过除法得到最后k个数字的乘积。注意要处理0的情况。
      */
     ArrayList<Integer> A;
 
@@ -93,6 +93,32 @@ public class ProductoftheLastKNumbers {
             }
             map.put(list.size() + "#" + k, res);
             return res;
+        }
+    }
+
+    /**
+     * 20200318review
+     */
+    class ProductOfNumbers_ {
+        List<Integer> prefix = new ArrayList<>();
+        public ProductOfNumbers_() {
+
+        }
+
+        public void add(int num) {
+            if (num == 0) {
+                prefix.clear();
+            } else if (prefix.size() == 0) {
+                prefix.add(num);
+            } else {
+                prefix.add(num * prefix.get(prefix.size() - 1));
+            }
+        }
+
+        public int getProduct(int k) {
+            if (k > prefix.size()) return 0;
+            if (k == prefix.size()) return prefix.get(prefix.size() - 1);
+            return prefix.get(prefix.size() - 1) / prefix.get(prefix.size() - k - 1);
         }
     }
 
