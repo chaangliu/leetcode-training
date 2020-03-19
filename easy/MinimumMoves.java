@@ -190,7 +190,7 @@ public class MinimumMoves {
 	}
 
 	//求最长回文。统计个个字母出现次数。奇数的保留最大的那个。偶数全保留。这个思路完全错了。
-	//因为奇数中成对的数字也是可以拿来用的。
+	//因为奇数中成对的字母也是可以拿来用的，不是说用一个字母就一定要全部都用完。
 	//正确的思路，计算成对出现的pair数。
 	public int longestPalindrome(String s) {
 		Set<Character> set = new HashSet<>();

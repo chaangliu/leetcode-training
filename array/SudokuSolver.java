@@ -107,4 +107,61 @@ public class SudokuSolver {
             if (board[r][c] != '.') flag[board[r][c] - '0'] = false;
         }
     }
+
+    /**
+     * 20200319
+     * wrote for Elaine
+     */
+    public void solveSudoku__(char[][] board) {
+        long before = System.currentTimeMillis();
+        dfs__(board, 0);
+        System.out.println("===================\nTime elapsed: " + (System.currentTimeMillis() - before) + " ms.\n===================\n");
+    }
+
+    private boolean dfs__(char[][] board, int d) {
+        if (d == 81) {
+            for (char[] row : board) {
+                for (char c : row) System.out.print(c + ", ");
+                System.out.println();
+            }
+            return true; // found solution
+        }
+        int i = d / 9, j = d % 9;
+        if (board[i][j] != '.') return dfs__(board, d + 1);// skip
+
+        HashSet<Integer> used = new HashSet<>();
+        checkUsed(board, i, j, used);
+        for (int k = 1; k <= 9; k++) {
+            if (!used.contains(k)) {
+                board[i][j] = (char) ('0' + k);
+                if (dfs__(board, d + 1)) return true;
+            }
+        }
+        board[i][j] = '.'; // backtrack
+        return false;
+    }
+
+    private void checkUsed(char[][] board, int i, int j, HashSet<Integer> used) {
+        for (int k = 0; k < 9; k++) {
+            if (board[i][k] != '.') used.add(board[i][k] - '0');
+            if (board[k][j] != '.') used.add(board[k][j] - '0');
+            int r = i / 3 * 3 + k / 3;
+            int c = j / 3 * 3 + k % 3;
+            if (board[r][c] != '.') used.add(board[r][c] - '0');
+        }
+    }
+
+    public static void main(String[] args) {
+        char[][] board = new char[][]{
+                {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+        new SudokuSolver().solveSudoku__(board);
+    }
 }
