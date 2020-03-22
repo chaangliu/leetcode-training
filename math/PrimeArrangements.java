@@ -131,4 +131,85 @@ public class PrimeArrangements {
         }
         return true;
     }
+    public boolean hasValidPath(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        if (grid[m - 1][n - 1] == 4 || grid[m - 1][n - 1] == 5) return false;
+        if (grid[0][0] == 4 || grid[0][0] == 5) return false;
+        return dfs(grid, 0, 0, new boolean[m][n],-1, -1);
+    }
+
+    private boolean dfs(int [][] grid, int i ,int j, boolean [][] visited, int prev, int dir) {
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || visited[i][j]) return false;
+        int d = grid[i][j];
+        if (!(i == 0 && j == 0) && !compatible(prev, d, dir)) return false;
+        if (i == grid.length - 1 && j == grid[0].length - 1) return true;
+        visited[i][j] = true;
+        if (d == 1) {
+            if (dfs(grid, i, j - 1, visited, 1, -1)) return true;
+            if (dfs(grid, i, j + 1, visited, 1, 1)) return true;
+        } else if (d == 2) {
+            if (dfs(grid, i + 1, j , visited, 2, 1)) return true;
+            if (dfs(grid, i - 1, j , visited, 2, -1)) return true;
+        } else if (d == 3) {
+            if (dfs(grid, i, j - 1, visited, 3, -1)) return true;
+            if (dfs(grid, i + 1, j , visited, 3, 1)) return true;
+        } else if (d == 4) {
+            if (dfs(grid, i, j + 1, visited, 4, 1)) return true;
+            if (dfs(grid, i + 1, j , visited, 4, -1)) return true;
+        } else if (d == 5) {
+            if (dfs(grid, i, j - 1 , visited, 5, 1)) return true;
+            if (dfs(grid, i - 1, j , visited, 5, -1)) return true;
+        }  else if (d == 6) {
+            if (dfs(grid, i, j + 1, visited, 6, 1)) return true;
+            if (dfs(grid, i - 1, j , visited, 6, -1)) return true;
+        }
+        visited[i][j] = false;
+        return false;
+    }
+
+    private boolean compatible(int prev, int cur, int dir) {
+        if (prev == 1) {
+            if (dir == 1) {
+                return cur == 1 || cur == 3 || cur == 5;
+            } else {
+                return cur == 1 || cur == 4 || cur == 6;
+            }
+        }
+        if (prev == 2) {
+            if (dir == 1) {
+                return cur == 2 || cur == 5 || cur == 6;
+            } else {
+                return cur == 2 || cur == 3 || cur == 4;
+            }
+        }
+        if (prev == 3) {
+            if (dir == 1) {
+                return cur == 2 || cur == 5 || cur == 6;
+            } else {
+                return cur == 1 || cur == 6 || cur == 4;
+            }
+        }
+        if (prev == 4) {
+            if (dir == 1) {
+                return cur == 2 || cur == 5 || cur == 6;
+            } else {
+                return cur == 1 || cur == 3 || cur == 5;
+            }
+        }
+        if (prev == 5) {
+            if (dir == 1) {
+                return cur == 1 || cur == 3 || cur == 4 || cur == 6;
+            } else {
+                return cur == 2 || cur == 3 || cur == 4;
+            }
+        }
+        if (prev == 6) {
+            if (dir == 1) {
+                return cur == 1 || cur == 3 || cur == 5;
+            } else {
+                return cur == 2 || cur == 3 || cur == 4;
+            }
+        }
+        return true;
+    }
 }
