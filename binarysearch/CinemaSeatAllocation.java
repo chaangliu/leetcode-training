@@ -39,24 +39,23 @@ public class CinemaSeatAllocation {
     /**
      * 题意：给你一些电影院座位的预订信息，有些已经被预订了，问最多能坐几个一家四口。
      * 解法：直接linear scan的话很容易WA/超时。可以
-     * binary search。
+     * 对于每一行被占的位置，先排序再做binary search，搜索2，4，8这几个位置。没有人占领的行数就+2.
      */
     public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
-        int res = 0;
         HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-        for (int i = 0; i < n; i++) {
-            for (int[] arr : reservedSeats) {
-                map.putIfAbsent(arr[0], new ArrayList<>());
-                map.get(arr[0]).add(arr[1]);
-            }
+
+        for (int[] arr : reservedSeats) {
+            map.putIfAbsent(arr[0], new ArrayList<>());
+            map.get(arr[0]).add(arr[1]);
         }
+
         int cnt = 0, rows = 0;
         for (ArrayList<Integer> item : map.values()) {
             rows++;
             Collections.sort(item);
             for (int i = 2; i <= 6; ) {
                 int lb = lower_bound(item, i);
-                if (lb >= item.size() || lb - i >= 4) {
+                if (lb == item.size() || item.get(lb) - i >= 4) { // item.get(lb) - i => 接下来的4个seats都没人占领
                     cnt++;
                     i += 4;
                 } else {
@@ -64,7 +63,7 @@ public class CinemaSeatAllocation {
                 }
             }
         }
-        cnt += ((n - rows) * 2);
+        cnt += ((n - rows) * 2); //没人占的rows都加可以坐两家人
         return cnt;
     }
 
