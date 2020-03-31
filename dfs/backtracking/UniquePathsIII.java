@@ -78,7 +78,7 @@ public class UniquePathsIII {
     /**
      * lee的代码
      */
-    int res = 0, empty = 1, sx, sy, ex, ey;
+    int result = 0, empty = 1, sx, sy, ex, ey;
     public int uniquePathsIII_(int[][] grid) {
         int m = grid.length, n = grid[0].length;
         for (int i = 0; i < m; ++i) {
@@ -94,14 +94,14 @@ public class UniquePathsIII {
             }
         }
         dfs(grid, sx, sy);
-        return res;
+        return result;
     }
 
     public void dfs(int[][] grid, int x, int y) {
         if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] < 0)
             return;
         if (x == ex && y == ey) {
-            if (empty == 0) res++;
+            if (empty == 0) result++;
             return;
         }
         grid[x][y] = -2;
