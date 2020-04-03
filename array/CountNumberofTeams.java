@@ -38,6 +38,9 @@ public class CountNumberofTeams {
     /**
      * 题意：给你一个数组，求满足顺序或者倒序的所有三元组的个数。
      * 解法：这题contest里可以用brute force，但是其实也可以用O(n^2)解法做，挺巧妙的
+     * 一个简单的组合：
+     * 每名士兵在中间的情况下可以组队的数量为：
+     * 左边比他小的人数 × 右边比他大的人数 + 左边比他大的人数 × 右边比他小的人数
      * 链接：https://leetcode-cn.com/problems/count-number-of-teams/solution/tong-ji-liang-ce-de-shi-bing-on2java-by-wowph/
      */
     public int numTeams(int[] rating) {
