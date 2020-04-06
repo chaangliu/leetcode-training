@@ -86,7 +86,6 @@ public class NumberofStepstoReduceaNumberinBinaryRepresentationtoOne {
                 // 0 + 0 = 0 even, need one step(divided by 2), (carry = 0)
                 // 1 + 1 = 0 even, need one step(divided by 2), (carry = 1 ,  carry keeps 1 in next round.)
                 res += 1;
-        }
         return res + carry;
     }
 }
