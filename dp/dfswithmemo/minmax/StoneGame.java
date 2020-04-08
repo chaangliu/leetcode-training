@@ -1,4 +1,4 @@
-package dp.dfswithmemo;
+package dp.dfswithmemo.minmax;
 
 /**
  * Alex and Lee play a game with piles of stones.  There are an even number of piles arranged in a row, and each pile has a positive integer number of stones piles[i].
@@ -26,8 +26,8 @@ package dp.dfswithmemo;
  */
 public class StoneGame {
     /**
-     * 题意：有n堆石子，n是偶数，石子总和是奇数。两个人轮流从head或者tail取一堆，最后得到的石子更多的人赢，问先手的人能不能赢。假设每个人都做全局最优选择。
-     * 解法1：top down dp, 拿到后发现跟Predict the winner那题一样。
+     * 题意：有n堆石子，n是偶数，石子总和是奇数。两个人轮流从这一排石子的开头或者结尾取一堆，最后得到的石子更多的人赢，问先手的人能不能赢。假设每个人都做全局最优选择。
+     * 解法1：top down dp, 拿到后发现是跟Predict the winner那题一样的min-max题。
      */
     public boolean stoneGame(int[] piles) {
         return dfs(0, piles.length - 1, piles, new Integer[piles.length][piles.length]) > 0;
@@ -36,14 +36,17 @@ public class StoneGame {
     //dfs返回[l,r]内我先手选择的比对方最多多几个stones
     private int dfs(int l, int r, int[] piles, Integer[][] memo) {
         if (l == r) return piles[l];
-        int ll = memo[l + 1][r] != null ? memo[l + 1][r] : dfs(l + 1, r, piles, memo);//已犯错误：写成了piles[l] - dfs(l + 1, r , piles, memo)
+        int ll = memo[l + 1][r] != null ? memo[l + 1][r] : dfs(l + 1, r, piles, memo);// 对方在[l+1,r]先手最多能比我多拿多少
         int rr = memo[l][r - 1] != null ? memo[l][r - 1] : dfs(l, r - 1, piles, memo);
         memo[l][r] = Math.max(piles[l] - ll, piles[r] - rr);
         return memo[l][r];
     }
 
     /**
-     * 解法2：Math, 直接return true。用的堆的总数是偶数这个条件，因为这样一来你会发现先手的人总有办法拿完所有的偶数堆或者奇数堆。
+     * 解法2：Math, 直接return true。用堆的总数是偶数这个条件，因为这样一来你会发现先手的人总有办法拿完所有的偶数index的堆或者奇数index的堆。
+     * In the description, we know that sum(piles) is odd.
+     * If sum(piles[even]) > sum(piles[odd]), Alex just picks all evens and wins.
+     * If sum(piles[even]) < sum(piles[odd]), Alex just picks all odds and wins.
      */
     public boolean stoneGame_(int[] piles) {
         return true;
