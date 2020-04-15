@@ -35,6 +35,10 @@ import java.util.Queue;
  * 20190227
  */
 public class _01Matrix {
+    /**
+     * 题意：找出二维数组中每个0到1最近的距离。
+     * 解法：BFS
+     */
     //approach1: bfs for every cell, 不能用multi-end bfs
     public int[][] updateMatrix(int[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return null;

@@ -31,8 +31,10 @@ package unionfind;
  */
 public class RedundantConnection {
     /**
+     * 题意：给你一个无向图，这个图由一个N个节点的树和一条附加的边组成，找出这条多余的边。如果有多个答案，返回数组中最后出现的那个。
+     * 解法：Union Find。
+     * 题目说：「如果有多个答案，则返回二维数组中最后出现的边。」正好符合uf的做法，因为只有一条多余的边，所以只要找到第一条不能union的边，那这条边一定是最后出现的。
      * we simply find the first edge occurring in the graph that is already connected.
-     * <p>
      * union find优化的地方:
      * 1. path compression，在find的时候顺便压缩路径，可以减少find的递归次数
      * 2. merge by rank，把rank较低的tree merge到rank高的tree上，这样可以减少path compression的次数
@@ -58,8 +60,6 @@ public class RedundantConnection {
         /**
          * draw a path between x & y
          *
-         * @param x node x
-         * @param y node y
          * @return 如果x, y已经在一个connected component(cluster)里了，也就是union失败了，返回false;否则返回true。
          */
         boolean union(int x, int y) {
@@ -98,8 +98,13 @@ public class RedundantConnection {
     public int[] findRedundantConnection(int[][] edges) {
         DSU dsu = new DSU();
         for (int[] edge : edges) {
-            if (!dsu.union(edge[0], edge[1])) return edge;
+            if (!dsu.union(edge[0], edge[1]))
+                return edge;
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        new RedundantConnection().findRedundantConnection(new int[][]{{2, 3}, {1, 2}, {1, 3}});
     }
 }
