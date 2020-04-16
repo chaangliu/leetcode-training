@@ -117,4 +117,27 @@ public class MergeIntervals {
 
         return result.toArray(new int[result.size()][]);
     }
+
+    /**
+     * 20200416 review
+     */
+    public int[][] merge__(int[][] intervals) {
+        if (intervals.length == 0) return intervals;
+        List<int[]> res = new ArrayList<>();
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int s = intervals[0][0], e = intervals[0][1];
+        for (int[] arr : intervals) {
+            if (arr[0] <= e) {
+                e = Math.max(e, arr[1]); //[1, 4][2, 3]
+            } else {
+                res.add(new int[]{s, e});
+                s = arr[0];
+                e = Math.max(e, arr[1]);
+            }
+        }
+        res.add(new int[]{s, e});
+        int[][] result = new int[res.size()][2];
+        for (int i = 0; i < res.size(); i++) result[i] = res.get(i);
+        return result;
+    }
 }
