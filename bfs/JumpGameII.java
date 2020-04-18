@@ -51,7 +51,8 @@ public class JumpGameII {
                 Pair p = queue.poll();
                 lastIndex = Math.max(p.num + p.idx, lastIndex);
                 if (lastIndex >= nums.length - 1) return res;
-                if (i != size - 1) continue; // 这句的意思要配合上面两行看，就是把这一层能跳最远的距离算出来，最后再结算
+                if (i != size - 1)
+                    continue; // 这句的意思要配合上面两行看，就是把这一层能跳最远的距离算出来，最后再结算
                 for (int j = p.idx + 1; j <= lastIndex; j++) {
                     queue.offer(new Pair(nums[j], j));
                 }
@@ -80,7 +81,7 @@ public class JumpGameII {
 
     /**
      * approach2: greedy
-     * 每次尝试跳最远；触及到边界代表需要再跳一次，curEnd第一次是0，第二次是2，没有第三次，说明需要跳两次。思路跟bfs有点像，都要找当前能跳的最远index。
+     * 每次尝试跳最远；触及到边界代表需要再跳一次，对于2, 3, 1, 1, 4，curEnd第一次是0，第二次是2，没有第三次，说明需要跳两次。思路跟bfs有点像，都要找当前能跳的最远index。
      * 跟bfs不同的地方在于，bfs不需要完整遍历一遍数组，中途跳出index范围了就会退出
      * [2,3,1,1,4]
      */
@@ -97,6 +98,6 @@ public class JumpGameII {
     }
 
     public static void main(String[] args) {
-        new JumpGameII().jump(new int[]{2, 1, 3, 1, 4});
+        new JumpGameII().jump__GREEDY(new int[]{2, 3, 1, 1, 4});
     }
 }
