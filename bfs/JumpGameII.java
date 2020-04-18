@@ -51,7 +51,7 @@ public class JumpGameII {
                 Pair p = queue.poll();
                 lastIndex = Math.max(p.num + p.idx, lastIndex);
                 if (lastIndex >= nums.length - 1) return res;
-                if (i != size - 1) continue;
+                if (i != size - 1) continue; // 这句的意思要配合上面两行看，就是把这一层能跳最远的距离算出来，最后再结算
                 for (int j = p.idx + 1; j <= lastIndex; j++) {
                     queue.offer(new Pair(nums[j], j));
                 }
@@ -94,5 +94,9 @@ public class JumpGameII {
             }
         }
         return jumps;
+    }
+
+    public static void main(String[] args) {
+        new JumpGameII().jump(new int[]{2, 1, 3, 1, 4});
     }
 }
