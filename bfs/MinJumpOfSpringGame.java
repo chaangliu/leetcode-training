@@ -1,5 +1,6 @@
 package bfs;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -50,5 +51,45 @@ public class MinJumpOfSpringGame {
             this.num = n;
             this.idx = index;
         }
+    }
+
+    /**
+     * 上面的解法并没有正确地去模拟跳跃，因为每次跳跃并没有把当前index左边的数字全部加入到queue。
+     * 正确解法如下，同时要利用visited防止重复访问
+     */
+    public int minJump(int[] jump) {
+        // int[] visited = new int[jump.length];
+        HashSet<Integer> visited = new HashSet<>();
+        int step = 0, stop = 0;
+        Queue<Integer> queue = new LinkedList<Integer>(), num = new LinkedList<Integer>();
+        queue.add(0);
+        for (int i = 1; i < jump.length; i++) {
+            num.add(i);
+        }
+        while (!queue.isEmpty()) {
+            int n = queue.size();
+            for (int i = 0; i < n; i++) {
+                int index = queue.poll();
+                int rightMost = index + jump[index]; // 最远能跳的位置
+                if (rightMost >= jump.length) {
+                    return step + 1;
+                }
+
+                //右边
+                if (visited.add(rightMost)) {
+                    queue.add(rightMost);
+                }
+
+                //左边
+                while (!num.isEmpty() && num.peek() < index) {
+                    int t = num.poll();
+                    if (visited.add(t)) {
+                        queue.add(t);
+                    }
+                }
+            }
+            step++;
+        }
+        return step;
     }
 }
