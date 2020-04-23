@@ -16,10 +16,14 @@ import java.util.Map;
 
 public class SubArraySumequalstoK {
 
+    /**
+     * 题意：给你一个int数组和一个k，找出有多少个和=k的连续子串。
+     * 解法：prefix sum：和为k的子串个数等于和为n - A[i]的子串的个数+1
+     */
     public int subarraySum(int[] nums, int k) {
         int sum = 0, result = 0;
         Map<Integer, Integer> preSum = new HashMap<>();
-        preSum.put(0, 1);
+        preSum.put(0, 1); // 有1个和为0的子串""
 
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i];

@@ -20,7 +20,7 @@ public class CoinChange {
 
     /**
      * 题意：给你一些不同硬币的面值(每种面值可以用无数次)，一个总数，问你最少用多少个硬币可以达到总数。
-     * 方法1，DFS WITH MEMO
+     * 方法1，dfs with memo
      */
     public int coinChange_(int[] coins, int amount) {
         int res = dfs(coins, amount, new Integer[amount + 1]);
@@ -28,7 +28,7 @@ public class CoinChange {
     }
 
     /**
-     * 返回组成amount数量最少需要多少硬币，情况需要特别注意。比如[2] 3这样的case
+     * 返回组成amount数量最少需要多少硬币；有些情况需要特别注意，比如[2] 3这样的case
      **/
     private int dfs(int[] coins, int amount, Integer[] memo) {
         if (amount == 0) return 0;
@@ -37,33 +37,10 @@ public class CoinChange {
         for (int c : coins) {
             if (amount - c < 0) continue;
             int r = dfs(coins, amount - c, memo);
-            if (r != -1)
-                res = Math.min(res, 1 + r);
+            if (r != -1) res = Math.min(res, 1 + r);
         }
-        memo[amount] = res == Integer.MAX_VALUE ? -1 : res;
+        memo[amount] = res == Integer.MAX_VALUE ? -1 : res; // 如果不能刚好用完amount，返回-1
         return memo[amount];
-    }
-
-    /**
-     * 方法1. dfs with memo, top down, code from leetcode solutions
-     */
-    public int coinChange__(int[] coins, int amount) {
-        if (amount < 1) return 0;
-        return coinChange(coins, amount, new int[amount]);
-    }
-
-    private int coinChange(int[] coins, int rem, int[] count) {
-        if (rem < 0) return -1;
-        if (rem == 0) return 0;
-        if (count[rem - 1] != 0) return count[rem - 1];
-        int min = Integer.MAX_VALUE;
-        for (int coin : coins) {
-            int res = coinChange(coins, rem - coin, count);
-            if (res >= 0 && res < min)
-                min = 1 + res;
-        }
-        count[rem - 1] = (min == Integer.MAX_VALUE) ? -1 : min;
-        return count[rem - 1];
     }
 
     /**

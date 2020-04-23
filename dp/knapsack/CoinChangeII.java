@@ -47,9 +47,32 @@ public class CoinChangeII {
         return dp[coins.length][amount];
     }
 
+    /**
+     * dfs with memo
+     */
+    public int change_(int amount, int[] coins) {
+        Integer[][] ways = new Integer[coins.length][amount + 1];
+        return changeWays(amount, coins, coins.length - 1, ways);
+    }
 
     /**
-     * 一维DP
+     * memo[i][j]代表使用前i种硬币组成amount有多少种方法
+     */
+    private int changeWays(int amount, int[] coins, int cur, Integer[][] memo) {
+        if (amount == 0) return 1;
+        if (cur < 0) return 0;
+        if (memo[cur][amount] != null) return memo[cur][amount];
+        int way1 = 0;
+        if (amount >= coins[cur]) way1 = changeWays(amount - coins[cur], coins, cur, memo); // 使用至少一个当前硬币cur
+        int way2 = changeWays(amount, coins, cur - 1, memo); // 完全不用当前硬币
+        memo[cur][amount] = way1 + way2;
+        return way1 + way2;
+    }
+
+
+
+    /**
+     * 另一种思路：一维DP（不是降维）
      * 可以理解为爬台阶，对于每个coin和每个总金额i，从i - coin那级可以再走coin级台阶就可以来到当前台阶
      * if(amount - coin >= 0) dp[amount] += dp[amount - coin]
      */
@@ -69,36 +92,28 @@ public class CoinChangeII {
     }
 
 
-    //1. dfs brute force, 借鉴coin change 1的代码，TLE
-//    int res = 0;
-//    public int change(int amount, int[] coins) {
-//        coinChange(0, coins, amount);
-//        return res;
-//    }
-//
-//    private int coinChange(int idxCoin, int[] coins, int amount) {
-//        if (amount == 0) {
-//            res++;
-//            return 0;
-//        }
-//        if (idxCoin < coins.length && amount > 0) {
-//            int maxVal = amount / coins[idxCoin];
-//            int minCost = Integer.MAX_VALUE;
-//            for (int x = 0; x <= maxVal; x++) {
-//                if (amount >= x * coins[idxCoin]) {
-//                    int res = coinChange(idxCoin + 1, coins, amount - x * coins[idxCoin]);
-//                    if (res != -1)
-//                        minCost = Math.min(minCost, res + x);
-//                }
-//            }
-//            return (minCost == Integer.MAX_VALUE) ? -1 : minCost;
-//        }
-//        return -1;
-//    }
+    /**
+     * 相应的dfs with memo
+     */
+    public int change__(int amount, int[] coins) {
+        if (amount == 0 && coins.length == 0) return 1;
+        if (amount < 0 || coins == null || coins.length == 0) return 0;
+        Integer[][] ways = new Integer[coins.length][amount + 1];
+        return dfs(amount, coins, 0, ways);
+    }
 
-
-    public static void main(String args[]) {
-        int[] coins = {1, 2, 5};
-        System.out.println(new CoinChangeII().change____1D(12, coins));
+    /**
+     * memo[i][j]代表使用从cur开始的硬币组成amount有多少种方法
+     */
+    private int dfs(int amount, int[] coins, int cur, Integer[][] memo) {
+        if (amount == 0) return 1;
+        if (amount < 0) return 0;
+        int res = 0;
+        if (memo[cur][amount] != null) return memo[cur][amount];
+        for (int i = cur; i < coins.length; i++) {
+            res += dfs(amount - coins[i], coins, i, memo);
+        }
+        memo[cur][amount] = res;
+        return res;
     }
 }
