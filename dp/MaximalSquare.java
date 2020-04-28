@@ -23,6 +23,7 @@ public class MaximalSquare {
 
 
     /**
+     * 题意：给你一个二维数组，让你找出由1构成的最大正方形的面积。
      * approach 2. 2dimensional dp
      * dp(i,j) represents the side length of the maximum square whose bottom right corner is the cell with index (i,j) in the original matrix.
      * 状态转移方程：dp(i, j)=min(dp(i−1, j), dp(i−1, j−1), dp(i, j−1))+1.

@@ -54,8 +54,8 @@ public class SlidingWindowMaximum {
 
 
     /**
-     * approach2. 双端队列O(n)解法，思维难度挺高的，队头保存window中的最大数的index，添加新数的时候不断从队尾移出比新数小的数的index
-     * 是个单调队列（单调下降）
+     * approach2. 双端队列O(n)解法，很经典，单调队列(栈底最大，栈顶最小)，相当于两边都能操作的单调栈，队头保存window中的最大数的index，添加新数的时候不断从队尾移出比新数小的数的index
+     * Last和First可以理解为加入的顺序
      * https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation
      */
     public int[] maxSlidingWindow(int[] a, int k) {
@@ -66,13 +66,13 @@ public class SlidingWindowMaximum {
         // store index
         Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < a.length; i++) {
-            // remove numbers out of range k
+            // remove numbers out of range k，删掉窗口外的元素
             if (!q.isEmpty() && q.peek() < i - k + 1) { // peek() 返回 the first element of this deque
-                q.poll();//相当于pollFirst，也就是队列正常的出队顺序，把左边的out of window的index移出
+                q.poll();//相当于pollFirst，也就是栈底，也就是队列正常的出队顺序，把左边的out of window的index移出
             }
-            // remove smaller numbers in k range as they are useless
+            // remove smaller numbers in k range as they are useless，对于窗口内的元素，从栈顶开始把比当前小的元素index都移除
             while (!q.isEmpty() && a[q.peekLast()] < a[i]) {
-                //从队尾开始(最近加入的)，把小于即将加入的a[i]的数出队，这样就保证队头(peek)永远是window中的最大数
+                //从队尾（也就是栈顶，也就是最近加入的）开始，把小于即将加入的a[i]的数出队，因为这些数都没用利用价值了，要用也是用a[i]；这样就保证队头(peek)永远是window中的最大数
                 q.pollLast();
             }
             // q contains index... r contains content
