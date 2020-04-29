@@ -29,16 +29,18 @@ import java.util.Deque;
 public class ConstrainedSubsetSum {
     /**
      * 题意：给你一个整形数组，找出一个子数组，但是它们的元素在原数组中的相隔不能超过k，问这个字数组的最大和是多少。
+     * 转移方程（dp[i] = nums[i] + max(0, dp[i-k], dp[i-k+1], ..., dp[i-1])）比较容易理解，关键点显然在于怎么找过去k个数字中的最大元素。
      * 解法：DP + sliding window(双端队列，单调递减队列，顶部小的栈)
      */
     public int constrainedSubsetSum(int[] nums, int k) {
-        int[] dp = new int[nums.length];
+        int[] dp = new int[nums.length]; // dp[i]存放截至index i为止，必须包含nums[i]的subset的最大和
         dp[0] = nums[0];
         int res = dp[0];
         Deque<Integer> deque = new ArrayDeque();//单调递减队列，队首是窗口的最大值，
         deque.addFirst(dp[0]);
         for (int i = 1; i < nums.length; i++) {
             dp[i] = Math.max(deque.getFirst() + nums[i], nums[i]);
+            // System.out.println(dp[i]);
             res = Math.max(res, dp[i]);
             while (!deque.isEmpty() && deque.getLast() < dp[i]) {
                 deque.removeLast(); // 栈顶比当前最大值小的元素出队
@@ -53,27 +55,30 @@ public class ConstrainedSubsetSum {
     }
 
     /**
-     * 我模仿sliding window maximum 的答案，WA，不知道为啥
+     * 我模仿sliding window maximum 的答案，stack中存放的是下标，这样判断出队比较清晰
      */
-    public int constrainedSubsetSum__(int[] nums, int k) {
+    public int constrainedSubsetSum_(int[] nums, int k) {
         int[] dp = nums.clone();
         dp[0] = nums[0];
         int res = dp[0];
         Deque<Integer> q = new ArrayDeque<>();
         q.offer(0);
         for (int i = 1; i < nums.length; i++) {
-            while (!q.isEmpty() && i - q.peekFirst() > k) { // 窗口外的出队
+            if (!q.isEmpty() && i - q.peekFirst() > k) { //窗口外的出队
                 q.pollFirst();
             }
-            int max = q.isEmpty() ? 0 : Math.max(0, dp[q.peekFirst()]);
-            dp[i] = Math.max(dp[i], max + nums[i]);
+            dp[i] = Math.max(nums[i], dp[q.peekFirst()] + nums[i]);
+            // System.out.println(dp[i]);
             res = Math.max(dp[i], res);
-            System.out.println(dp[i]);
-            while (!q.isEmpty() && nums[i] >= dp[q.peekLast()]) { //栈顶比nums[i]小的数字都出队
+            while (!q.isEmpty() && dp[i] > dp[q.peekLast()]) { //栈顶比nums[i]小的数字都出队
                 q.pollLast();
             }
             q.offer(i);
         }
         return res;
+    }
+
+    public static void main(String[] arg) {
+        new ConstrainedSubsetSum().constrainedSubsetSum_(new int[]{10, -2, -10, -5, 20}, 2);
     }
 }
