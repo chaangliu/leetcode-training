@@ -26,7 +26,8 @@ package tree;
  */
 public class BinaryTreeMaximumPathSum {
     /**
-     *  题意：给你一个tree，问最大的路径和是多少。可以拐弯，但是不能出现岔路。
+     *  题意：给你一个tree，问最大的路径和是多少。可以是一条折线，但是不能出现岔路。
+     *  解法：dfs
      */
     int res = Integer.MIN_VALUE;
 
@@ -43,6 +44,6 @@ public class BinaryTreeMaximumPathSum {
         int left = Math.max(0, dfs(node.left));//已犯错误：没有取0作为下限
         int right = Math.max(0, dfs(node.right));
         res = Math.max(res, node.val + left + right);
-        return Math.max(left, right) + node.val;
+        return Math.max(left, right) + node.val; // 把左右两端path sum大一些的那个分支返回给parent，所以每一层都有可能是个折线
     }
 }
