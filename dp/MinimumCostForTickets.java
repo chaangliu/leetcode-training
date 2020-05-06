@@ -43,15 +43,56 @@ import java.util.Set;
  */
 public class MinimumCostForTickets {
     /**
-     * 这题意思是选择最划算的交通卡。我一开始觉得是背包问题。
-     * 我觉得讨论区votrubac说得很好，DP是高阶能力。
-     * The higher is the bar, the more you're expected to use dynamic programming (DP) during an interview. This technique requires a lot of practice to grasp;
-     * if you've mastered the recursion, DP is the next level.
-     * <p>
-     * 方法1. 以日历的日期为维度，假设今天交通卡到期，那计算上次买了1天/7天/30天的话最少需要钱
-     * 这种方案的优化可以用滚动数组，只保留30天前的最小花销
+     * 题意：选择最划算的交通卡。
+     * 解法：这种题显然是top down的DFS + MEMO比较好写；但是我想了一会儿没想出来，一开始想以日期为维度，但是发现构造不出days的递推关系；然后以index为维度，写了半天WA了。于是看了答案。
+     * top down, solution 1，以index为维度，这里也是我自己写的，当时其实WA的是个小问题，就是>写成了>=
+     */
+    public int mincostTickets__(int[] days, int[] costs) {
+        return dfs(days, costs, 0, new Integer[days.length]);
+    }
+
+    private int dfs(int[] days, int[] costs, int d, Integer[] memo) {
+        if (d >= days.length) return 0; // >= length, not length - 1
+        if (memo[d] != null) return memo[d];
+        int res = Integer.MAX_VALUE;
+        int x = d, y = d, z = d;
+        for (int i = d + 1; i < days.length; i++) { // 对每种票价分别找到cover不到的那一天
+            if (days[d] + 1 > days[i]) x = i;// 不要写成>=
+            if (days[d] + 7 > days[i]) y = i;
+            if (days[d] + 30 > days[i]) z = i;
+            else break;
+        }
+        res = Math.min(res, costs[0] + dfs(days, costs, x + 1, memo));
+        res = Math.min(res, costs[1] + dfs(days, costs, y + 1, memo));
+        res = Math.min(res, costs[2] + dfs(days, costs, z + 1, memo));
+        memo[d] = res;
+        return res;
+    }
+
+    /**
+     * * top down, solution 2, 以日期为维度；它的关键点在于一个贪心准则，就是我们应该在出行当天再买；如果没到那天，就等着。
      */
     public int mincostTickets(int[] days, int[] costs) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int i : days) set.add(i);
+        return dfs(set, costs, 1, new Integer[366]);
+    }
+
+    private int dfs(HashSet<Integer> days, int[] costs, int d, Integer[] memo) {
+        if (d > 365) return 0;
+        if (memo[d] != null) return memo[d];
+        if (!days.contains(d)) return dfs(days, costs, d + 1, memo);
+        int res = Math.min(Math.min(costs[0] + dfs(days, costs, d + 1, memo), costs[1] + dfs(days, costs, d + 7, memo)), costs[2] + dfs(days, costs, d + 30, memo));
+        memo[d] = res;
+        return res;
+    }
+
+
+    /**
+     * bottom up dp: 以日历的日期为维度，假设今天交通卡到期，那计算上次买了1天/7天/30天的话最少需要钱
+     * 这种方案的优化可以用滚动数组，只保留30天前的最小花销
+     */
+    public int mincostTickets_bottom_up(int[] days, int[] costs) {
         int dp[] = new int[366];//dp[i]代表截至第i天的min cost；optimization：可用长度30的滚动数组
         Set<Integer> set = new HashSet<>();
         for (int i : days) set.add(i);
