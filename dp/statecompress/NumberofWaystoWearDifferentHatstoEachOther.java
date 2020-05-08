@@ -42,7 +42,7 @@ public class NumberofWaystoWearDifferentHatstoEachOther {
      * 题意：给n个人分配帽子，一共有40个帽子，每个人有自己的喜好，问分配帽子的方案一共有多少。
      * 解法：状态压缩DP。状态压缩的意思就是，在状态特别多的时候，你不好记录之前的状态，比如你总不能拼接一个很长的字符串吧（可能真的可以？），那样操作起来很麻烦。
      * 所以用到bit，这里以帽子的维度来考虑的话，帽子数量太多不好压缩，所以考虑压缩人是否有帽子这个状态，把帽子分给人。这里也是借鉴了discuss里老哥的top down解法；
-     * 但是我一开始没看懂为什么要跳过第i个帽子，直到看了wnjxyk的视频才恍然大悟；讲解得真好。https://www.bilibili.com/video/BV1hZ4y1s79w
+     * 但是我一开始没看懂为什么要跳过第i个帽子，直到看了wnjxyk的视频才恍然大悟；讲解得真好。【
      * q:
      * 大佬我能问一下嘛，为什么第四题很显然是状态压缩啊。
      * wnjxyk:
@@ -75,5 +75,32 @@ public class NumberofWaystoWearDifferentHatstoEachOther {
         }
         memo[i][mask] = res;
         return res;
+    }
+
+    int MOD = (int) (1e9) + 7;
+
+    /**
+     * 状压bottom up写法，参考https://www.bilibili.com/video/BV1hZ4y1s79w
+     */
+    public int numberWays_(List<List<Integer>> hats) {
+        int n = hats.size();
+        int all = 1 << n;
+        int[][] dp = new int[41][1 << 10]; // dp[i][j]代表前有i顶帽子的、分配情况是j的情况下总共的方案数。1<<10意思是10个人，每个人两种状态。
+        dp[0][0] = 1; // 0顶帽子分给0个人，一种分法
+        for (int h = 1; h <= 40; h++) {
+            for (int mask = 0; mask < all; mask++) {
+                if (dp[h - 1][mask] == 0) continue; // 0的加到当前状态也无影响，所以跳过
+                for (int p = 0; p < n; p++) {
+                    if (!hats.get(p).contains(h)) continue; // 他不喜欢这顶帽子
+                    if (((mask >> p) & 1) == 1) continue; // 这个人已经戴上了这顶帽子
+                    int newMask = mask | (1 << p); // 把帽子分给这个人
+                    dp[h][newMask] = (dp[h][newMask] + dp[h - 1][mask]) % MOD;
+                }
+            }
+            for (int mask = 0; mask < all; mask++) {
+                dp[h][mask] = (dp[h][mask] + dp[h - 1][mask]) % MOD;
+            }
+        }
+        return dp[40][all - 1];
     }
 }

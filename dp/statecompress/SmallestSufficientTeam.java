@@ -31,32 +31,34 @@ import tree.TreeNode;
  */
 public class SmallestSufficientTeam {
     /**
-     * 这题据说是经典的状态压缩DP，NP问题，几个大佬都是用bit manipulation做的，很熟练的样子，似乎是固定题型。
+     * 题意：给你一个skills数组代表一项工作需要的skills，和一个people数组代表一些人掌握的技能，求最小班底。
+     * 这题是经典的状态压缩DP，NP问题，几个大佬都是用bit manipulation做的，很熟练的样子，似乎是固定题型。
      * Time O(people * 2^skill)
      * Space O(2^skill)
+     * 每个人的技能列表不好维护，但是总的技能只有16种，一个人最多有16种技能，可以映射到一个int上（2^16 = 65 536, int是-2的31次方到+2的31次方）
      */
     public int[] smallestSufficientTeam(String[] skills, List<List<String>> people) {
         int sLen = skills.length, pLen = people.size();
         Map<String, Integer> skmap = new HashMap<>();
         for (int i = 0; i < sLen; i++) skmap.put(skills[i], i);//把需求技能映射成数字
-        Set<Integer>[] dp = new Set[1 << sLen];
+        Set<Integer>[] dp = new Set[1 << sLen]; //dp[mask]代表一个可以cover mask这种需求列表的sufficient team
         dp[0] = new HashSet<>();
         for (int ppl = 0; ppl < pLen; ppl++) {
             int his_skill = 0;
             for (String sks : people.get(ppl)) {
                 his_skill |= 1 << (skmap.get(sks));//计算这个人的技能
             }
-            for (int skill_set = 0; skill_set < dp.length; skill_set++) {
-                if (dp[skill_set] == null)
-                    continue;//比如skill_set:100, ppl:110，没有[reactjs]的班底，那么跟当前这个人就没有可能产生新的班底[这一步一定不能少]
-                Set<Integer> currSkills = dp[skill_set];
-                int with_him = skill_set | his_skill;//with_him:当前的skill_set在有了这个人之后的变化
-                if (with_him == skill_set)//代表这个人的技能不能叠加现有skill_set以产生新的skill_set
+            for (int mask = 0; mask < (1 << sLen); mask++) {
+                if (dp[mask] == null)
+                    continue;//比如mask:100, ppl:110，没有[reactjs]的班底，那么跟当前这个人就没有可能产生新的班底[这一步一定不能少]
+                Set<Integer> currSkills = dp[mask];
+                int with_him = mask | his_skill;//with_him:当前的mask在有了这个人之后的变化
+                if (with_him == mask)//代表这个人的技能不能叠加现有mask以产生新的mask
                     continue;
                 if (dp[with_him] == null || dp[with_him].size() > currSkills.size() + 1) {//dp[with_him].size():新req_skill目前的最少班底人数，currSkills.size():老req_skill目前最少班底人数
                     Set<Integer> cSkills = new HashSet<>(currSkills);
                     cSkills.add(ppl);
-                    dp[with_him] = cSkills;//dp[skill_set]代表一个可以cover skill_set这种需求列表的sufficient team
+                    dp[with_him] = cSkills;//dp[mask]代表一个可以cover mask这种需求列表的sufficient team
                 }
             }
         }
@@ -84,5 +86,44 @@ public class SmallestSufficientTeam {
         ppl.add(p2);
         ppl.add(p3);
         new SmallestSufficientTeam().smallestSufficientTeam(req, ppl);
+    }
+
+    List<Integer> sol = new ArrayList<>();
+
+    public int[] smallestSufficientTeam_DFS(String[] req_skills, List<List<String>> people) {
+        Map<String, Integer> idx = new HashMap<>();
+        int n = 0;
+        for (String s : req_skills) idx.put(s, n++);///skills are represented by 0, 1, 2....
+        int[] pe = new int[people.size()];
+        for (int i = 0; i < pe.length; i++) {
+            for (String p : people.get(i)) {
+                int skill = idx.get(p);
+                pe[i] += 1 << skill;
+            }
+        } // each person is transferred to a number, of which the bits of 1 means the guy has the skill
+        search(0, pe, new ArrayList<Integer>(), n);
+        int[] ans = new int[sol.size()];
+        for (int i = 0; i < sol.size(); i++) ans[i] = sol.get(i);
+        return ans;
+    }
+
+    public void search(int cur, int[] pe, List<Integer> onesol, int n) {
+        if (cur == (1 << n) - 1) {  // when all bits are 1, all skills are coverred
+            if (sol.size() == 0 || onesol.size() < sol.size()) {
+                sol = new ArrayList<>(onesol);
+            }
+            return;
+        }
+        if (sol.size() != 0 && onesol.size() >= sol.size()) return;    //pruning
+        int zeroBit = 0;
+        while (((cur >> zeroBit) & 1) == 1) zeroBit++;
+        for (int i = 0; i < pe.length; i++) {
+            int per = pe[i];
+            if (((per >> zeroBit) & 1) == 1) {
+                onesol.add(i); // when a person can cover a zero bit in the current number, we can add him
+                search(cur | per, pe, onesol, n);
+                onesol.remove(onesol.size() - 1);  //search in a backtracking way
+            }
+        }
     }
 }
