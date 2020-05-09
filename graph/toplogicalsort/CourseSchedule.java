@@ -109,12 +109,12 @@ public class CourseSchedule {
     //BFS 邻接表(adjacent list)
     public boolean canFinish____1(int numCourses, int[][] prerequisites) {
         if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
-        ArrayList[] adjacentList = new ArrayList[numCourses];
-        int[] inDegrees = new int[numCourses];
+        ArrayList[] adjacentList = new ArrayList[numCourses]; // 建立邻接表
+        int[] inDegrees = new int[numCourses]; //记录每个课程有多少前驱课程
         for (int i = 0; i < prerequisites.length; i++) {
             //当前课程
             int ready = prerequisites[i][0];
-            //当前课程的前驱课程
+            //前驱课程
             int pre = prerequisites[i][1];
             inDegrees[ready]++;
             if (adjacentList[pre] == null) {//已犯错误1 没有初始化
@@ -150,18 +150,13 @@ public class CourseSchedule {
     public boolean canFinish____2(int numCourses, int[][] prerequisites) {
         if (prerequisites == null || prerequisites.length == 0 || prerequisites[0].length == 0) return true;
         ArrayList[] adjacentList = new ArrayList[numCourses];
-        for (int i = 0; i < numCourses; i++) {
-            adjacentList[i] = new ArrayList();
-        }
-//        int[] inDegrees = new int[numCourses];// doesn't need a indegree list here
+        for (int i = 0; i < numCourses; i++) adjacentList[i] = new ArrayList();
         for (int i = 0; i < prerequisites.length; i++) {
             //当前课程
             int ready = prerequisites[i][0];
-            //当前课程的前驱课程
+            //前驱课程
             int pre = prerequisites[i][1];
-            if (adjacentList[pre] == null) {//已犯错误1 没有初始化
-                adjacentList[pre] = new ArrayList();
-            }
+            if (adjacentList[pre] == null) adjacentList[pre] = new ArrayList();
             adjacentList[pre].add(ready);
         }
         //从每个节点开始判断有没有环

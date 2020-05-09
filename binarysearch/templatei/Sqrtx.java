@@ -22,6 +22,21 @@ package binarysearch.templatei;
 
 public class Sqrtx {
     /**
+     * 题意：给你一个非负整数x，求它的平方根，不保留小数。
+     * 解法：因为不保留小数，所以可以统一求出upper_bound 然后 - 1
+     * 202005review
+     */
+    public int mySqrt(int x) {
+        long lo = 0, hi = (long) x + 1;// 注意这儿有两个要点，一个是不能直接x + 1，这样x = Integer.MAX_VALUE时仍然是会溢出的因为x仍然是int。 第二是要 + 1，否则对于x = 0, 1，会少计算一次。（其实所有二分搜索都可以hi+1吧
+        while (lo < hi) {
+            long mid = lo + (hi - lo) / 2;
+            if (mid * mid > x) hi = mid;
+            else lo = mid + 1;
+        }
+        return (int) lo - 1;
+    }
+
+    /**
      * binary search, 运用模板1
      */
     public int mySqrt__(int x) {
@@ -47,7 +62,7 @@ public class Sqrtx {
      * 不要在中途返回，不会出现死循环
      * 用在这题的思路相当于是找upper_bound，第一个>=target的数，比如sqrt(9)，返回4；sqrt(10)也返回4，最后统一减去1.
      */
-    public int mySqrt(int x) {
+    public int mySqrt____(int x) {
         long low = 0 + 1; //trick + 1，让low最小 == 1
         long high = (long) x + 1; //要先把x转为long，否则仍会越界
         while (low < high) {
