@@ -93,41 +93,36 @@ class MinStack {
     }
 }
 
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack obj = new MinStack();
- * obj.push(x);
- * obj.pop();
- * int param_3 = obj.top();
- * int param_4 = obj.getMin();
- */
+class MinStack_ {
 
-//        onStack version，空间上大小上一样，只是往同一个stack里push twice，pop twice
-//        https://leetcode.com/problems/min-stack/discuss/49014/Java-accepted-solution-using-one-stack
-//class MinStack {
-//    int min = Integer.MAX_VALUE;
-//    Stack<Integer> stack = new Stack<Integer>();
-//    public void push(int x) {
-//        // only push the old minimum value when the current
-//        // minimum value changes after pushing the new value x
-//        if(x <= min){
-//            stack.push(min);
-//            min=x;
-//        }
-//        stack.push(x);
-//    }
-//
-//    public void pop() {
-//        // if pop operation could result in the changing of the current minimum value,
-//        // pop twice and change the current minimum value to the last minimum value.
-//        if(stack.pop() == min) min=stack.pop();
-//    }
-//
-//    public int top() {
-//        return stack.peek();
-//    }
-//
-//    public int getMin() {
-//        return min;
-//    }
-//}
+    Stack<Integer> stack = new Stack();
+    Stack<Integer> mono = new Stack();
+
+    /**
+     * initialize your data structure here.
+     */
+    public MinStack_() {
+
+    }
+
+    public void push(int x) {
+        stack.push(x);
+        if (mono.empty() || mono.peek() >= x) {
+            mono.push(x);
+        }
+    }
+
+    public void pop() {
+        int a = mono.peek();
+        int b = stack.pop();
+        if (a == b) mono.pop(); // 20200512review 这儿不能把stack.pop()写到==里，不然就不会pop，不知为何
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return mono.peek();
+    }
+}
