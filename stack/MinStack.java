@@ -113,9 +113,7 @@ class MinStack_ {
     }
 
     public void pop() {
-        int a = mono.peek();
-        int b = stack.pop();
-        if (a == b) mono.pop(); // 20200512review 这儿不能把stack.pop()写到==里，不然就不会pop，不知为何
+        if (mono.peek().equals(stack.pop())) mono.pop(); // 20200512review 这儿如果用==就会WA，因为自动装箱的缘故，装进两个stack的不是同一个Integer对象了
     }
 
     public int top() {
