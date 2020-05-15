@@ -1,6 +1,11 @@
 package tree;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Given an undirected tree consisting of n vertices numbered from 0 to n-1, which has some apples in their vertices. You spend 1 second to walk over one edge of the tree. Return the minimum time in seconds you have to spend in order to collect all apples in the tree starting at vertex 0 and coming back to this vertex.
@@ -30,7 +35,7 @@ import java.util.List;
 public class MinimumTimetoCollectAllApplesinaTree {
     /**
      * 题意：给你一个无向树，一个hasApple数组记录着某个node上是否有苹果。走一个edge需要1秒，问从0开始收集所以苹果需要的最短时间。
-     * 解法：DFS。从node出发往0走。参考：https://leetcode-cn.com/problems/minimum-time-to-collect-all-apples-in-a-tree/solution/dfsshen-ru-qian-chu-by-geguanting/
+     * 解法1：从有苹果的node开始反向DFS。因为是无向树，而且有苹果的node都告诉你了，所以可以从node出发往0走。参考：https://leetcode-cn.com/problems/minimum-time-to-collect-all-apples-in-a-tree/solution/dfsshen-ru-qian-chu-by-geguanting/
      * 我一开始想用BFS，发现没法处理一条路上有多个苹果的情况。
      */
     int res = 0;
@@ -59,6 +64,44 @@ public class MinimumTimetoCollectAllApplesinaTree {
             visited[node] = true;
             res++;
             dfs(reversed[node], reversed, visited);
+        }
+    }
+
+    /**
+     * 解法2：非常巧妙，从0开始DFS，利用post order判断子孙有没有苹果，如果有，那么当前node也需要+2
+     */
+    public int minTime_(int n, int[][] edges, List<Boolean> hasApple) {
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        buildTree(edges, map);
+        Set<Integer> visited = new HashSet<>();
+        return helper(0, map, hasApple, visited);
+    }
+
+    private int helper(int node, Map<Integer, List<Integer>> map, List<Boolean> hasApple, Set<Integer> visited) {
+
+        visited.add(node);
+
+        int res = 0;
+
+        for (int child : map.getOrDefault(node, new LinkedList<>())) {
+            if (visited.contains(child)) continue;
+            res += helper(child, map, hasApple, visited);
+        }
+
+        if ((res > 0 || hasApple.get(node)) && node != 0) res += 2; // res > 2: 后序遍历判断子孙有苹果
+
+        return res;
+    }
+
+    private void buildTree(int[][] edges, Map<Integer, List<Integer>> map) {
+
+        for (int[] edge : edges) {
+            int a = edge[0], b = edge[1];
+            map.putIfAbsent(a, new LinkedList<>());
+            map.putIfAbsent(b, new LinkedList<>());
+            map.get(a).add(b);
+            map.get(b).add(a);
         }
     }
 }

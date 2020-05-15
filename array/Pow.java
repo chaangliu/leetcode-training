@@ -41,9 +41,15 @@ public class Pow {
         }
     }
 
-    public static void main(String args[]) {
-        Pow pow = new Pow();
-        System.out.println(pow.myPow(2, -3));
-        System.out.println(-2 % 3);
+    /**
+     * 20200511review，注意-3 % 2 是 -1，不是1; 而-3 & 1 = 1
+     */
+    public double myPow__(double x, int n) {
+        if (n == 0) return 1;
+        if (n == 1) return x;
+        if (n == -1) return 1 / x;
+        double half = myPow__(x, n / 2);
+        double compensation = ((n % 2) == 1 ? x : (n % 2) == -1 ? 1 / x : 1);
+        return half * half * compensation;
     }
 }

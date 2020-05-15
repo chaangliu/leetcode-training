@@ -15,10 +15,12 @@ public class LargestRectangleinHistogram {
      * 题意：找出最大面积的长方形。
      * 解法：单调栈。
      * 以单调增为例，单调栈的性质是：
-     * 1. 当你遇到一个比栈顶元素小的元素的时候，出栈的元素(out)右边第一个比它小的元素一定是入栈元素(in);
-     * 2. 因为是单调增，所以out出栈之后、in入栈之前，栈顶元素一定是out左边第一个比它小的元素。
-     * 经过1和2我们找到了一个区间[left + 1, right - 1]，在这个区间内，out一定是短板，所以就可以计算这个区间*heigth[out]得到面积
+     * 1. 当你遇到一个比栈顶元素小的元素的时候栈顶要弹出，出栈的元素(out)右边第一个比它小的元素一定是入栈元素(in);
+     * 2. 因为是单调增，所以out出栈之后(可能要连续出栈)、in入栈之前，栈顶元素一定是out左边第一个比它小的元素。
+     * 经过1和2我们找到了一个区间[left + 1, right - 1]，在这个区间内，最后出栈的元素out一定是短板，所以就可以计算(right - left + 1) * height[out]得到面积
+     * 125623，6，5出栈，因为65比两端都高，是不会影响两端计算的。
      * 这个讲解非常好：https://leetcode-cn.com/problems/largest-rectangle-in-histogram/solution/84-by-ikaruga/
+     * Time: O(n)
      **/
     public int largestRectangleArea(int[] heights) {
         int[] h = new int[heights.length + 1];
