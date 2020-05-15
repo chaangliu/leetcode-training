@@ -18,7 +18,8 @@ public class SubArraySumequalstoK {
 
     /**
      * 题意：给你一个int数组和一个k，找出有多少个和=k的连续子串。
-     * 解法：prefix sum：和为k的子串个数等于和为n - A[i]的子串的个数+1
+     * 解法：看着像sliding window，但其实是prefix sum：和为k的子串个数等于和为k - A[i]的子串的个数+1
+     * preSum + HashMap，one pass
      */
     public int subarraySum(int[] nums, int k) {
         int sum = 0, result = 0;
@@ -27,7 +28,7 @@ public class SubArraySumequalstoK {
 
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i];
-            if (preSum.containsKey(sum - k)) {
+            if (preSum.containsKey(sum - k)) {// 意思是，在[sum - k, sum]这段区间内的sum是k
                 result += preSum.get(sum - k);
             }
             preSum.put(sum, preSum.getOrDefault(sum, 0) + 1);
