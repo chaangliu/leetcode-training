@@ -116,5 +116,32 @@ public class ImplementRand10UsingRand7 {
 
     /**
      * 另一个题(from: gui chen)：已知概率函数 f(n) 返回值 p概率返回1， 1-p概率返回0 (p != 0.5)，仅利用 f 实现一个g，返回值 0.5概率返回1，0.5概率返回0
+     * 链接：https://www.nowcoder.com/questionTerminal/248553ad24e64d8a922482c7c29c4aa0
+     * 来源：牛客网
+     * <p>
+     * randp()以概率p产生0，概率（1-p）产生1；
+     * a=0,b=1的概率为p(1-p),将其视为0
+     * a=1,b=0的概率也为p（1-p）,将其视为1
+     * 则产生0和1的概率相等
      */
+
+    int random_0_1() {
+        int i = RANDOM();
+        int j = RANDOM();
+        int result;
+        while (true) {
+            if (i == 0 && j == 1) {
+                result = 0;
+                break;
+            } else if (i == 1 && j == 0) {
+                result = 1;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private int RANDOM() {
+        return 0;
+    }
 }
