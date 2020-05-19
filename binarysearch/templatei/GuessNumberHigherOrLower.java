@@ -32,6 +32,20 @@ public class GuessNumberHigherOrLower {
         return 999;
     }
 
+    /**
+     * 用lower_bound写法，可以吧g==0和g==1合并成A[m] >= val
+     */
+    public int guessNumber_(int n) {
+        int l = 1, r = n;
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            int g = guess(mid);
+            if (g == -1 || g == 0) r = mid; // lower_bound
+            else l = mid + 1;
+        }
+        return l;
+    }
+
     /* The guess API is defined in the parent class GuessGame.
    @param num, your guess
    @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
