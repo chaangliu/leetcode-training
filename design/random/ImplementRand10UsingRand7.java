@@ -113,4 +113,8 @@ public class ImplementRand10UsingRand7 {
         double d = Math.random();//[0.0, 1.0)
         return (int) (d * 7) + 1;
     }
+
+    /**
+     * 另一个题(from: gui chen)：已知概率函数 f(n) 返回值 p概率返回1， 1-p概率返回0 (p != 0.5)，仅利用 f 实现一个g，返回值 0.5概率返回1，0.5概率返回0
+     */
 }
