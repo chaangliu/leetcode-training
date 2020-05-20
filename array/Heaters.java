@@ -64,7 +64,10 @@ public class Heaters {
         return res;
     }
 
-    //评论区看到的BinarySearch方案
+    /**
+     * 评论区看到的BinarySearch方案
+     * 对于每个house，去找离它最近的heater，Java的BinarySearch的Api真绕。。我觉得还是自定义lower_bound比较好
+     */
     public int findRadius___(int[] houses, int[] heaters) {
         Arrays.sort(heaters);
         int result = Integer.MIN_VALUE;
@@ -81,4 +84,30 @@ public class Heaters {
         }
         return result;
     }
+    /**
+     * js的lower_bound写法，注意heaters.sort((a, b) => a - b)一定要给comparator，不然会字典序排序。。
+     */
+    //    var findRadius = function(ho, heaters) {
+    //        heaters.sort((a, b) => a - b)
+    //        let res = 0
+    //        for (let i = 0; i < ho.length; i++) {
+    //            let house = ho[i];
+    //            let index = lower_bound(heaters, house);
+    //            let dist1 = index - 1 >= 0 ? house - heaters[index - 1] : Number.MAX_SAFE_INTEGER
+    //            let dist2 = index < heaters.length ? heaters[index] - house : Number.MAX_SAFE_INTEGER
+    //            res = Math.max(res, Math.min(dist1, dist2));
+    //        }
+    //        return res
+    //    };
+    //
+    //    var lower_bound = function(arr, target) {
+    //        let lo = 0
+    //        let hi = arr.length
+    //        while (lo < hi) {
+    //            let mid = (lo + hi) >> 1
+    //            if (arr[mid] >= target) hi = mid;
+    //            else lo = mid + 1;
+    //        }
+    //        return lo;
+    //    };
 }
