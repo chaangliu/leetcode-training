@@ -36,6 +36,8 @@ public class MinimumWindowSubstring {
      * 解法：sliding window，不满足时就expand, 满足时(set.size() == 0)就contract。
      * 做的过程中发现这题有个要点在于，不能用set，而要用map，即便题目没有要求子串要包含t中字母出现的次数也要用map，
      * 如果用了map，在左边contract的时候你无法判断这时候substring里是否还有其他即将出窗的那个字母。
+     * 20200523review: 今天又写了一下，用了两个map，但是有个很长的CASE过不了，遂放弃。我觉得用两个map很容易出错，变量太多了。
+     * 还是用一个map好，map中记录与每个字符与目标字符串相差的字符个数。
      **/
     public String minWindow(String s, String t) {
         HashMap<Character, Integer> map = new HashMap<>();
