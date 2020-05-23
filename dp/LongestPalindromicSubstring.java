@@ -45,6 +45,29 @@ public class LongestPalindromicSubstring {
         return s.substring(start, end + 1);
     }
 
+
+    /**
+     * 20200521review, 注意dp要从后往前，我一开始从前往后了，这样是没法计算"aaaa"这种情况的，因为我们需要先用到i+1的状态。
+     */
+    public String longestPalindrome_(String s) {
+        if (s.length() == 0) return s;
+        int n = s.length(), max = 1;
+        String res = s.charAt(0) + "";
+        int[][] dp = new int[n][n];
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = n - 1; j > i; j--) {
+                if (s.charAt(i) == s.charAt(j) && (i + 1 == j || i + 2 == j || dp[i + 1][j - 1] != 0)) {
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                    if (j - i + 1 >= max) {
+                        max = j - i + 1;
+                        res = s.substring(i, j + 1);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
     /**
      * dp review 20191230
      * dp[i][j] = A[i] == A[j] && dp[i + 1][j - 1]，不用处理[i+1][j],[i][j-1]

@@ -17,7 +17,7 @@ package easy;
 public class ValidPalindromeII {
     /**
      * 题意：最多remove一个字符是否能成为palindrome。
-     * 这题非常好，首先brute force会超时，于是想到2 pointers, 左边或者右边有个tolerrence可以跳过一次
+     * 这题非常好，首先brute force会超时，于是想到2 pointers, 左边或者右边有个tolerance可以跳过一次
      * 但是我写的做法是不对的，不能仅仅因为l + 1 和 r上的char一样就这么执行下去；而是要两种情况都检测一下。比如：axb....xba
      * 首先，正确做法：
      */

@@ -23,6 +23,7 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
     /**
      * 题意：给你一个前序遍历和中序遍历的数组，让你还原一棵树。
      * 解法：维护preOrder的index和inorder的左右子树的起始和结束index。
+     * 20200522review: 这题关键在于右子树的root index的确定，如果不用全局变量记录，你需要跳过整颗左子树去定位右边子树的root位置。
      */
     int preOrderIndex;
 
@@ -56,15 +57,12 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
     }
 
     private TreeNode construct(int[] preorder, int preOrderStart, int preOrderEnd, int[] inorder, int inOrderStart, int inOrderEnd) {
-        //important to have return null
-//        if (preOrderStart > preOrderEnd || inOrderStart > inOrderEnd) return null;
         if (preOrderStart > preOrderEnd) return null;
 
         int val = preorder[preOrderStart];
         TreeNode node = new TreeNode(val);
 
         int pivot = 0;
-//        for (int i = 0; i < inOrderEnd; i++) {---->silly mistake
         for (int i = 0; i < inorder.length; i++) {
             if (val == inorder[i]) {
                 pivot = i;
@@ -86,17 +84,32 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
         }
     }
 
+
     /**
-     * preorder:  {7}, {10,4,3,1}, {2,8,11}
-     * inorder:   {4,10,3,1}, {7}, {11, 8,2}
+     * ---------------------------------------------------------------------------------------------------------------
+     * 2020 review
      */
-    public static void main(String args[]) {
-        ConstructBinaryTreefromPreorderandInorderTraversal constructBinaryTreefromPreorderandInorderTraversal = new ConstructBinaryTreefromPreorderandInorderTraversal();
-        int[] preorder = {7, 10, 4, 3, 1, 2, 8, 11};
-        int[] inorder = {4, 10, 3, 1, 7, 11, 8, 2};
-        TreeNode result = constructBinaryTreefromPreorderandInorderTraversal.buildTree(preorder, inorder);
+    public TreeNode buildTree_(int[] preorder, int[] inorder) {
+        return dfs(preorder, inorder, 0, preorder.length - 1);
+    }
 
-        constructBinaryTreefromPreorderandInorderTraversal.preorderTraverse(result);
+    int rootPos = 0;
 
+    private TreeNode dfs(int[] preorder, int[] inorder, int l, int r) {
+        if (rootPos >= preorder.length) return null;
+        if (l > r) return null;
+        // if (l == r) return new TreeNode(inorder[l]);
+        int midPos = -1;
+        for (int i = l; i <= r; i++) {
+            if (inorder[i] == preorder[rootPos]) {
+                midPos = i;
+                break;
+            }
+        }
+        TreeNode root = new TreeNode(preorder[rootPos]);
+        rootPos++;
+        root.left = dfs(preorder, inorder, l, midPos - 1);
+        root.right = dfs(preorder, inorder, midPos + 1, r);
+        return root;
     }
 }
