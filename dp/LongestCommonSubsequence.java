@@ -26,7 +26,7 @@ public class LongestCommonSubsequence {
     /**
      * 题目：求最长公共子序列。经典题。
      * dp[i][j]代表text1的前i个字符和text2的前j个字符的LCS长度
-     * 转移方程：dp[i][j] = A[i] == B[j] ? dp[i - 1][j - 1] : max(dp[i - 1][j], dp[i][j - 1]);
+     * 转移方程：dp[i][j] = A[i] == B[j] ? dp[i - 1][j - 1] + 1: max(dp[i - 1][j], dp[i][j - 1]);
      */
     public int longestCommonSubsequence(String text1, String text2) {
         int len1 = text1.length(), len2 = text2.length();
