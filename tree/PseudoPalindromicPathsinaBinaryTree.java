@@ -73,6 +73,9 @@ public class PseudoPalindromicPathsinaBinaryTree {
     /**
      * lee的bit解法，因为node的范围是0~9，所以可以用bit来表示每个数字出现的次数。
      * 但我不解的是，为什么不需要backtrack呢？加上backtrack反而不对了。
+     * -----------
+     * lee说是因为，int is local variable, set is not
+     * 回顾之前做过的题目，才发现，只需要保证传入下一层递归的参数不是同一个对象（或者说，这个参数在下一层会变成新的局部变量，不会互相影响），就不需要回溯. 参考Path Sum那题。
      */
     public int pseudoPalindromicPaths_(TreeNode root) {
         return dfs(root, 0);

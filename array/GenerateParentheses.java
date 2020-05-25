@@ -40,4 +40,19 @@ public class GenerateParentheses {
         dfs(res, cur + "(", l + 1, r, n);
         dfs(res, cur + ")", l, r + 1, n);
     }
+
+
+    /**
+     * dfs这么写也行：
+     */
+    private void dfs__(List<String> res, String cur, int l, int r, int n) {
+        if (l > n || l < r) return;//已犯错误：这个条件写在了添加res的后面
+        if (cur.length() == n * 2) {
+            res.add(cur);
+            return;
+        }
+        String left = cur + "(", right = cur + ")";
+        dfs__(res, left, l + 1, r, n);
+        dfs__(res, right, l, r + 1, n);
+    }
 }
