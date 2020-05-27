@@ -20,7 +20,15 @@ public class PalindromeRemoval {
      * 题意：给你一个数组，每次可以移除其中的一个palindrome字符串，移除之后剩下的就左移。问最少移动多少次可以把字符串移空。
      * 双周赛第四题。
      * 做法：区间DP。边界我有点迷糊。。区间最大长度是n。
-     * 转移方程比较复杂，大概是dp[i][j] = min(dp[1] + dp[i + 1][j], A[i] == A[i + 1] ? 1 + dp[i + 2][j], A[i] == A[i + k(k>=2)] ? dp[i + 1][k -1 ] + dp[k + 1][j])
+     * 转移方程比较复杂，
+     * 1. 可将A[i]单独移除
+     * res = min(res, 1 + dp[i + 1][j])
+     * 2. 如果A[i] == A[i + 1]，可将两个数一起删除
+     * res = min(res, 1 + dp[i + 2][j])
+     * 3. 如果A[i] == A[i + k] (2<=k<=j，相当于分割点)，那么A[i]和A[k]可以随着A[i+1]~A[k-1]一起删除
+     * res = min(res, dp[i + 1][k-1] + dp[k+1][j])
+     *
+     * => dp[i][j] = res
      * 参考：https://www.acwing.com/solution/LeetCode/content/5795/
      */
     public int minimumMoves(int[] A) {
