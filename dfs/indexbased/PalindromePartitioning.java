@@ -1,4 +1,4 @@
-package dfs.backtracking;
+package dfs.indexbased;
 
 import java.util.ArrayList;
 import java.util.List;
