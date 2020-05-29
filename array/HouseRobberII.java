@@ -23,6 +23,8 @@ package array;
 public class HouseRobberII {
 
     /**
+     * 题意：跟第一题不同之处是，这题假设数组的开头和结尾是相邻的，问最大收益是多少。
+     * 因为不能同时抢首尾两间房，the problem becomes to rob either House[1]-House[n-1] or House[2]-House[n]
      * 我的做法，掐头去尾，O(2n)
      * 一开始想着怎么才能one pass，但那样需要记录第一个数字有没有用到，比较难。
      */

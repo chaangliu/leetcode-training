@@ -23,53 +23,44 @@ import tree.TreeNode;
  * Output: 7
  * Explanation: Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
  * Example 2:
- * <p>
  * Input: [3,4,5,1,3,null,1]
- * <p>
  * 3
  * / \
  * 4   5
  * / \   \
  * 1   3   1
- * <p>
  * Output: 9
  * Explanation: Maximum amount of money the thief can rob = 4 + 5 = 9.
  */
 public class HouseRobberIII {
 
-
     /**
-     * 好的解法，
-     * 这个解法的启示是，∑不一定要bfs，dfs然后加上返回值那种方式也可以
-     * <p>
-     * 注意不能用Set而要用Map，val保存从每个结点向下开始偷能偷到的最大值
-     * <p>
-     * 1，2，3，4这样左边一条棍子；从下到上得到的结果分别是4，4，6，6
-     */
+     * 题意：房子是二叉树形式分布，不能偷两根线相连的房子。问最大收益。
+     * 解法：20200529 review 再看真是很清晰明了；
+     * DFS WITH MEMO。本质上，跟第一题一样，只是换了一种数据结构；因为Tree没有index，所以我们可以直接用Map保存对象，记录从当前位置向下的最大收益。
+     * 恍然大悟，原来这就是所谓的「树形DP」
+     **/
     public int rob(TreeNode root) {
-        return robSub(root, new HashMap<TreeNode, Integer>());
+        return dfs(root, new HashMap<>());
     }
 
-    private int robSub(TreeNode root, Map<TreeNode, Integer> map) {
+    private int dfs(TreeNode root, HashMap<TreeNode, Integer> memo) {
         if (root == null) return 0;
-        if (map.containsKey(root)) return map.get(root);
-
-        int val = root.val;
+        if (memo.containsKey(root)) return memo.get(root);
+        int notrob = dfs(root.left, memo) + dfs(root.right, memo);
+        int rob = root.val;
         if (root.left != null) {
-            val += robSub(root.left.left, map) + robSub(root.left.right, map);
+            rob += dfs(root.left.left, memo) + dfs(root.left.right, memo);
         }
         if (root.right != null) {
-            val += robSub(root.right.left, map) + robSub(root.right.right, map);
+            rob += dfs(root.right.left, memo) + dfs(root.right.right, memo);
         }
-        //从当前这家开始、或者从lChild、rChild开始，取一个最佳的值。这里有点像DP了。这也是为什么可以跨越2级以上选择
-        val = Math.max(val, robSub(root.left, map) + robSub(root.right, map));
-        map.put(root, val);
-
-        return val;
+        memo.put(root, Math.max(rob, notrob));
+        return memo.get(root);
     }
 
     /**
-     * dp solution, 从讨论区看来的；但是也用了递归
+     * 树形DP，int[2]，0代表不偷，1代表偷
      */
     public int rob__DP(TreeNode root) {
         int[] res = robSub(root);
@@ -78,14 +69,11 @@ public class HouseRobberIII {
 
     private int[] robSub(TreeNode root) {
         if (root == null) return new int[2];
-
         int[] left = robSub(root.left);
         int[] right = robSub(root.right);
         int[] res = new int[2];
-
-        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
-        res[1] = root.val + left[0] + right[0];
-
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]); // 不偷
+        res[1] = root.val + left[0] + right[0]; // 偷
         return res;
     }
 
@@ -173,5 +161,4 @@ public class HouseRobberIII {
         root.left.left.left = new TreeNode(4);
         new HouseRobberIII().rob(root);
     }
-
 }
