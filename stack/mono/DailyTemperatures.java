@@ -1,4 +1,4 @@
-package stack;
+package stack.mono;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -14,30 +14,12 @@ import java.util.Stack;
  */
 public class DailyTemperatures {
 
-    //approach1
-    //从后往前，比如对于[73, 74, 75, 71, 69, 72, 76, 73]，到72的时候，就在[73,100]在next[]数组寻找最小的index；这样的复杂度是O(NW)，where NN is the length of T and WW is the number of allowed values for T[i]. Since W = 71W=71, we can consider this complexity O(N).
-    public int[] dailyTemperatures(int[] T) {
-        int[] ans = new int[T.length];
-        int[] next = new int[101];
-        Arrays.fill(next, Integer.MAX_VALUE);
-        for (int i = T.length - 1; i >= 0; --i) {
-            int warmer_index = Integer.MAX_VALUE;
-            for (int t = T[i] + 1; t <= 100; ++t) {
-                if (next[t] < warmer_index)
-                    warmer_index = next[t];
-            }
-            if (warmer_index < Integer.MAX_VALUE)
-                ans[i] = warmer_index - i;
-            next[T[i]] = i;
-        }
-        return ans;
-    }
-
     /**
-     * approach2 单调栈
+     * 题意：给你一个数组，问对于每个数字来说，第一个比它大的数字的index是几。
+     * 解法: 单调栈
      * 从后往前遍历，用一个栈保存index，遍历到一个数的时候先把栈中所有比它小的数的index出栈，再入栈这个数的index。因为后面的都没价值了。有点像QueueReconstructionByHeight那题，在两个高个子的人中间的矮子都没存在的必要了，因为不会用他们做参照物😄
      * 这个就是单调栈的应用，这里用的是「小顶栈」（我发明的词）。
-     *
+     * <p>
      * 这题google面过
      */
     public int[] dailyTemperatures__STACK(int[] T) {
@@ -55,7 +37,7 @@ public class DailyTemperatures {
 
     /**
      * 单调栈写法二
-     * 小顶栈，left to right。没有前面那种直观
+     * 小顶栈，left to right，跟wack讨论了一下。我觉得比倒序要直观的。
      */
     public int[] dailyTemperatures__MONOSTACK2(int[] T) {
         int[] res = new int[T.length];
@@ -70,4 +52,25 @@ public class DailyTemperatures {
         return res;
     }
 
+    /**
+     * approach2
+     * 从后往前，比如对于[73, 74, 75, 71, 69, 72, 76, 73]，到72的时候，就在[73,100]在next[]数组寻找最小的index；
+     * 复杂度是O(NW)，where NN is the length of T and WW is the number of allowed values for T[i]. Since W = 71W=71, we can consider this complexity O(N).
+     */
+    public int[] dailyTemperatures(int[] T) {
+        int[] ans = new int[T.length];
+        int[] next = new int[101];
+        Arrays.fill(next, Integer.MAX_VALUE);
+        for (int i = T.length - 1; i >= 0; --i) {
+            int warmer_index = Integer.MAX_VALUE;
+            for (int t = T[i] + 1; t <= 100; ++t) {
+                if (next[t] < warmer_index)
+                    warmer_index = next[t];
+            }
+            if (warmer_index < Integer.MAX_VALUE)
+                ans[i] = warmer_index - i;
+            next[T[i]] = i;
+        }
+        return ans;
+    }
 }
