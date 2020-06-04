@@ -38,4 +38,40 @@ public class CherryPickupII {
         int cherries = c1 == c2 ? grid[r][c1] : grid[r][c1] + grid[r][c2];
         return dp[r][c1][c2] = ans + cherries;
     }
+
+
+    /**
+     * WNJXYK的DP写法，也很清晰。
+     */
+    public int cherryPickup__DP(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][][] dp = new int[m][n][n]; // dp[r][a][b]表示两个机器人分别在(a, r)和(b, r)位置时的最大收益
+        for (int[][] a : dp)
+            for (int[] b : a) {
+                for (int i = 0; i < b.length; i++) b[i] = -1;
+            }
+        dp[0][0][n - 1] = grid[0][0] + grid[0][n - 1];
+        for (int r = 0; r < m - 1; r++) { // 枚举行数
+            for (int a = 0; a < n; a++) { // 枚举机器人a的纵坐标
+                for (int b = 0; b < n; b++) { //枚举机器人b的纵坐标
+                    if (dp[r][a][b] == -1) continue; //跳过第一行中的其他位置
+                    for (int d1 = -1; d1 <= 1; d1++) {
+                        for (int d2 = -1; d2 <= 1; d2++) {// 一个错误，写成了d2 < 1，找了一小时
+                            int na = a + d1, nb = b + d2;
+                            if (na < 0 || na >= n || nb < 0 || nb >= n) continue;
+                            int gain = grid[r + 1][na] + (na != nb ? grid[r + 1][nb] : 0);
+                            dp[r + 1][na][nb] = Math.max(dp[r + 1][na][nb], dp[r][a][b] + gain);
+                        }
+                    }
+                }
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                res = Math.max(res, dp[m - 1][i][j]);
+            }
+        }
+        return res;
+    }
 }
