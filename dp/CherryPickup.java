@@ -42,6 +42,63 @@ public class CherryPickup {
      * 我的想法2：看了一眼题解，说可以想象两个人分别从左上角往右下角走。写了一下(bottom up形式)，觉得不太对，因为每次枚举步数又会从头开始走。看了下答案，别人是从后往前枚举的。原因未知。似乎用top down比较容易理解。先这样，晚上再看一下。
      */
 
+    /**
+     * 四维，top down
+     * 注意这题，recursion是+1而不是-1。
+     */
+    public int cherryPickup___(int[][] grid) {
+        return Math.max(0, cherryPickup(grid, grid.length, 0, 0, 0, 0));
+    }
+
+    private int cherryPickup(int[][] grid, int n, int r1, int c1, int r2, int c2) {
+        if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1) return Integer.MIN_VALUE;
+        if (r1 == n - 1 && c1 == n - 1) return grid[r1][c1];
+        if (r2 == n - 1 && c2 == n - 1) return grid[r2][c2];
+        int cherries;
+        if (r1 == r2 && c1 == c2) cherries = grid[r1][c1];
+        else cherries = grid[r1][c1] + grid[r2][c2];
+        //    P1     |      P2
+        //   DOWN    |     DOWN
+        //   DOWN    |     RIGHT
+        //   RIGHT   |     DOWN
+        //   RIGHT   |     RIGHT
+        cherries += Math.max(
+                Math.max(cherryPickup(grid, n, r1 + 1, c1, r2 + 1, c2), cherryPickup(grid, n, r1 + 1, c1, r2, c2 + 1)),
+                Math.max(cherryPickup(grid, n, r1, c1 + 1, r2 + 1, c2), cherryPickup(grid, n, r1, c1 + 1, r2, c2 + 1)));
+
+        return cherries;
+    }
+
+    /**
+     * top down (AC)
+     * 由于步长相同，可以减少一维
+     */
+    public int cherryPickup__(int[][] A) {
+        int n = A.length;
+        Integer[][][] dp = new Integer[n][n][n];
+        // dp[0][0][0] = A[0][0];
+        return Math.max(0, dfs(A, dp, 0, 0, 0));
+    }
+
+    private int dfs(int[][] A, Integer[][][] dp, int r1, int r2, int c1) {
+
+        int N = A.length;
+
+        int c2 = r1 + c1 - r2;
+        if (r1 == N || r2 == N || c1 == N || c2 == N || A[r1][c1] == -1 || A[r2][c2] == -1) {
+            return Integer.MIN_VALUE;
+        }
+        if (r1 == N - 1 && c1 == N - 1) return A[r1][c1]; // base case
+        if (dp[r1][r2][c1] != null) return dp[r1][r2][c1];
+        int gain = r1 == r2 ? A[r1][c1] : A[r1][c1] + A[r2][c2];
+        int next = Integer.MIN_VALUE; // next 不能 = 0
+        next = Math.max(next, dfs(A, dp, r1, r2 + 1, c1 + 1)); // 1号向右走, 2号向下走
+        next = Math.max(next, dfs(A, dp, r1, r2, c1 + 1)); // 1号向右走， 2号向右走
+        next = Math.max(next, dfs(A, dp, r1 + 1, r2, c1)); // 1号向下走，2号向右走
+        next = Math.max(next, dfs(A, dp, r1 + 1, r2 + 1, c1)); // 1号向下走，2号向下走
+        return dp[r1][r2][c1] = next + gain;
+    }
+
 
     /**
      * 我的想法2（Wrong Answer）
