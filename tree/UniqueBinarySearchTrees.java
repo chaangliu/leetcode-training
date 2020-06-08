@@ -12,6 +12,12 @@ package tree;
  */
 
 abstract class UniqueBinarySearchTrees {
+    /**
+     * 题意：求[1,n]个node能组成的不同bst的数量。
+     * 解法，dp。dp[i]表示以i为root的bst的个数，那么dp[i] = dp[i - 1] + dp[n - i]
+     * dp[i - 1]代表以i- 1为root的bst的数量 dp[n-i]表示以 n-i为root的数量，分别就是左右子树的root
+     * 20200608review
+     */
     public int numTrees(int n) {
         int dp[] = new int[n + 1];
         //包含0个node的BST有1种
