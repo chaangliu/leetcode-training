@@ -2,6 +2,7 @@ package hashtable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
@@ -51,6 +52,7 @@ public class LongestConsecutiveSequence {
     /**
      * 十月份用的是hashset，也是O(n)但不是One pass。讨论区看到一个One pass的，用map。
      * For example, as a result, for sequence {1, 2, 3, 4, 5}, map.get(1) and map.get(5) should both return 5.
+     * [100, 99, 101]
      */
     public int longestConsecutive_(int[] nums) {
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -68,5 +70,35 @@ public class LongestConsecutiveSequence {
             map.put(n + right, streak);
         }
         return res;
+    }
+
+    /**
+     * hashset, one ass
+     * 如果set中没有num左边的数，就跳过
+     * 如果有左边，说明左边一定在后面。也就是一直往最左边的那个数字找，然后再找最长streak
+     */
+    public int longestConsecutive__(int[] nums) {
+        Set<Integer> num_set = new HashSet<Integer>();
+        for (int num : nums) {
+            num_set.add(num);
+        }
+
+        int longestStreak = 0;
+
+        for (int num : num_set) {
+            if (!num_set.contains(num - 1)) {
+                int currentNum = num;
+                int currentStreak = 1;
+
+                while (num_set.contains(currentNum + 1)) {
+                    currentNum += 1;
+                    currentStreak += 1;
+                }
+
+                longestStreak = Math.max(longestStreak, currentStreak);
+            }
+        }
+
+        return longestStreak;
     }
 }
