@@ -1,10 +1,13 @@
 package bfs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-
-import test.Test;
+import java.util.Map;
+import java.util.Queue;
 
 public class WordLadder {
     /**
@@ -18,7 +21,7 @@ public class WordLadder {
      * open the lock那题可以用2-end bfs，这题也一样。2-end bfs，用两个set来替代queue（其实普通BFS也可以用SET，这里用SET是方便检测两端是否互相包含）。
      * 我看题解里有人在beginSet.size>endSet.size()才时候才switch，也算一种优化。
      */
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+    public int ladderLength_(String beginWord, String endWord, List<String> wordList) {
         boolean found = false;
         for (String s : wordList) {
             if (s.equals(endWord)) {
@@ -60,7 +63,51 @@ public class WordLadder {
         }
     }
 
+    /**
+     * 单向BFS，
+     * 思路是把wordList中的每个单词中的每个字母都试着替换成*，记录成一种模式，然后放到map里记录这种模式里所有的单词，然后一层层去匹配
+     * 单向BFS的缺点是，数据量大的时候会延伸出一棵很大的树。所以双向BFS比较好。
+     */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int L = beginWord.length(); // Since all words are of same length.
+        Map<String, List<String>> allComboDict = new HashMap<>();
+        wordList.forEach(
+                word -> {
+                    for (int i = 0; i < L; i++) {
+                        String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+                        List<String> transformations = allComboDict.getOrDefault(newWord, new ArrayList<>());
+                        transformations.add(word);
+                        allComboDict.put(newWord, transformations);
+                    }
+                });
+
+        Queue<String> Q = new LinkedList<>();
+        Q.add(beginWord);
+        Map<String, Boolean> visited = new HashMap<>();
+        visited.put(beginWord, true);
+        int level = 1; // 第一个单词也算链子的长度
+        while (!Q.isEmpty()) {
+            for (int sz = Q.size(); sz > 0; sz--) { // 标准答案没有用这种写法，而是用了Pair记录每个node的level；我试了一下我常用的写法（for循环一次把同一层的node都处理完），也能过
+                String word = Q.remove();
+                for (int i = 0; i < L; i++) {
+                    String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+                    for (String adjacentWord : allComboDict.getOrDefault(newWord, new ArrayList<>())) {
+                        if (adjacentWord.equals(endWord)) {
+                            return level + 1;
+                        }
+                        if (!visited.containsKey(adjacentWord)) {
+                            visited.put(adjacentWord, true);
+                            Q.add(adjacentWord);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+        return 0;
+    }
+
     public static void main(String args[]) {
-        new WordLadder().ladderLength("hit", "cog", Arrays.asList(new String[]{"hot", "dot", "dog", "lot", "log", "cog"}));
+        new WordLadder().ladderLength_("hit", "cog", Arrays.asList(new String[]{"hot", "dot", "dog", "lot", "log", "cog"}));
     }
 }
