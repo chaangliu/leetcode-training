@@ -9,9 +9,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+/**
+ * 给定两个单词（beginWord 和 endWord）和一个字典，找到从 beginWord 到 endWord 的最短转换序列的长度。转换需遵循如下规则：
+ * 每次转换只能改变一个字母。
+ * 转换过程中的中间单词必须是字典中的单词。
+ * 说明:
+ * 如果不存在这样的转换序列，返回 0。
+ * 所有单词具有相同的长度。
+ * 所有单词只由小写字母组成。
+ * 字典中不存在重复的单词。
+ * 你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+ * 示例 1:
+ * 输入:
+ * beginWord = "hit",
+ * endWord = "cog",
+ * wordList = ["hot","dot","dog","lot","log","cog"]
+ * 输出: 5
+ * 解释: 一个最短转换序列是 "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+ * 返回它的长度 5。
+ * 示例 2:
+ * 输入:
+ * beginWord = "hit"
+ * endWord = "cog"
+ * wordList = ["hot","dot","dog","lot","log"]
+ * 输出: 0
+ * 解释: endWord "cog" 不在字典中，所以无法进行转换。
+ * 20200610review
+ */
+
 public class WordLadder {
     /**
-     * 题意：给你一个beginWord和endWord，以及一个wordlist,每次只能变一个字母，问最少需要多少次可以从beginWord变到endWord。
+     * 题意：给你一个beginWord和endWord，以及一个wordlist, 每次只能变一个字母，转换过程中的中间单词必须是字典中的单词。问最少需要多少次可以从beginWord变到endWord。
      * 这题跟open the lock那题很像，但是我一开始没想到用bfs，而是想用两个循环把word对其他word的距离都求出来。
      * TAG是BFS，我一开始想，普通BFS目测是不行的，为什么，因为BFS需要每一层标记visited，那么如果当前层的某个词被标记了，那下一层就没法再变回来了，难道要backtrack?
      * 这个想法是错误的！因为A和B/C相邻的话，B,C的dist一定是大于1的。比如hit him wit。
@@ -20,6 +48,7 @@ public class WordLadder {
      * <p>
      * open the lock那题可以用2-end bfs，这题也一样。2-end bfs，用两个set来替代queue（其实普通BFS也可以用SET，这里用SET是方便检测两端是否互相包含）。
      * 我看题解里有人在beginSet.size>endSet.size()才时候才switch，也算一种优化。
+     * 双向BFS:
      */
     public int ladderLength_(String beginWord, String endWord, List<String> wordList) {
         boolean found = false;
@@ -64,7 +93,7 @@ public class WordLadder {
     }
 
     /**
-     * 单向BFS，
+     * 单向BFS:
      * 思路是把wordList中的每个单词中的每个字母都试着替换成*，记录成一种模式，然后放到map里记录这种模式里所有的单词，然后一层层去匹配
      * 单向BFS的缺点是，数据量大的时候会延伸出一棵很大的树。所以双向BFS比较好。
      */
