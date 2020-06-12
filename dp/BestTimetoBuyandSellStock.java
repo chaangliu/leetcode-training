@@ -27,10 +27,10 @@ public class BestTimetoBuyandSellStock {
      */
     public int maxProfit(int[] prices) {
         if (prices.length < 2) return 0;
-        int local = 0;//当天卖出的最大profit
+        int local = 0;// 当天卖出的最大profit
         int global = 0;
         for (int i = 1; i < prices.length; i++) {
-            //今天必须要卖呀
+            // 昨天卖出的最大收益 + 昨天买入今天卖出挣到的钱 = 今天卖出能获得的最大收益
             local = Math.max(local + prices[i] - prices[i - 1], 0);//如果某天卖出发现收益是负的，置0，代表我可以从当天开始买
             global = Math.max(global, local);
         }
@@ -55,9 +55,7 @@ public class BestTimetoBuyandSellStock {
 
     public static void main(String args[]) {
         BestTimetoBuyandSellStock instance = new BestTimetoBuyandSellStock();
-//        int[] nums = {7, 1, 5, 3, 6, 4};
-        int[] nums = {1, 2, 4};
-//        int[] nums = {7, 6, 4, 3, 1};
+        int[] nums = {7, 1, 5, 3, 6, 4};
         System.out.println(instance.maxProfit(nums));
     }
 }
