@@ -33,9 +33,41 @@ public class LongestCommonSubsequence {
         int[][] dp = new int[len1 + 1][len2 + 1];
         for (int i = 1; i <= len1; i++) {
             for (int j = 1; j <= len2; j++) {
-                dp[i][j] = text1.charAt(i - 1) == text2.charAt(j - 1) ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);//注意text的charAt是i - 1
+                dp[i][j] = text1.charAt(i - 1) == text2.charAt(j - 1)
+                        ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);//注意text的charAt是i - 1
             }
         }
         return dp[text1.length()][text2.length()];
+    }
+
+    /**
+     * top down, recursive with memo
+     */
+    public int longestCommonSubsequence_(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        return longestCommonSubsequence(text1, text2, 0, 0, dp);
+    }
+
+    int longestCommonSubsequence(String s1, String s2, int i, int j, int[][] dp) {
+        if (i == s1.length() || j == s2.length()) {
+            return 0;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+
+        if (s1.charAt(i) == s2.charAt(j)) {
+            return dp[i][j] = 1 + longestCommonSubsequence(s1, s2, i + 1, j + 1, dp);
+        } else {
+            return dp[i][j] = Math.max(longestCommonSubsequence(s1, s2, i + 1, j, dp),
+                    longestCommonSubsequence(s1, s2, i, j + 1, dp));
+        }
     }
 }
