@@ -41,6 +41,7 @@ public class BestTimetoBuyandSellStockII {
      * 0代表当天结束不持有股票，1代表持有股票，转移方程：
      * dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])//不持有==卖掉，所以+price[i]
      * dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])//持有==买回，所以-price[i]
+     * 也可以看看第IV题，任意k次的模板。多加了一个维度。
      */
 
     public int maxProfit__(int[] prices) {
