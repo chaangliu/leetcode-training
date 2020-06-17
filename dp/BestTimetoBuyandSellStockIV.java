@@ -15,14 +15,14 @@ public class BestTimetoBuyandSellStockIV {
     /**
      * 题意：跟前几题一样，但是这题有个要求，只能买卖k次。
      * 解法：dp[i][k][h]表示第i天，【至多进行了k次交易】，h = 0：「不持有」股票的最大收益 h = 1：持有股票的最大收益。
-     * k应该<= n/2，因为买入和卖出至少分两天。
+     * k应该<= n/2，因为买入和卖出至少分两天才有意义；如果k > n/2，那就相当于可以无限次买入卖出，参考第二题。
      * dp[i][k][j] =
      * 不持有: max(dp[i - 1][k][0], dp[i - 1][k][1] + prices[i])
      * 持 有: max(dp[i - 1][k][1], dp[i - 1][k - 1][0] - prices[i])
      */
     public int maxProfit(int k, int[] prices) {
         int n = prices.length;
-        if (k > n / 2) {
+        if (k > n / 2) { // k应该<= n/2，因为买入和卖出至少分两天才有意义；如果k > n/2，那就相当于可以无限次买入卖出，参考第二题
             return maxProfit_infinity(prices);
         }
         int[][][] dp = new int[n][k + 1][2];
@@ -43,6 +43,9 @@ public class BestTimetoBuyandSellStockIV {
         return dp[n - 1][k][0];
     }
 
+    /**
+     * 参考第二题，无限次买入卖出
+     */
     public int maxProfit_infinity(int[] prices) {
         int maxprofit = 0;
         for (int i = 1; i < prices.length; i++) {
