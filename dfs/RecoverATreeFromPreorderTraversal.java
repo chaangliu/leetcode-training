@@ -1,5 +1,7 @@
 package dfs;
 
+import java.util.Stack;
+
 import tree.TreeNode;
 
 /**
@@ -19,11 +21,43 @@ import tree.TreeNode;
  */
 public class RecoverATreeFromPreorderTraversal {
     /**
-     * 此题的recursive写法用一个index记录s的index；dfs的顺序就是buildTree的顺序，所以index是一直往后+的。
-     * <p>
-     * 另外看到也可以用stack来做iterative实现，跟preorder traversal类似。
+     * 题意：给一个深度优先遍历的二叉树的字符串，"-"的个数代表当前node的深度。请你恢复这棵树。
+     * 解法：一年前做过；一年后用递归写了下，不好构造，被绕晕了。看题解推荐用stack，确实比递归清晰：
+     * 用stack保存node，stack的size就代表深度，每当遇到一个新的数字，就一直pop到size=level的时候（所以，先计算dash的个数，也就是深度），这样再插，就能保证插入到指定的level。
+     * 可用1-2--3-4--5模拟一下帮助理解。
      */
     public TreeNode recoverFromPreorder(String S) {
+        int level, val;
+        Stack<TreeNode> stack = new Stack<>();
+        for (int i = 0; i < S.length(); ) {
+            for (level = 0; S.charAt(i) == '-'; i++) {
+                level++;
+            }
+            while (!stack.empty() && level < stack.size()) {
+                stack.pop(); // 一直pop到当前这个node所在的层级
+            }
+            for (val = 0; i < S.length() && Character.isDigit(S.charAt(i)); i++) {
+                val = val * 10 + (S.charAt(i) - '0');
+            }
+            TreeNode node = new TreeNode(val);
+            if (!stack.empty()) {
+                if (stack.peek().left == null) {
+                    stack.peek().left = node;
+                } else {
+                    stack.peek().right = node;
+                }
+            }
+            stack.push(node);
+        }
+        while (stack.size() != 1) stack.pop();
+        return stack.pop();
+    }
+
+    /**
+     * 此题的recursive写法用一个index记录s的index；dfs的顺序就是buildTree的顺序，所以index是一直往后+的。
+     * 另外看到也可以用stack来做iterative实现，跟preorder traversal类似。
+     */
+    public TreeNode recoverFromPreorder_RECURSION(String S) {
         return dfs(S, 0);
     }
 
