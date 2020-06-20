@@ -15,6 +15,10 @@ public class BestTimetoBuyandSellStockIII {
     /**
      * 题意：跟前两题一样，但是这题有个要求，只能买卖两次。
      * 解法：模拟买卖。来自https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/solution/mai-gu-piao-de-zui-jia-shi-ji-iii-yi-kan-jiu-dong-/
+<<<<<<< HEAD
+=======
+     * 也可以看看第IV题，任意k次的模板。
+>>>>>>> c7c75b6df8a3b72c66fd6c2612c188b16a2d0583
      */
     public int maxProfit(int[] prices) {
         int minPrice1 = Integer.MAX_VALUE;

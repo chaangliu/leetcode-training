@@ -42,6 +42,23 @@ package dp;
  */
 
 public class WildcardMatching {
+    /**
+     * 题意：
+     * 给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+     * '.' 匹配任意单个字符
+     * '*' 匹配零个或多个前面的那一个元素
+     * 所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+     * 解法:DP
+     * 如果 p.charAt(j) == s.charAt(i) : dp[i][j] = dp[i-1][j-1]；
+     * 如果 p.charAt(j) == '.' : dp[i][j] = dp[i-1][j-1]；
+     * 如果 p.charAt(j) == '*'：
+     * 如果 p.charAt(j-1) != s.charAt(i) : dp[i][j] = dp[i][j-2] //in this case, a* only counts as empty
+     * 如果 p.charAt(i-1) == s.charAt(i) or p.charAt(i-1) == '.'：
+     * dp[i][j] = dp[i-1][j] //in this case, a* counts as multiple a
+     * or dp[i][j] = dp[i][j-1] // in this case, a* counts as single a
+     * or dp[i][j] = dp[i][j-2] // in this case, a* counts as empty
+     * 参考：https://leetcode-cn.com/problems/regular-expression-matching/solution/dong-tai-gui-hua-zen-yao-cong-0kai-shi-si-kao-da-b/
+     */
     public boolean isMatch(String s, String p) {
         if (s == null && p == null) return true;
         boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
