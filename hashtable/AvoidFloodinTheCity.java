@@ -1,5 +1,6 @@
 package hashtable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -74,5 +75,52 @@ public class AvoidFloodinTheCity {
         }
         for (int i : zeros) res[i] = 1;
         return res;
+    }
+
+    /**
+     * 二分做法：
+     * 用List记录不下雨的日子的index，用Map记录下雨的水池的index；然后每当遇到一个已经满了的水池，就从它上一个位置的右边搜索一个不下雨的日子把它的水放掉。
+     * 总体时间O(nlog(n))
+     */
+    public int[] avoidFlood_BinarySearch(int[] rains) {
+        int n = rains.length;
+        int[] res = new int[n];
+        ArrayList<Integer> zeros = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>(); // 记录下雨的水池->下雨的日子
+        for (int i = 0; i < n; i++) {
+            if (rains[i] == 0) {
+                zeros.add(i); // 记录不下雨的日子
+            } else {
+                res[i] = -1;
+                int pool = rains[i];
+                if (map.containsKey(pool)) {
+                    // Integer zeroIdx = zeros.ceiling(map.get(pool));
+                    int lastFull = map.get(pool);
+                    int id = lower_bound(zeros, lastFull); // 前一个满了的pool右边的第一个0的index
+                    int zeroIdx = id >= zeros.size() ? -1 : zeros.get(id);
+                    if (zeroIdx > lastFull) {
+                        res[zeroIdx] = pool;
+                        zeros.remove(Integer.valueOf(zeroIdx)); // 这里要用Integer装箱；如果不装箱，会outOfBound，因为remove默认的参数代表index
+                        map.put(pool, i);// 这里要更新当前满了的Pool的index，不能remove，因为虽然把前一个编号为pool的水池放干了，但是现在又下满了
+                    } else {
+                        return new int[0];
+                    }
+                } else {
+                    map.put(pool, i);
+                }
+            }
+        }
+        for (int i : zeros) res[i] = 1; // 根据题意，把所有没有用到的0置为任意正数
+        return res;
+    }
+
+    private int lower_bound(ArrayList<Integer> A, int target) {
+        int lo = 0, hi = A.size();
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (A.get(mid) >= target) hi = mid;
+            else lo = mid + 1;
+        }
+        return lo;
     }
 }
