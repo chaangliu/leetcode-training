@@ -14,43 +14,37 @@ import java.util.Arrays;
  */
 
 public class ThreeSumClosest {
-    public static int Solution(int[] nums, int target) {
+    /**
+     * 题意：在一个数组里找3个数，它们的sum最接近target。返回sum。
+     * 解法：跟three sum类似，先排序再双指针。要维护一个minDist记录sum和target之间的最小距离.
+     */
+    public int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
-        int low, high, result, minDist;
-        result = nums[0] + nums[1] + nums[nums.length - 1];
+        int low, high, res, minDist;
+        res = nums[0] + nums[1] + nums[nums.length - 1];
         minDist = Integer.MAX_VALUE;
         for (int i = 0; i < nums.length - 2; i++) {
             low = i + 1;
             high = nums.length - 1;
             while (low < high) {
                 int sum = nums[i] + nums[low] + nums[high];
-
                 if (sum == target) {
                     return target;
                 } else if (sum < target) {
                     if (target - sum < minDist) {
                         minDist = target - sum;
-                        result = sum;
-
+                        res = sum;
                     }
                     low++;
                 } else {
                     if (sum - target < minDist) {
                         minDist = sum - target;
-
-                        result = sum;
+                        res = sum;
                     }
                     high--;
                 }
             }
         }
-
-        return result;
-    }
-
-    public static void main(String args[]) {
-        int[] arrays = {-1, 2, 1, -4};
-        int target = 1;
-        System.out.println(Solution(arrays, target));
+        return res;
     }
 }
