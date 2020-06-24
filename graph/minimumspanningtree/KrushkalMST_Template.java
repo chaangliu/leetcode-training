@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
- * N个节点连接成最小生成树
- * 贪心算法。
+ * N个节点连接成最小生成树（最小代价生成树，也就是所有的edge加起来权值最小）
+ * 贪心算法，利用最小堆和并查集。
  * 把所有Edge加入最小堆，每次从堆顶取一条边去union，如果构成了环就跳过。直到union了N-1条边结束。
  * 这个算法感性上我会觉得，不太好证明的地方是为什么中间跳过了的环后面都抛弃掉了，换句话说就是贪心真的能达到全局最优吗。
  * https://algorithms.tutorialhorizon.com/kruskals-algorithm-minimum-spanning-tree-mst-complete-java-implementation/
