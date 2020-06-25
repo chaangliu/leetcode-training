@@ -26,8 +26,9 @@ import java.util.List;
 public class ThreeSum {
     /**
      * 题意：找出三数之和等于0，任意顺序，不能有重复。
-     * 先放我的解法，固定一个pivot，然后后两个用2sum的方法找。
-     * 答案的解法大家一致地选择了先排序，总体O(n^2)。
+     * 有两种思路，
+     * 第一种是模仿2sum，先固定一个pivot，然后后两个用2sum的方法找；缺点是需要用一个Set的空间。
+     * 第二种比较好，先排序然后双指针；反正总体要达到O(n^2)所以先排序不影响复杂度。
      */
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
@@ -51,7 +52,10 @@ public class ThreeSum {
         return res;
     }
 
-    //20190113review 这题的思路，要以一个pivot为基准，从前往后扫描，在后面找两个合适的数；找两个数的的方法就是sorted 2 sum的方案，难点是去重
+    /**
+     * Approach2 two pointers
+     * 以一个pivot为基准，从前往后扫描，在后面找两个合适的数；找两个数的的方法就是sorted 2 sum的方案，难点是去重
+     */
     public List<List<Integer>> threeSum2(int[] num) {
         Arrays.sort(num);
         List<List<Integer>> res = new LinkedList<>();
@@ -79,7 +83,6 @@ public class ThreeSum {
 
     public static void main(String args[]) {
         int[] nums = {-1, 0, 1, 2, -1, -4};
-        //        int[] nums = {-2, 0, 1, 1, 2};
         List<List<Integer>> list = new ThreeSum().threeSum2(nums);
         System.out.println("result--->" + list.toString());
     }
