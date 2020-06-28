@@ -1,5 +1,6 @@
 package dp;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -56,6 +57,29 @@ public class WordBreak {
             }
         }
         memo[start] = false;
+        return false;
+    }
+
+    /**
+     * 20200625 看第一眼觉得是dfs，看了tag发现是dp
+     */
+    public boolean wordBreak__(String s, List<String> wordDict) {
+        return dfs(new HashMap<Integer, Boolean>(), wordDict, s, 0);
+    }
+
+    private boolean dfs(HashMap<Integer, Boolean> memo, List<String> dict, String s, int i) {
+        // if (memo.getOrDefault(i, false)) return true; // 20200625 竟然写错成这个了
+        if (memo.containsKey(i)) return memo.get(i);
+        if (i == s.length()) return true;
+        for (String w : dict) {
+            if (s.substring(i).startsWith(w)) {
+                if (dfs(memo, dict, s, i + w.length())) {
+                    memo.put(i, true);
+                    return true;
+                }
+            }
+        }
+        memo.put(i, false);
         return false;
     }
 
