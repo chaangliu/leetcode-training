@@ -1,17 +1,14 @@
 package quickselect;
 
 /**
- * //Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
- * //        Example 1:
- * //
- * //        Input: [3,2,1,5,6,4] and k = 2
- * //        Output: 5
- * //        Example 2:
- * //
- * //        Input: [3,2,3,1,2,4,5,5,6] and k = 4
- * //        Output: 4
- * //        Note:
- * //        You may assume k is always valid, 1 ≤ k ≤ array's length.
+ * Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+ * 在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+ * 示例 1:
+ * 输入: [3,2,1,5,6,4] 和 k = 2
+ * 输出: 5
+ * 示例 2:
+ * 输入: [3,2,3,1,2,4,5,5,6] 和 k = 4
+ * 输出: 4
  * 20190713
  */
 
@@ -20,6 +17,38 @@ public class KthLargestElementInAnArray {
      * 题意：找出第K大元素（不是第K小）。
      * 解法：经典做法quick select，可以逆序排列找第k个，也可以正序排序找倒数第k个。这个解法是O(n)的。
      * 也可以维持一个大小为k的小顶堆。不过复杂度高，O(Nlogk)。
+     * 20200628review
+     * 这题做了第四遍了；这次我在纸上想出了partition函数的写法，这一点我觉得很不错；但是不足之处是分治的dfs函数仍旧没写出来，没有让它往一侧搜索。
+     */
+    public int findKthLargest202006review(int[] nums, int k) {
+        // 注意，这里不需要for循环去处理每个数
+        return dfs(nums, 0, nums.length - 1, k);
+    }
+
+    private int dfs(int[] A, int lo, int hi, int k) {
+        int pos = partition(A, lo, hi);
+        if (pos + 1 == k) return A[pos];
+        if (pos + 1 > k)
+            return dfs(A, lo, pos - 1, k);
+        else
+            return dfs(A, pos + 1, hi, k);
+    }
+
+    private int partition(int[] A, int lo, int hi) {
+        int pivot = A[lo], l = lo + 1;
+        for (int i = lo + 1; i <= hi; i++) {
+            if (A[i] > pivot) {
+                int tmp = A[l];
+                A[l++] = A[i];
+                A[i] = tmp;
+            }
+        }
+        A[lo] = A[l - 1];
+        A[l - 1] = pivot;
+        return l - 1;
+    }
+
+    /**
      * 20200222 review
      */
     public int findKthLargest__(int[] A, int k) {
