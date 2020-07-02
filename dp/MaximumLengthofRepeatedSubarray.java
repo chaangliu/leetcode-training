@@ -55,7 +55,7 @@ public class MaximumLengthofRepeatedSubarray {
     }
 
     /**
-     * 滑动窗口：分别枚举A和B的起始偏移量，对剩下的长度做对比。这样很神奇地可以把复杂度降低到O(m+n) * min(m,n)，同样小于O(n^3)
+     * 滑动窗口：分别枚举A和B的起始偏移量，对剩下的长度做对比。看起来很像brute force，但却很神奇地可以把复杂度降低到O(m+n) * min(m,n)，同样小于O(n^3)
      */
     public int findLength__(int[] A, int[] B) {
         int n = A.length, m = B.length;
