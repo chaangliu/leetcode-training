@@ -66,29 +66,22 @@ public class KthSmallestElementInASortedMatrix {
 
     /**
      * Approach2. binary search
-     * 以matrix的中位数mid做标尺，每次查找数组中有多少个小于mid的个数count，那么count<k就向右找，否则向左找。（实际执行的时候，相当于少每次只搜索右下矩阵，少搜索一半）
-     * 比较难理解的是，为什么退出后lo正好是第k小元素？因为最后一次执行的时候，计算的正好是数组中有>=k个数 == mid
-     * 这里可以举个例子，
-     * [1,2,3,5]
-     * [2,3,5,7]
-     * [3,5,8,9]
-     * [5,8,9,13]
-     * k = 11
-     * Result = 7
-     * 这种情况会发现执行一次后count = 11，k = 11；high = mid = 7,之后low不停向hi靠拢
-     * 再看就发现是标准的二分模板，这里lo，hi分别取的是左上角和右下角的数字。
+     * 枚举一个数，寻找数组中有多少个数字<=它，满足，则hi = mid， 相当于lower_bound，所以一定会落在数组中的某个数上。
+     * 时间：O(n log(r - l)), r和l分别是数组中的最大和最小的数字
      */
     public int kthSmallest__(int[][] matrix, int k) {
         int lo = matrix[0][0], hi = matrix[matrix.length - 1][matrix[0].length - 1] + 1;//[lo, hi), binary search Template II，这里我试了不+1也能AC
         while (lo < hi) {
             int mid = lo + (hi - lo) / 2;
             int count = 0, j = matrix[0].length - 1;
-            for (int i = 0; i < matrix.length; i++) {//计算数组中一共有多少个数<=mid，记为count
-                while (j >= 0 && matrix[i][j] > mid) j--;//计算第i行有多少个数<=mid(其实这里横向应该也可以二分搜索，参考668题)
+            for (int i = 0; i < matrix.length; i++) {// 计算数组中一共有多少个数<=mid，记为count
+                while (j >= 0 && matrix[i][j] > mid) j--;// 计算第i行有多少个数<=mid(其实这里横向应该也可以二分搜索，参考668题)
                 count += (j + 1);
             }
-            if (count < k) lo = mid + 1;//显然，如果比<=mid的数 < k个，要找的数比mid大
-            else hi = mid;
+            if (count >= k)
+                hi = mid;
+            else
+                lo = mid + 1;// 显然，如果比<=mid的数 < k个，要找的数比mid大
         }
         return lo;
     }
