@@ -1,20 +1,24 @@
-package array;
+package stack;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
  * Created by DrunkPiano on 2017/3/17.
- * <p>
- * 遇到左括号就入栈、计数；遇到右括号先检查栈是否为空；不为空就出栈、计数，为空就结束本次计数
- * --
- * 上面这种思路有漏洞，比如当(()的情况时，返回的结果将会是3
- * 正确的方式：
- * 遇到左括号就把它的index压栈，遇到右括号先检查栈是否为空，为空就说明是())这种情形，所以把start右移一位，直到找到一个(为止；
- * 不为空就pop出一个元素，这时候要进行第二次判空，如果为空，说明是()了，判断i-start+1；如果不为空就说明是((),那么返回i-peak+1
  */
 
 public class LongestValidParentheses {
+    /**
+     * 题意：判断最长的符合条件的括号对的长度。
+     * 解法：STACK
+     * * NAIVE: 遇到左括号就入栈、计数；遇到右括号先检查栈是否为空；不为空就出栈、计数，为空就结束本次计数
+     * * -------
+     * * 上面这种思路有漏洞，比如当(()的情况时，返回的结果将会是3
+     * * 正确的方式：
+     * * 遇到左括号就把它的index压栈，遇到右括号先检查栈是否为空，为空就说明是())这种情形，所以把start右移一位，直到找到一个(为止；
+     * * 不为空就pop出一个元素，这时候要进行第二次判空，如果为空，说明是()了，判断i-start+1；如果不为空就说明是((),那么返回i-peak+1
+     */
     public int longestValidParentheses2(String s) {
         if (s == null || s.length() == 0)
             return 0;
@@ -56,6 +60,32 @@ public class LongestValidParentheses {
             }
         }
         return max;
+    }
+
+    /**
+     * 官方stack解法：
+     * 对于遇到的每个(，我们将它的下标放入栈中
+     * 对于遇到的每个 ) ，我们先弹出栈顶元素表示匹配了当前右括号：
+     * - 如果栈为空，说明当前的右括号为没有被匹配的右括号，我们将其下标放入栈中来更新我们之前提到的「最后一个没有被匹配的右括号的下标」
+     * - 如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+     */
+    public int longestValidParentheses_official(String s) {
+        int maxans = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.empty()) {
+                    stack.push(i);
+                } else {
+                    maxans = Math.max(maxans, i - stack.peek());
+                }
+            }
+        }
+        return maxans;
     }
 
     public static void main(String args[]) {
