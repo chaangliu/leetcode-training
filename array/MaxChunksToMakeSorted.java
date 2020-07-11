@@ -28,7 +28,8 @@ package array;
  */
 public class MaxChunksToMakeSorted {
     /**
-     * 这题某种程度上是找规律，最后你会发现答案就等于：截至当前index最大的数和index相同的个数。把当前最大数当做桩，第i个桩和第i-1个桩之间就是一个最小chunk。
+     * 题意：给你一串数字，问最多能分成多少块，使得他们分块排序后合并正好能有序。
+     * 解法：这题某种程度上是找规律，最后你会发现答案就等于：截至当前最大的数是否能放到当前的index上。
      */
     public int maxChunksToSorted(int[] arr) {
         int max = arr[0], res = 0;

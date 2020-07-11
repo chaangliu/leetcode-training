@@ -57,6 +57,7 @@ public class BulbSwitcherIII {
 
     /**
      * lee的O(1) space做法..记录最右的灯泡位置。感觉他总能把问题看得很透彻。
+     * 这种思路很像MaxChunksToMakeSorted那题。
      */
     public int numTimesAllBlue_(int[] A) {
         int right = 0, res = 0, n = A.length;

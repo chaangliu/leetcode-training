@@ -1,4 +1,4 @@
-package dfs;
+package dfs.backtracking;
 
 /**
  * Given an array of integers nums and a positive integer k, find whether it's possible to divide this array into k non-empty subsets whose sums are all equal.
@@ -14,27 +14,10 @@ package dfs;
  * 20190203
  */
 public class PartitionToKEqualSumSubsets {
-//    public boolean canPartitionKSubsets(int[] nums, int k) {
-//        if (nums == null || nums.length < k) return false;
-//        int sum = 0;
-//        for (int n : nums) {
-//            sum += n;
-//        }
-//        if (sum % k != 0) return false;
-//        return helper(nums, sum / k, new boolean[nums.length], 0, k);
-//    }
-//
-//    private boolean helper(int[] nums, int target, boolean[] used, int index, int k) {
-//        if (target == 0) return true;
-//        if (k == 0) return true;
-//        if (used[index]) return false;
-//        used[index] = true;
-//        helper(nums, target - nums[k], used, index + 1, k - 1);
-//        used[index] = false;
-//        return false;
-//    }
-
-
+    /**
+     * 题意：问能否把数字的数字分为k个sum相同的小组。
+     * 解法：backtrack
+     */
     public boolean canPartitionKSubsets(int[] nums, int k) {
         int sum = 0;
         for (int num : nums) sum += num;
@@ -60,4 +43,24 @@ public class PartitionToKEqualSumSubsets {
         }
         return false;
     }
+
+    //    public boolean canPartitionKSubsets(int[] nums, int k) {
+//        if (nums == null || nums.length < k) return false;
+//        int sum = 0;
+//        for (int n : nums) {
+//            sum += n;
+//        }
+//        if (sum % k != 0) return false;
+//        return helper(nums, sum / k, new boolean[nums.length], 0, k);
+//    }
+//
+//    private boolean helper(int[] nums, int target, boolean[] used, int index, int k) {
+//        if (target == 0) return true;
+//        if (k == 0) return true;
+//        if (used[index]) return false;
+//        used[index] = true;
+//        helper(nums, target - nums[k], used, index + 1, k - 1);
+//        used[index] = false;
+//        return false;
+//    }
 }
