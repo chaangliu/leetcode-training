@@ -20,7 +20,7 @@ package dp;
  */
 public class ArithmeticSlices {
     /**
-     * 题意：给你一个数组，让你找出等差数列slice的个数。P + 1 < Q暗示我们slice最短是3.
+     * 题意：给你一个数组，让你找出等差数列slice（连续）的个数。P + 1 < Q暗示我们slice最短是3. 例如A = [1, 2, 3, 4]，返回3.
      * 这题我自己写出来了O(n^2)解法，但是有O(n)解法的。。中途WA了几次。有个case没考虑到[1,2,3,8,9,10]
      * 我的思路是：dp[i][j] = j - i == 2 ? [判断A[i,j]是否等差] : dp[i + 1][j] && nums[i] - nums[i + 1] == nums[i + 1] - nums[i + 2]
      */
@@ -50,7 +50,8 @@ public class ArithmeticSlices {
     /**
      * O(n)做法，
      * [1, 2, 3, 4, 5]
-     * 连续的arr里面如果当前加入的num符合，一定会在当前num的等差数列数量里面+1；如果当前已经是长度4了，那就要+2（234和1234）；如果长度是5了那就要+3(345,2345,12345); 如果当前数字打断了等差数列就把cur reset到0.
+     * 连续的arr里面如果当前加入的num符合，一定会在当前num的等差数列数量里面+1；如果当前已经是长度4了，那就要+2（234和1234）；如果长度是5了那就要+3(345,2345,12345);
+     * 如果当前数字打断了等差数列就把cur reset到0.
      * Any time we find ith index does not form arith seq, make currently running no of seqs to zero.
      */
     public int numberOfArithmeticSlices_(int[] A) {
