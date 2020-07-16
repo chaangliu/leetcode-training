@@ -1,5 +1,7 @@
 package dp;
 
+import android.app.AlertDialog;
+
 /**
  * The demons had captured the princess (P) and imprisoned her in the bottom-right corner of a dungeon. The dungeon consists of M x N rooms laid out in a 2D grid. Our valiant knight (K) was initially positioned in the top-left room and must fight his way through the dungeon to rescue the princess.
  * The knight has an initial health point represented by a positive integer. If at any point his health point drops to 0 or below, he dies immediately.
@@ -38,5 +40,65 @@ public class DungeonGame {
             }
         }
         return dp[0][0];
+    }
+
+    /**
+     * check 2 ways,
+     * 010101..
+     * or
+     * 101010..
+     **/
+    public int solution(int[] A) {
+        int n = A.length, res = n;
+        // assume starting with 0
+        res = Math.min(diff(n, 0, A), res);
+        // assume starting with 1
+        res = Math.min(diff(n, 1, A), res);
+        return res;
+    }
+
+    private int diff(int n, int initial, int[] A) {
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if (A[i] != initial) {
+                res++;
+            }
+            initial = 1 - initial;
+        }
+        return res;
+    }
+
+    /**
+     * right to left,
+     * V is even => S ends with '0', we directly divide
+     * V is odd  => S ends with '1', we minus one and divide
+     * Time: O(n)
+     */
+
+
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 400000; i++) sb.append('1');
+        int res = new DungeonGame().solution("0");
+        int res1 = new DungeonGame().solution("0000");
+//        int res = new DungeonGame().solution(new int[]{0});
+//        int res1 = new DungeonGame().solution(new int[]{1});
+        int a = 1;
+    }
+
+    public int solution(String S) {
+        if (S == null) return 0;
+        int n = S.length(), res = 0;
+        int leadingOne = 0; // first occurrence index of '1'
+        // getting rid of leading zeros
+        while (leadingOne < n) {
+            if (S.charAt(leadingOne) == '0') leadingOne++;
+            else break;
+        }
+        if (leadingOne >= n) return 0;
+        for (int i = n - 1; i >= leadingOne; i--) {
+            res += (S.charAt(i) == '0') ? 1 : 2;
+        }
+        return res - 1;
     }
 }

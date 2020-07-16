@@ -19,6 +19,7 @@ public class KthLargestElementInAnArray {
      * 也可以维持一个大小为k的小顶堆。不过复杂度高，O(Nlogk)。
      * 20200628review
      * 这题做了第四遍了；这次我在纸上想出了partition函数的写法，这一点我觉得很不错；但是不足之处是分治的dfs函数仍旧没写出来，没有让它往一侧搜索。
+     * 如果是求TOPK大元素的话，其实一样，因为快排的本质就是当第K个排好了，前面就都是TOPK大的了。
      */
     public int findKthLargest202006review(int[] nums, int k) {
         // 注意，这里不需要for循环去处理每个数
