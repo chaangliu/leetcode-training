@@ -29,4 +29,23 @@ abstract class UniqueBinarySearchTrees {
             }
         return dp[n];
     }
+
+    /**
+     * dfs with memo
+     * 20200715
+     */
+    public int numTrees_(int n) {
+        return dfs(n, new Integer[n + 1]);
+    }
+
+    private int dfs(int n, Integer[] memo) {
+        if (n <= 1) return 1; // 边界
+        if (memo[n] != null) return memo[n];
+        int res = 0;
+        for (int i = 1; i <= n; i++) { // 枚举root
+            res += dfs(i - 1, memo) * dfs(n - i, memo); // [1, i - 1] * [i + 1, n] 个nodes的组合数量
+        }
+        memo[n] = res;
+        return res;
+    }
 }

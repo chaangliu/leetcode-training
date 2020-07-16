@@ -17,57 +17,78 @@ import java.util.List;
  * <p>
  * Note:
  * Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
- * <p>
- * <p>
- * <p>
  * Created by DrunkPiano on 2017/2/23.
  */
 
 public class Triangle {
+    /**
+     * 题意：求三角形最小的path sum。
+     * 解法：dp[i][j] = min(dp[i - 1][j], dp[i - 1][j - 1])
+     * 如果用滚动数组空间压缩，一定要注意处理覆盖的情况。
+     */
     public int minimumTotal(List<List<Integer>> triangle) {
-        //第一列和最后一列的path sum
-        for (int i = 1; i < triangle.size(); i++) {
-            triangle.get(i).set(0, triangle.get(i - 1).get(0) + triangle.get(i).get(0));
-            int cell_size = triangle.get(i).size();
-            triangle.get(i).set(cell_size - 1, triangle.get(i - 1).get(cell_size - 2) + triangle.get(i).get(cell_size - 1));
-        }
-
-        //第三行开始
-        for (int i = 2; i < triangle.size(); i++)
-            //每一行的第二个数到倒数第二个数
-            for (int j = 1; j < triangle.get(i).size() - 1; j++) {
-                triangle.get(i).set(j, triangle.get(i).get(j) + Math.min(triangle.get(i - 1).get(j - 1), triangle.get(i - 1).get(j)));
+        int n = triangle.size(), res = Integer.MAX_VALUE;
+        Integer[][] dp = new Integer[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < triangle.get(i).size(); j++) {
+                int cur = triangle.get(i).get(j);
+                if (i == 0) {
+                    dp[i][j] = cur;
+                } else {
+                    int prev;
+                    if (j == 0) {
+                        prev = dp[i - 1][j];
+                    } else if (dp[i - 1][j] == null) {
+                        prev = dp[i - 1][j - 1];
+                    } else {
+                        prev = Math.min(dp[i - 1][j - 1], dp[i - 1][j]);
+                    }
+                    dp[i][j] = prev + cur;
+                }
+                if (i == n - 1) res = Math.min(dp[i][j], res);
             }
-
-        int min = triangle.get(triangle.size() - 1).get(0);
-        for (int i = 0; i < triangle.get(triangle.size() - 1).size(); i++) {
-            if (min > triangle.get(triangle.size() - 1).get(i))
-                min = triangle.get(triangle.size() - 1).get(i);
         }
-        return min;
+        return res;
     }
 
-    public static void main(String args[]) {
-        ArrayList<Integer> cell1 = new ArrayList<>();
-        cell1.add(-1);
-
-        ArrayList<Integer> cell2 = new ArrayList<>();
-        cell2.add(2);
-        cell2.add(3);
-
-        ArrayList<Integer> cell3 = new ArrayList<>();
-        cell3.add(1);
-        cell3.add(-1);
-        cell3.add(-1);
-
-        List<List<Integer>> result = new ArrayList<>();
-        result.add(cell1);
-        result.add(cell2);
-        result.add(cell3);
-
-        Triangle triangle = new Triangle();
-        triangle.minimumTotal(result);
+    /**
+     * 滚动数组，O(2n)space，来自https://leetcode-cn.com/problems/triangle/solution/san-jiao-xing-zui-xiao-lu-jing-he-by-leetcode-solu/
+     */
+    public int minimumTotal_O2n(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[][] f = new int[2][n];
+        f[0][0] = triangle.get(0).get(0);
+        for (int i = 1; i < n; ++i) {
+            int curr = i % 2; // trick
+            int prev = 1 - curr;
+            f[curr][0] = f[prev][0] + triangle.get(i).get(0);
+            for (int j = 1; j < i; ++j) {
+                f[curr][j] = Math.min(f[prev][j - 1], f[prev][j]) + triangle.get(i).get(j);
+            }
+            f[curr][i] = f[prev][i - 1] + triangle.get(i).get(i);
+        }
+        int minTotal = f[(n - 1) % 2][0];
+        for (int i = 1; i < n; ++i) {
+            minTotal = Math.min(minTotal, f[(n - 1) % 2][i]);
+        }
+        return minTotal;
     }
 
-
+    public int minimumTotal_O1n(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[] f = new int[n];
+        f[0] = triangle.get(0).get(0);
+        for (int i = 1; i < n; ++i) {
+            f[i] = f[i - 1] + triangle.get(i).get(i);
+            for (int j = i - 1; j > 0; --j) { // 从后往前
+                f[j] = Math.min(f[j - 1], f[j]) + triangle.get(i).get(j);
+            }
+            f[0] += triangle.get(i).get(0);
+        }
+        int minTotal = f[0];
+        for (int i = 1; i < n; ++i) {
+            minTotal = Math.min(minTotal, f[i]);
+        }
+        return minTotal;
+    }
 }

@@ -13,8 +13,6 @@ import java.util.Stack;
  */
 
 public class BinaryTreeInorderTraversal {
-
-
     /**
      * 题意：中序遍历二叉树。要求中序遍历。
      * 思路：用stack，但是这题的while条件比较复杂，还有最后node=node.right没写出来（我以为还要push进去）
@@ -33,7 +31,7 @@ public class BinaryTreeInorderTraversal {
             }
             root = stack.pop();
             res.add(root.val);//这样保证先加入的最left的值
-            root = root.right;
+            root = root.right; // 这里不需要、也不能加上root.right的判空，否则下一次将进入死循环
         }
         return res;
     }

@@ -1,6 +1,7 @@
 package dfs.divideandconquer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import tree.TreeNode;
@@ -20,6 +21,10 @@ import tree.TreeNode;
  */
 
 abstract class UniqueBinarySearchTreesII {
+    /**
+     * 题意：给定一个整数 n，生成所有由 1 ... n 为节点所组成的 二叉搜索树 。
+     * 解法：后续遍历
+     */
     public List<TreeNode> generateTrees(int n) {
         if (n == 0) return new ArrayList<>();
         //以root=1开始，root=n结束
@@ -39,7 +44,7 @@ abstract class UniqueBinarySearchTreesII {
             List<TreeNode> rightSide = dfs(i + 1, right);//所有可能的右子树
             for (TreeNode lt : leftSide)
                 for (TreeNode rt : rightSide) {
-                    TreeNode root = new TreeNode(i);
+                    TreeNode root = new TreeNode(i); // 每次必须重新生成单个node i，不能放到外面
                     root.left = lt;
                     root.right = rt;
                     res.add(root);
