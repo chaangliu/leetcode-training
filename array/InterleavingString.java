@@ -15,9 +15,9 @@ package array;
 public class InterleavingString {
 
     /**
+     * 题意：判断s3能否由s1和s2交错组成。
      * approach1. dp
      * dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1) || dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
-     *
      * 20190505review
      */
     public boolean isInterleave(String s1, String s2, String s3) {
@@ -44,8 +44,32 @@ public class InterleavingString {
         return dp[s1.length()][s2.length()];
     }
 
+    boolean interleave = false;
+    char[] chars1, chars2, chars3;
+    int len1, len2, len3;
+    boolean[][] visited;
+
     /**
-     * approach2. bfs
-     * 想象成一个棋盘，向右走就是把s1[i]加入字符串，向下走就是把s2[j]加入字符串，每轮把满足条件的保存起来，看最后能不能遍历完了s1和s2
+     * dfs with memo
      */
+    public boolean isInterleave_(String s1, String s2, String s3) {
+        len1 = s1.length();
+        len2 = s2.length();
+        len3 = s3.length();
+        if (len1 + len2 != len3) return false;
+        visited = new boolean[len1 + 1][len2 + 1];
+        chars1 = s1.toCharArray();
+        chars2 = s2.toCharArray();
+        chars3 = s3.toCharArray();
+        dfs(0, 0, 0);
+        return interleave;
+    }
+
+    private void dfs(int i, int j, int k) {
+        if (k == len3) interleave = true;
+        if (interleave || visited[i][j]) return;
+        if (i < len1 && chars1[i] == chars3[k]) dfs(i + 1, j, k + 1);
+        if (j < len2 && chars2[j] == chars3[k]) dfs(i, j + 1, k + 1);
+        visited[i][j] = true;
+    }
 }
