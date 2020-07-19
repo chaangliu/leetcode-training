@@ -97,6 +97,30 @@ public class TopKFrequentElements {
     }
 
     /**
+     * 题目变了，现在给的数组是string[]了，不是int[]。
+     * 做法是，建立最小堆，堆顶是出现次数最少的，如果出现次数相同，那么逆字典序排列，这样就可以保证q pop出去的是没用的。
+     */
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> count = new HashMap();
+        for (String word : words) {
+            count.put(word, count.getOrDefault(word, 0) + 1);
+        }
+        PriorityQueue<String> heap = new PriorityQueue<String>(
+                (w1, w2) -> count.get(w1).equals(count.get(w2)) ?
+                        w2.compareTo(w1) : count.get(w1) - count.get(w2));
+
+        for (String word : count.keySet()) {
+            heap.offer(word);
+            if (heap.size() > k) heap.poll();
+        }
+
+        List<String> ans = new ArrayList();
+        while (!heap.isEmpty()) ans.add(heap.poll());
+        Collections.reverse(ans);
+        return ans;
+    }
+
+    /**
      * =========================================================================================================================
      * 我的Solution：HashMap + PriorityQueue(最大堆)
      * =========================================================================================================================
