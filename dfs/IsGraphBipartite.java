@@ -41,7 +41,7 @@ import java.util.Queue;
 public class IsGraphBipartite {
     /**
      * 题意：给你一个邻接表表示的graph，判断是否是二分图。
-     * 解法：利用二分图充要条件：着色法；对所有node着色，如果相邻node颜色都不想同，就是二分图。
+     * 解法：利用二分图充要条件：着色法；对所有node着色，如果相邻node颜色都不想同，就是二分图。这题给出的是邻接表，不是edge，所以不需要build graph。
      * DFS
      */
     public boolean isBipartite(int[][] graph) {
