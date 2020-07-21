@@ -52,4 +52,34 @@ abstract class UniqueBinarySearchTreesII {
         }
         return res;
     }
+
+    /**
+     * 20200721review
+     * 写了一下，漏掉了lList和rList为空的情况。但要注意，在list不为空的时候你不能给list加null节点，因为list本身不包含空子树。
+     */
+    public List<TreeNode> generateTrees_(int n) {
+        if (n == 0) return new ArrayList<>();
+        //以root=1开始，root=n结束
+        return dfs_(1, n);
+    }
+
+    //生成一棵树，你想嘛，肯定先生成所有可能的左子树，然后生成所有可能的右子树，然后左子树那边取一个，右子树那边取一个，然后和根结点一拼，就是一棵大树了😂
+    private List<TreeNode> dfs_(int left, int right) {
+        List<TreeNode> res = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            List<TreeNode> lList = dfs_(left, i - 1);
+            List<TreeNode> rList = dfs_(i + 1, right);
+            if (lList.size() == 0) lList.add(null);
+            if (rList.size() == 0) rList.add(null);
+            for (TreeNode lt : lList) {
+                for (TreeNode rt : rList) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = lt;
+                    root.right = rt;
+                    res.add(root);
+                }
+            }
+        }
+        return res;
+    }
 }
