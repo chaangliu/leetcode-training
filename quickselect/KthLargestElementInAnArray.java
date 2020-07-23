@@ -1,5 +1,7 @@
 package quickselect;
 
+import java.util.Random;
+
 /**
  * Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
  * 在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
@@ -19,34 +21,50 @@ public class KthLargestElementInAnArray {
      * 也可以维持一个大小为k的小顶堆。不过复杂度高，O(Nlogk)。
      * 20200628review
      * 这题做了第四遍了；这次我在纸上想出了partition函数的写法，这一点我觉得很不错；但是不足之处是分治的dfs函数仍旧没写出来，没有让它往一侧搜索。
-     * 如果是求TOPK大元素的话，其实一样，因为快排的本质就是当第K个排好了，前面就都是TOPK大的了。
+     * 20200720: 如果是求TOPK大元素的话，其实一样，因为快排的本质就是当第K个排好了，前面就都是TOPK大的了。
      */
-    public int findKthLargest202006review(int[] nums, int k) {
-        // 注意，这里不需要for循环去处理每个数
-        return dfs(nums, 0, nums.length - 1, k);
+    public int findKthLargest202007(int[] A, int k) {
+        return dfs(A, 0, A.length - 1, k);
     }
 
     private int dfs(int[] A, int lo, int hi, int k) {
-        int pos = partition(A, lo, hi);
-        if (pos + 1 == k) return A[pos];
-        if (pos + 1 > k)
-            return dfs(A, lo, pos - 1, k);
-        else
-            return dfs(A, pos + 1, hi, k);
+        //if (lo > hi) return -1;
+        int p = randomPartition(A, lo, hi);
+        if (p == k - 1) {
+            return A[p];
+        } else if (p > k - 1) {
+            return dfs(A, lo, p - 1, k);
+        } else {
+            return dfs(A, p + 1, hi, k);
+        }
     }
 
+    Random random = new Random(); // 加一个random，速度提升很多
+
+    public int randomPartition(int[] A, int l, int r) {
+        int i = random.nextInt(r - l + 1) + l;
+        swap(A, i, r);
+        return partition(A, l, r);
+    }
+
+    // 3,2,1,5,6,4
     private int partition(int[] A, int lo, int hi) {
-        int pivot = A[lo], l = lo + 1;
-        for (int i = lo + 1; i <= hi; i++) {
-            if (A[i] > pivot) {
-                int tmp = A[l];
-                A[l++] = A[i];
-                A[i] = tmp;
+        int pivot = A[lo]; // A[lo], not lo
+        int pos = lo + 1;
+        for (int i = lo + 1; i <= hi; i++) {//  lo + 1, not lo
+            if (A[i] >= pivot) { // >或者>=都行
+                swap(A, pos++, i);
             }
         }
-        A[lo] = A[l - 1];
-        A[l - 1] = pivot;
-        return l - 1;
+        swap(A, lo, pos - 1); // pos - 1, not pos
+        return pos - 1;
+    }
+
+
+    private void swap(int[] A, int i, int j) {
+        int tmp = A[i];
+        A[i] = A[j];
+        A[j] = tmp;
     }
 
     /**
@@ -75,14 +93,14 @@ public class KthLargestElementInAnArray {
         int slot = lo;
         for (int i = lo; i < hi; i++) {
             if (A[i] < p) {
-                swap(A, slot++, i);
+                swap_(A, slot++, i);
             }
         }
-        swap(A, slot, hi);
+        swap_(A, slot, hi);
         return slot;
     }
 
-    private void swap(int[] A, int a, int b) {
+    private void swap_(int[] A, int a, int b) {
         int t = A[a];
         A[a] = A[b];
         A[b] = t;

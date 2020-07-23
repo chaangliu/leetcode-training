@@ -34,34 +34,12 @@ package dfs;
  * 20190301
  */
 public class FloodFill {
-
     /**
-     * 注意floodfill需要一个visited[]数组
+     * 题意：实现涂色功能，把相同的颜色涂成目标颜色。
+     * 解法就是floodfill, 无需backtrack. 注意floodfill需要一个visited[]数组
      */
-    public int[][] floodFill_20190301(int[][] image, int sr, int sc, int newColor) {
-        helper(image, sr, sc, newColor, new boolean[image.length][image[0].length], image[sr][sc]);
-        return image;
-    }
-
-    private void helper(int[][] image, int sr, int sc, int newColor, boolean[][] visited, int originalColor) {
-        image[sr][sc] = newColor;
-        visited[sr][sc] = true;
-        if (sr - 1 >= 0 && !visited[sr - 1][sc] && image[sr - 1][sc] == originalColor) helper(image, sr - 1, sc, newColor, visited, originalColor);
-        if (sr + 1 < image.length && !visited[sr + 1][sc] && image[sr + 1][sc] == originalColor) helper(image, sr + 1, sc, newColor, visited, originalColor);
-        if (sc - 1 >= 0 && !visited[sr][sc - 1] && image[sr][sc - 1] == originalColor) helper(image, sr, sc - 1, newColor, visited, originalColor);
-        if (sc + 1 < image[0].length && !visited[sr][sc + 1] && image[sr][sc + 1] == originalColor) helper(image, sr, sc + 1, newColor, visited, originalColor);
-    }
-
-
-    /**
-     * --------------------------------------------------------------------------------------------------------
-     */
-
-
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
-        if (image == null || image.length == 0 || sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length) {
-            return image;
-        }
+        if (image == null || image.length == 0 || sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length) return image;
         dfs(image, sr, sc, newColor, new boolean[image.length][image[0].length], image[sr][sc]);
         return image;
     }
@@ -79,8 +57,17 @@ public class FloodFill {
         dfs(image, sr, sc + 1, newColor, visited, originalColor);
     }
 
-    public static void main(String args[]) {
-        int[][] a = {{0, 0, 0}, {0, 1, 1}};
-        new FloodFill().floodFill_20190301(a, 1, 1, 1);
+    public int[][] floodFill_20190301(int[][] image, int sr, int sc, int newColor) {
+        helper(image, sr, sc, newColor, new boolean[image.length][image[0].length], image[sr][sc]);
+        return image;
+    }
+
+    private void helper(int[][] image, int sr, int sc, int newColor, boolean[][] visited, int originalColor) {
+        image[sr][sc] = newColor;
+        visited[sr][sc] = true;
+        if (sr - 1 >= 0 && !visited[sr - 1][sc] && image[sr - 1][sc] == originalColor) helper(image, sr - 1, sc, newColor, visited, originalColor);
+        if (sr + 1 < image.length && !visited[sr + 1][sc] && image[sr + 1][sc] == originalColor) helper(image, sr + 1, sc, newColor, visited, originalColor);
+        if (sc - 1 >= 0 && !visited[sr][sc - 1] && image[sr][sc - 1] == originalColor) helper(image, sr, sc - 1, newColor, visited, originalColor);
+        if (sc + 1 < image[0].length && !visited[sr][sc + 1] && image[sr][sc + 1] == originalColor) helper(image, sr, sc + 1, newColor, visited, originalColor);
     }
 }

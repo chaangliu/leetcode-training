@@ -25,6 +25,9 @@ public class BalancedTree {
         return getDepth(root) != -1;
     }
 
+    /**
+     * 返回root的高度；如果root的左右子树高度相差>1，返回-1
+     */
     private int getDepth(TreeNode root) {
         if (root == null) return 0;
         int leftDepth = getDepth(root.left);
