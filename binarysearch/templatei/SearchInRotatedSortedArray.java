@@ -14,7 +14,7 @@ package binarysearch.templatei;
 public class SearchInRotatedSortedArray {
     /**
      * 题意：在一个发生翻折的sorted array里搜索一个数。
-     * 这题要找到一个ascending的区间进行搜索。
+     * 这题要找到一个ascending的区间进行搜索（与lo或者hi对比都行），*[关键]是要判断target是在这个区间内的，否则交给下次迭代。
      */
     public int search(int[] nums, int target) {
         if (nums == null || nums.length == 0) return -1;
@@ -25,11 +25,12 @@ public class SearchInRotatedSortedArray {
             if (nums[mid] >= nums[lo]) {// 这个条件说明[low, mid]之间是递增的；不能是>，否则无法通过[3,1]，因为只有>的话，3,1会被认为是递增的
                 // 关键，这里跟普通的二分搜索的区别是，你需要把target的两端都限定
                 // 这个if必须在前，因为只有一段是固定的，else才能去不确定的那另一边搜
-                if (target >= nums[lo] && target < nums[mid]) hi = mid - 1;
+                if (target >= nums[lo] && target < nums[mid]) hi = mid;
                     // target在[low,mid]之外，那么target一定落在mid右边
                 else lo = mid + 1;
-            } else {// 否则说明(mid,high]之间是递增的，开区间
-                if (target > nums[mid] && target <= nums[hi]) lo = mid + 1;
+            } else {// (mid,high]之间是递增的
+                // 我们只能保证它在[mid, hi]之间是递增的，所以判断一下target如果在这个范围内就处理，否则把需求交给下次迭代
+                if (target > nums[mid] && target <= nums[hi]) lo = mid;
                 else hi = mid - 1;
             }
         }
@@ -37,7 +38,7 @@ public class SearchInRotatedSortedArray {
     }
 
     /**
-     * 第二种写法
+     * 第二种写法，与hi对比
      */
     public int search__(int[] nums, int target) {
         if (nums == null || nums.length == 0) return -1;
