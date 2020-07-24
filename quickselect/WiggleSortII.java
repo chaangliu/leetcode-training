@@ -46,3 +46,20 @@ public class WiggleSortII {
         }
     }
 }
+
+/**
+ * wiggle sort I被锁了，类似题目可以看https://leetcode-cn.com/problems/peaks-and-valleys-lcci/
+ */
+//class Solution {
+//    public:
+//    void wiggleSort(vector<int>& nums) {
+//        for(int i=1;i<nums.size();i++){
+//            if(i%2==0){
+//                if(nums[i]<nums[i-1]) swap(nums[i],nums[i-1]);
+//            }
+//            else{
+//                if(nums[i]>nums[i-1]) swap(nums[i],nums[i-1]);
+//            }
+//        }
+//    }
+//};
