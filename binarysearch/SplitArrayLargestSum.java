@@ -27,7 +27,9 @@ package binarysearch;
 public class SplitArrayLargestSum {
     /**
      * approach1. binary search
-     * 找到一个值n，能把array分成m份并且每份都能囊括，并且经过不断二分，n正好等于最大的那个分区的sum。还是有点思维难度的。
+     * 题意：给你一个数组，把它分成m份，问每份的sum最大值最小是多少。
+     * 其实这题可以想想brute force怎么写，就是枚举n，然后看能不能把array分成m份，每份的sum都小于n。
+     * 进而，我们可以经过不断二分，n正好等于最大的那个分区的sum。还是有点思维难度的。
      * approach2. dp(略)
      */
     public int splitArray(int[] nums, int m) {
@@ -39,10 +41,10 @@ public class SplitArrayLargestSum {
         }
         if (m == 1) return (int) sum;
         long l = max, r = sum;//初始状态让左边等于nums里最大的那个数，考虑nums.length == 1的情况
-        while (l <= r) {
+        while (l < r) {
             long mid = l + (r - l) / 2;
             if (valid(mid, nums, m)) {//如果能把nums分成m份并且每份的和都<=mid，说明mid大了
-                r = mid - 1;
+                r = mid;
             } else {
                 l = mid + 1;//加大力度
             }
