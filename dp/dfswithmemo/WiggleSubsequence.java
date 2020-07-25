@@ -25,6 +25,7 @@ package dp.dfswithmemo;
  */
 public class WiggleSubsequence {
     /**
+     * 题意：求最长的wiggle子序列的长度。
      * approach1 dfs with memo，回溯，如果不加memo：复杂度O(n!)，调用了n!次calculate，会TLE
      */
     public int wiggleMaxLength(int[] nums) {
@@ -36,7 +37,7 @@ public class WiggleSubsequence {
     private int calculate(int[] nums, int start, boolean isUp, Integer[][] memo) {
         if (memo[start][isUp ? 0 : 1] != null) return memo[start][isUp ? 0 : 1];
         int maxcount = 0;
-        for (int i = start + 1; i < nums.length; i++) {
+        for (int i = start + 1; i < nums.length; i++) {// subsequence, 所以for循环+递归
             if ((isUp && nums[i] > nums[start]) || (!isUp && nums[i] < nums[start]))
                 maxcount = Math.max(maxcount, 1 + calculate(nums, i, !isUp, memo));
         }

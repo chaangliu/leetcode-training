@@ -1,5 +1,7 @@
 package math;
 
+import java.util.HashMap;
+
 /**
  * Alice and Bob take turns playing a game, with Alice starting first.
  * <p>
@@ -33,11 +35,32 @@ public class DivisorGame {
     /**
      * 这种题如果不看它的标签是EASY，你不知道它的深浅。
      * 如果是Easy通常就是找规律，然后证明它。
-     * <p>
-     * 另外这题还可以DP，先不看了，想搞本DP的书看看。
      */
     public boolean divisorGame(int N) {
         //如果N是Alice赢，那么N + 1一定是Alice输，因为Bob可以直接让N - 1
         return (N & 1) == 0;
+    }
+
+    /**
+     * dfs with memo， minmax
+     */
+    public boolean divisorGame_(int N) {
+        HashMap<Integer, Boolean> memo = new HashMap<>();
+        memo.put(1, false);
+        return canWin(N, memo);
+    }
+
+    private boolean canWin(int N, HashMap<Integer, Boolean> memo) {
+        if (memo.containsKey(N)) return memo.get(N);
+        boolean res = false;
+        for (int i = 1; i <= (int) Math.sqrt(N); i++) {
+            if (N % i != 0) continue;
+            if (!canWin(N - i, memo)) {
+                res = true;
+                break;
+            }
+        }
+        memo.put(N, res);
+        return res;
     }
 }
