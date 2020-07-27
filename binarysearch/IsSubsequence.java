@@ -13,6 +13,11 @@ import java.util.List;
  */
 
 public class IsSubsequence {
+    /**
+     * 题意：判断s是否是t的子序列
+     * 解法：2 pointers
+     * follow up: 多个s怎么办？ binary search
+     */
     public boolean isSubsequence(String s, String t) {
         if (s == null || s.length() == 0) return true;
         int nextIndex = 0;
@@ -40,8 +45,9 @@ public class IsSubsequence {
     /**
      * follow up，如果有很多个incoming的s的解法
      * 思路，可以避免每次都扫描s，而是采取把s中的字母保存到类似Map中去匹配
+     * binary search
      */
-    public boolean isSubsequence__BINARYSEARCH(String s, String t) {
+    public boolean isSubsequence__(String s, String t) {
         List<Integer>[] idx = new List[256]; // Just for clarity
         //模拟HashMap，生成256个buckets
         for (int i = 0; i < t.length(); i++) {
@@ -57,17 +63,23 @@ public class IsSubsequence {
             //如果t中没有s返回false
             if (idx[si] == null) return false; // Note: char of S does NOT exist in T causing NPE
             //在t中相同字母的index列表中寻找prev，如果没找到，说明prev代表的index在t上无法匹配，那么返回在t中最早出现的位置即可
-            //之所以用二分查找，是因为t对于list里面有些index是不可用的，必须取prev后面的数。比如s=ab, t=bab，那么t中第0个b就不能用，prev保证了b中最早的那个，跟two pointers异曲同工
-            int j = Collections.binarySearch(idx[si], prev);
-            if (j < 0) j = -j - 1;//如果没找到prev，会返回-(insertion point) - 1，于是-(-(insertion point) - 1)-1可以恢复j；insertion point代表应该插入的位置，也就是比它大的那个数前面1个数的index
-            if (j == idx[si].size()) return false;
+            int j = lower_bound(idx[si], prev); // 在当前字母indices列表中找一个最早出现于上一个字母之后的
+            if (j == idx[si].size()) {
+                return false;
+            }
             prev = idx[si].get(j) + 1;
         }
         return true;
     }
 
-    public static void main(String args[]) {
-        new IsSubsequence().isSubsequence__BINARYSEARCH("abc", "xabcbbbbbbb");
-//        new IsSubsequence().isSubsequence__BINARYSEARCH("abc", "bahgdcb");
+    private int lower_bound(List<Integer> list, int target) {
+        int lo = 0, hi = list.size();
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (list.get(mid) < target)
+                lo = mid + 1;
+            else hi = mid;
+        }
+        return lo;
     }
 }
