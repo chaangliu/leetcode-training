@@ -29,16 +29,17 @@ class ValidateBinarySearchTree {
 
     /**
      * 题意：判断binary tree是不是BST。
+     * 注意不能只判断当前node的左右两个节点，而要top down地夹逼，左边所有children的val都在[min, root.val]之间这样。
      * 解法：递归和迭代。
      */
     public boolean isValidBST1(TreeNode root) {
         if (root == null) return true;
-        return recursion(root, Long.MIN_VALUE, Long.MAX_VALUE);
+        return recursion(root, Long.MIN_VALUE, Long.MAX_VALUE); // 用long因为case里有个Integer.MAX_VALUE
     }
 
     private boolean recursion(TreeNode root, long min, long max) {
         if (root == null) return true;
-        if (root.val <= min || root.val >= max) return false;
+        if (root.val <= min || root.val >= max) return false; // BST不能有[1,1]这样的相同节点
         return recursion(root.left, min, root.val) && recursion(root.right, root.val, max);
     }
 

@@ -59,7 +59,6 @@ public class IntegerBreak {
     }
 
 
-
     /**
      * Recursion原型:
      * int result = Math.max(2 * integerBreak(10 - 2) * i, 3 * integerBreak(10 - 3), 4 * integerBreak(10 - 4)...)
@@ -108,5 +107,23 @@ public class IntegerBreak {
             dp[n] = Math.max(dp[n], solve_topdown(i, dp) * (n - i));// do break
         }
         return dp[n];
+    }
+
+    /**
+     * dfs with memo:
+     * dp[n] = max(1 * dp[n - 1], 2 * dp[n - 2].. (n - 1) * dp[1])
+     **/
+    public int integerBreak___(int n) {
+        return dfs(n, new Integer[n + 1], true);
+    }
+
+    private int dfs(int n, Integer[] memo, boolean mustDivide) {
+        if (memo[n] != null) return memo[n];
+        int not_divide = n;
+        int divide = 1;
+        for (int i = 1; i <= n / 2; i++) {
+            divide = Math.max(divide, i * dfs(n - i, memo, false));
+        }
+        return memo[n] = mustDivide ? divide : Math.max(not_divide, divide);
     }
 }
