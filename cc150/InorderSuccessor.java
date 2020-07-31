@@ -44,7 +44,7 @@ public class InorderSuccessor {
             return inorderSuccessor(root.right, p);
         } else {
             TreeNode next = inorderSuccessor(root.left, p);
-            return next == null ? root : next;
+            return next == null ? root : next; // 如果左边没找到，那后继者一定是root。
         }
     }
 }
