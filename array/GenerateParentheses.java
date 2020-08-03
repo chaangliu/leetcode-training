@@ -55,4 +55,27 @@ public class GenerateParentheses {
         dfs__(res, left, l + 1, r, n);
         dfs__(res, right, l, r + 1, n);
     }
+
+
+    /**
+     * cc150, Bracket
+     */
+    class Solution {
+        public List<String> generateParenthesis(int n) {
+            List<String> res = new ArrayList<>();
+            dfs(res, "", 0, 0, n);
+            return res;
+        }
+
+        private void dfs(List<String> res, String cur, int l, int r, int n) {
+            if (l < r) return;
+            if (l > n) return;// 已犯错误, 漏掉这个boundary check
+            if (l == n && r == n) {
+                res.add(cur);
+                return;
+            }
+            dfs(res, cur + "(", l + 1, r, n);
+            dfs(res, cur + ")", l, r + 1, n);
+        }
+    }
 }
