@@ -36,38 +36,77 @@ package dfs;
 public class FloodFill {
     /**
      * 题意：实现涂色功能，把相同的颜色涂成目标颜色。
-     * 解法就是floodfill, 无需backtrack. 注意floodfill需要一个visited[]数组
+     * 注意处理相同颜色的情况，颜色相同是，不需要涂色的，也不需要visited数组！！！！
      */
+    int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
-        if (image == null || image.length == 0 || sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length) return image;
-        dfs(image, sr, sc, newColor, new boolean[image.length][image[0].length], image[sr][sc]);
+        if (newColor == image[sr][sc]) return image;
+        dfs(image, sr, sc, newColor, image[sr][sc]);
         return image;
     }
 
-    private void dfs(int[][] image, int sr, int sc, int newColor, boolean[][] visited, int originalColor) {
-        if (sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length || visited[sr][sc] || image[sr][sc] != originalColor) {
-            return;
+    private void dfs(int[][] image, int sr, int sc, int newColor, int orginalColor) {
+        int m = image.length, n = image[0].length;
+        if (sr >= m || sr < 0 || sc >= n || sc < 0 || image[sr][sc] != orginalColor) return;
+        image[sr][sc] = newColor;
+        for (int[] d : dirs) {
+            dfs(image, sr + d[0], sc + d[1], newColor, orginalColor);
         }
-        //铁头娃
-        image[sr][sc] = newColor;
-        visited[sr][sc] = true;
-        dfs(image, sr - 1, sc, newColor, visited, originalColor);
-        dfs(image, sr + 1, sc, newColor, visited, originalColor);
-        dfs(image, sr, sc - 1, newColor, visited, originalColor);
-        dfs(image, sr, sc + 1, newColor, visited, originalColor);
     }
 
-    public int[][] floodFill_20190301(int[][] image, int sr, int sc, int newColor) {
-        helper(image, sr, sc, newColor, new boolean[image.length][image[0].length], image[sr][sc]);
-        return image;
+    /**
+     * 另一种写法，continue：
+     */
+    class Solution {
+        int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+            if (newColor == image[sr][sc]) return image;
+            dfs(image, sr, sc, newColor, image[sr][sc]);
+            image[sr][sc] = newColor; // dont forget
+            return image;
+        }
+
+        private void dfs(int[][] image, int sr, int sc, int newColor, int orginalColor) {
+            int m = image.length, n = image[0].length;
+            for (int[] d : dirs) {
+                int nr = sr + d[0], nc = sc + d[1]; //这里一定要重新申请变量nr，不能直接sr+=d[0]，否则无法通过！！
+                if (nr >= m || nr < 0 || nc >= n || nc < 0 || image[nr][nc] != orginalColor) continue;
+                image[nr][nc] = newColor;
+                dfs(image, nr, nc, newColor, orginalColor);
+            }
+        }
     }
 
-    private void helper(int[][] image, int sr, int sc, int newColor, boolean[][] visited, int originalColor) {
-        image[sr][sc] = newColor;
-        visited[sr][sc] = true;
-        if (sr - 1 >= 0 && !visited[sr - 1][sc] && image[sr - 1][sc] == originalColor) helper(image, sr - 1, sc, newColor, visited, originalColor);
-        if (sr + 1 < image.length && !visited[sr + 1][sc] && image[sr + 1][sc] == originalColor) helper(image, sr + 1, sc, newColor, visited, originalColor);
-        if (sc - 1 >= 0 && !visited[sr][sc - 1] && image[sr][sc - 1] == originalColor) helper(image, sr, sc - 1, newColor, visited, originalColor);
-        if (sc + 1 < image[0].length && !visited[sr][sc + 1] && image[sr][sc + 1] == originalColor) helper(image, sr, sc + 1, newColor, visited, originalColor);
+    /**
+     * 回溯写法：
+     */
+    class Solution1 {
+        int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+            if (newColor == image[sr][sc]) return image;
+            dfs(image, sr, sc, newColor, image[sr][sc]);
+            image[sr][sc] = newColor; // dont forget
+            return image;
+        }
+
+        private void dfs(int[][] image, int sr, int sc, int newColor, int orginalColor) {
+            int m = image.length, n = image[0].length;
+            for (int[] d : dirs) {
+                sr += d[0];
+                sc += d[1]; //backtracking
+                if (sr >= m || sr < 0 || sc >= n || sc < 0 || image[sr][sc] != orginalColor) {
+                    sr -= d[0];
+                    sc -= d[1];
+                    continue;
+                }
+                image[sr][sc] = newColor;
+                dfs(image, sr, sc, newColor, orginalColor);
+                sr -= d[0];
+                sc -= d[1];
+            }
+        }
     }
 }
