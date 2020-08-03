@@ -30,6 +30,53 @@ package dp.knapsack;
 public class CoinChangeII {
     /**
      * 题意：给你一些面值的硬币和一个总额，问有多少种组成总额的方式。每种硬币可以使用无限次。
+     * 【推荐解法】：一维DP（不是降维）
+     * 这题是cc150的08.11，leetcode英文版的coin changeii，lc高赞的答案的第一种解法并不好（占用memory太多），还是推荐用以下这种。
+     * 可以理解为爬台阶，对于每个coin和每个总金额i，从i - coin那级可以再走coin级台阶就可以来到当前台阶
+     * if(amount - coin >= 0) dp[amount] += dp[amount - coin]
+     */
+    public int change____1D(int amount, int[] coins) {
+        if (amount == 0 && coins.length == 0) return 1;
+        if (amount < 0 || coins == null || coins.length == 0) return 0;
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
+        for (int coin : coins) { // 枚举面值
+            for (int i = 1; i <= amount; i++) { //枚举金额
+                if (i - coin >= 0) {// 如果当前的钱可以用当前硬币来找钱
+                    dp[i] += dp[i - coin];// not dp[i - 1]。这里可以理解为爬台阶，从i - coin那级可以再走coin级台阶就可以来到当前台阶
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
+
+    /**
+     * 相应的dfs with memo
+     */
+    public int change__(int amount, int[] coins) {
+        if (amount == 0 && coins.length == 0) return 1;
+        if (amount < 0 || coins == null || coins.length == 0) return 0;
+        Integer[][] ways = new Integer[coins.length][amount + 1];
+        return dfs(amount, coins, 0, ways);
+    }
+
+    /**
+     * memo[i][j]代表使用从cur开始的硬币组成amount有多少种方法
+     */
+    private int dfs(int amount, int[] coins, int cur, Integer[][] memo) {
+        if (amount == 0) return 1;
+        if (amount < 0) return 0;
+        int res = 0;
+        if (memo[cur][amount] != null) return memo[cur][amount];
+        for (int i = cur; i < coins.length; i++) {
+            res += dfs(amount - coins[i], coins, i, memo);
+        }
+        memo[cur][amount] = res;
+        return res;
+    }
+
+    /**
      * 经典背包问题, knapsack problem，DP
      * dp[i][j] : the number of combinations to make up amount j by using the first i types of coins
      */
@@ -67,53 +114,5 @@ public class CoinChangeII {
         int way2 = changeWays(amount, coins, cur - 1, memo); // 完全不用当前硬币
         memo[cur][amount] = way1 + way2;
         return way1 + way2;
-    }
-
-
-
-    /**
-     * 另一种思路：一维DP（不是降维）
-     * 可以理解为爬台阶，对于每个coin和每个总金额i，从i - coin那级可以再走coin级台阶就可以来到当前台阶
-     * if(amount - coin >= 0) dp[amount] += dp[amount - coin]
-     */
-    public int change____1D(int amount, int[] coins) {
-        if (amount == 0 && coins.length == 0) return 1;
-        if (amount < 0 || coins == null || coins.length == 0) return 0;
-        int[] dp = new int[amount + 1];
-        dp[0] = 1;//如果有amount = 1, coin = 1，那dp[1] = dp[1 - 1]
-        for (int coin : coins) {
-            for (int i = 1; i <= amount; i++) {
-                if (i - coin >= 0) {//如果当前的钱可以用当前硬币来找钱
-                    dp[i] += dp[i - coin];//not dp[i - 1]。这里可以理解为爬台阶，从i - coin那级可以再走coin级台阶就可以来到当前台阶
-                }
-            }
-        }
-        return dp[dp.length - 1];
-    }
-
-
-    /**
-     * 相应的dfs with memo
-     */
-    public int change__(int amount, int[] coins) {
-        if (amount == 0 && coins.length == 0) return 1;
-        if (amount < 0 || coins == null || coins.length == 0) return 0;
-        Integer[][] ways = new Integer[coins.length][amount + 1];
-        return dfs(amount, coins, 0, ways);
-    }
-
-    /**
-     * memo[i][j]代表使用从cur开始的硬币组成amount有多少种方法
-     */
-    private int dfs(int amount, int[] coins, int cur, Integer[][] memo) {
-        if (amount == 0) return 1;
-        if (amount < 0) return 0;
-        int res = 0;
-        if (memo[cur][amount] != null) return memo[cur][amount];
-        for (int i = cur; i < coins.length; i++) {
-            res += dfs(amount - coins[i], coins, i, memo);
-        }
-        memo[cur][amount] = res;
-        return res;
     }
 }

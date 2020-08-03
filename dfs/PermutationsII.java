@@ -19,6 +19,10 @@ import java.util.List;
 
 
 public class PermutationsII {
+    /**
+     * 题意：求nums数组的所有排列组合。有重复元素，不能含有重复解。
+     * 解法：大部分和I一样，就是要注意，排序之后的判断，注意!used[i - 1]不能省略，否则在aab下一层的第二个a处就直接continue了，一个解都得不到。
+     */
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         if (nums == null || nums.length == 0) {
@@ -41,7 +45,7 @@ public class PermutationsII {
             //1 1 2
             //1 1 2
             //1 1 2
-            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;//意思是不用从同一个初始入口进入dfs
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;// 意思是不用从同一个初始入口进入dfs，注意!used[i - 1]不能省略
             if (!used[i]) {
                 used[i] = true;
                 item.add(nums[i]);

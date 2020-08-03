@@ -26,10 +26,10 @@ import java.util.List;
  */
 
 public class Subsets {
-
     /**
      * 题意：求一个数组所有数字的组合，包含空组合。顺序无所谓。
      * 解法：general approach to backtracking。
+     * 需要注意的是，每层的for循环i是从start开始，这样才能包含当前元素。
      */
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();

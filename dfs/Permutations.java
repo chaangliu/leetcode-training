@@ -27,7 +27,7 @@ public class Permutations {
 
     /**
      * 题意：给你一个数组，让你输出出所有的排列。
-     * 解法：经典backtracking
+     * 解法：经典backtracking, 值得注意的是这题的参数中是不需要index的，因为每层都需要从0开始遍历。
      */
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
