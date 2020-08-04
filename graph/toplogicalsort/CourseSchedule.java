@@ -1,6 +1,7 @@
 package graph.toplogicalsort;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -47,7 +48,7 @@ public class CourseSchedule {
         int[][] m = new int[n][n];
         for (int[] p : prerequisites) {
             int cur = p[0], pre = p[1];
-            if (m[pre][cur] == 0) indegree[cur]++;
+            if (m[pre][cur] == 0) indegree[cur]++; // 如果没有重叠的edge，其实不用这个if判断
             m[pre][cur] = 1;
         }
         Queue<Integer> q = new LinkedList<>();
@@ -185,10 +186,30 @@ public class CourseSchedule {
         return true;
     }
 
-    public static void main(String args[]) {
-        int[][] prerequisites = new int[2][2];
-        prerequisites[0] = new int[]{1, 0};
-        prerequisites[1] = new int[]{2, 1};
-        new CourseSchedule().canFinish____1(3, prerequisites);
+    // 复习。这次用Map记录有向图。
+    public boolean canFinish_MAP(int n, int[][] prerequisites) {
+        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+        int[] indegree = new int[n]; // node->indgree，记录每个node的入度（有几个node指向它）
+        for (int[] p : prerequisites) {
+            int u = p[1], v = p[0];
+            graph.putIfAbsent(u, new ArrayList<>());
+            graph.get(u).add(v);
+            indegree[v]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+        int cnt = 0;
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            cnt++;
+            for (int v : graph.getOrDefault(u, new ArrayList<>())) {
+                if (--indegree[v] == 0) {
+                    q.offer(v);
+                }
+            }
+        }
+        return cnt == n;
     }
 }

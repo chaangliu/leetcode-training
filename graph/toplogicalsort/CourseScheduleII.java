@@ -36,7 +36,7 @@ import java.util.Queue;
  */
 public class CourseScheduleII {
     /**
-     * 题意：跟第一题一样，不过要打印出一个order。
+     * 题意：跟第一题一样，不过要打印出一个order（打印出其中一个解就行，所以仍然能用bfs，每次记录入度为0的course）。
      * 解法：跟第一题一样，用拓扑排序。我用了邻接表+BFS
      */
     public int[] findOrder(int numCourses, int[][] prerequisites) {
