@@ -67,14 +67,46 @@ public class HouseRobberIII {
         return Math.max(res[0], res[1]);
     }
 
+    /**
+     * 返回当前偷或者不偷的两种结果
+     */
     private int[] robSub(TreeNode root) {
         if (root == null) return new int[2];
         int[] left = robSub(root.left);
         int[] right = robSub(root.right);
         int[] res = new int[2];
-        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]); // 不偷
-        res[1] = root.val + left[0] + right[0]; // 偷
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]); // 不偷当前的root
+        res[1] = root.val + left[0] + right[0]; // 偷当前的root
         return res;
+    }
+
+    /**
+     * Aug 5, 2020 复习
+     * 抢了当前的，就不能抢下一层的 res = max(抢这层的 + 后面， 不抢这层的 + 后面))
+     */
+    public int rob_(TreeNode root) {
+        return dfs(root, true, new HashMap<>());
+    }
+
+    private int dfs(TreeNode root, boolean canRob, HashMap<TreeNode, Integer[]> memo) {
+        if (root == null) return 0;
+        if (memo.containsKey(root)) {
+            if (canRob && memo.get(root)[0] != 0) return memo.get(root)[0];
+            if (!canRob && memo.get(root)[1] != 0) return memo.get(root)[1];
+        }
+        int rob = root.val + dfs(root.left, false, memo) + dfs(root.right, false, memo);
+        int not_rob = dfs(root.left, true, memo) + dfs(root.right, true, memo);
+        if (canRob) {
+            int res = Math.max(rob, not_rob);
+            Integer[] val = memo.getOrDefault(root, new Integer[]{0, 0});
+            val[0] = res;
+            memo.put(root, val);
+            return res;
+        }
+        Integer[] val = memo.getOrDefault(root, new Integer[]{0, 0});
+        val[1] = not_rob;
+        memo.put(root, val);
+        return not_rob;
     }
 
 
