@@ -91,7 +91,7 @@ public class PalindromePairs {
     private static class TrieNode {
         TrieNode[] next;
         int index;
-        List<Integer> list;
+        List<Integer> list; // 如果某个单词的substring里面含有palindrome，记录这个单词在words数组中的index
 
         TrieNode() {
             next = new TrieNode[26];
@@ -104,7 +104,7 @@ public class PalindromePairs {
         List<List<Integer>> res = new ArrayList<>();
         TrieNode root = new TrieNode();
         for (int i = 0; i < words.length; i++) {
-            addWord(root, words[i], i);
+            addWord(root, words[i], i); // root在函数中会创建新引用，不用借助dummyNode
         }
         for (int i = 0; i < words.length; i++) {
             search(words, i, root, res);
@@ -112,33 +112,30 @@ public class PalindromePairs {
         return res;
     }
 
-    private void addWord(TrieNode root, String word, int index) {
+    private void addWord(TrieNode root, String word, int index) { // word: "abade"
         for (int i = word.length() - 1; i >= 0; i--) {
             int j = word.charAt(i) - 'a';
-
             if (root.next[j] == null) {
                 root.next[j] = new TrieNode();
             }
-
-            if (isPalindrome(word, 0, i)) {
+            if (isPalindrome(word, 0, i)) { // aba 是 palindrome => i = 3,  记录在d的list里
                 root.list.add(index);
             }
-
             root = root.next[j];
         }
-
         root.list.add(index);
         root.index = index;
     }
 
     private void search(String[] words, int i, TrieNode root, List<List<Integer>> res) {
-        for (int j = 0; j < words[i].length(); j++) {
-            if (root.index >= 0 && root.index != i && isPalindrome(words[i], j, words[i].length() - 1)) {
+        String w = words[i];
+        for (int j = 0; j < w.length(); j++) { // w = "ed"
+            if (root.index >= 0 && root.index != i && isPalindrome(w, j, w.length() - 1)) {
                 res.add(Arrays.asList(i, root.index));
             }
-
-            root = root.next[words[i].charAt(j) - 'a'];
-            if (root == null) return;
+            root = root.next[w.charAt(j) - 'a'];
+            if (root == null)
+                return;
         }
 
         for (int j : root.list) {
@@ -151,11 +148,10 @@ public class PalindromePairs {
         while (i < j) {
             if (word.charAt(i++) != word.charAt(j--)) return false;
         }
-
         return true;
     }
 
     public static void main(String args[]) {
-        new PalindromePairs().palindromePairs(new String[]{"abcd", "dcba", "lls", "s", "sssll"});
+        new PalindromePairs().palindromePairs(new String[]{"abade", "ed"});
     }
 }
