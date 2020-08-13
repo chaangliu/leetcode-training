@@ -2,6 +2,7 @@ package array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,5 +61,28 @@ public class GroupAnagrams {
             map.put(key, tempList);
         }
         return new LinkedList<>(map.values());
+    }
+
+
+    /**
+     * cc150有同样的题，但要注意如果用map，必须sort key；map的key似乎是不规则排序的，不一定元素相同顺序就相同。
+     */
+    public List<List<String>> groupAnagrams__(String[] strs) {
+        Map<String, ArrayList<String>> res = new HashMap<>();
+        for (String s : strs) {
+            Map<Character, Integer> map = new HashMap<>();
+            for (char c : s.toCharArray()) {
+                map.put(c, map.getOrDefault(c, 0) + 1);
+            }
+            StringBuilder key = new StringBuilder();
+            List<Character> keyList = new ArrayList<>(map.keySet());
+            Collections.sort(keyList);
+            for (char c : keyList) {
+                key.append(c).append(map.get(c));
+            }
+            res.putIfAbsent(key.toString(), new ArrayList<>());
+            res.get(key.toString()).add(s);
+        }
+        return new ArrayList<>(res.values());
     }
 }
