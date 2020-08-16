@@ -25,6 +25,10 @@ package binarysearch;
  * 20190729 on the air
  */
 public class KokoEatingBananas {
+    /**
+     * 题意：piles代表一些香蕉堆，koko需要在H小时内把所有香蕉吃完，问最慢的吃香蕉速度。
+     * 解法：二分枚举。
+     */
     public int minEatingSpeed(int[] piles, int H) {
         int l = 1, r = 1000000000;//max eating speed needed
         while (l < r) {
