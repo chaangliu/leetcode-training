@@ -23,7 +23,7 @@ package binarysearch.templatei;
 public class SearchInRotatedSortedArrayII {
     /**
      * 题意：在一个rotated的sorted array里搜索一个数。
-     * 还是按照SearchInRotatedSortedArray1的写法来做，只是严格对待nums[mid] == nums[lo]的情况
+     * 还是按照SearchInRotatedSortedArray1的写法来做，只是要把nums[mid] == nums[lo]的情况单独拎出来
      */
     public boolean search(int[] nums, int target) {
         if (nums == null || nums.length == 0) return false;
@@ -47,26 +47,4 @@ public class SearchInRotatedSortedArrayII {
         }
         return false;
     }
-
-//    public static boolean search(int nums[], int target) {
-//        int len = nums.length;
-//        int left = 0, right = len - 1;
-//        while (left <= right) {
-//            int mid = (left + right) / 2;
-//            if (nums[mid] == target) return true;
-//            if (nums[mid] > nums[left]) {
-//                if (target >= nums[left] && target < nums[mid])
-//                    right = mid - 1;
-//                else left = mid + 1;
-//            } else if (nums[mid] < nums[left]) {
-//                if (target > nums[mid] && target <= nums[right])
-//                    left = mid + 1;
-//                else right = mid - 1;
-//            } else {
-//                left++;
-//            }
-//        }
-//        return false;
-//    }
-
 }
