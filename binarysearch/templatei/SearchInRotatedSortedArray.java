@@ -30,7 +30,7 @@ public class SearchInRotatedSortedArray {
                 else lo = mid + 1;
             } else {// (mid,high]之间是递增的
                 // 我们只能保证它在[mid, hi]之间是递增的，所以判断一下target如果在这个范围内就处理，否则把需求交给下次迭代
-                if (target > nums[mid] && target <= nums[hi]) lo = mid;
+                if (target > nums[mid] && target <= nums[hi]) lo = mid; // 这儿写成lo = mid + 1, hi = mid也没毛病
                 else hi = mid - 1;
             }
         }

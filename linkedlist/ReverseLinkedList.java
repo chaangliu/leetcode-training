@@ -30,9 +30,8 @@ class ReverseLinkedList {
 
     /**
      * approach2. recursion
-     * 两个注意的点
-     * 1. 只在最后返回了p，中途没有对p进行操作
-     * 2. 打印p.val，打印了n - 1次head的值(取最后一次)
+     * 其实这么去思考比较好，先把头节点后面的节点都反转了，然后把头结点接到它的尾部
+     * 摘录：递归的意思：我子节点下的所有节点都已经反转好了，现在就剩我和我的子节点 没有完成最后的反转了，所以反转一下我和我的子节点。
      */
     public static ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) return head;
