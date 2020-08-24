@@ -27,7 +27,7 @@ public class LongestIncreasingSubsequence {
      */
     public int lengthOfLIS(int[] nums) {
         if (nums.length == 0) return 0;
-        int [] dp = new int[nums.length];
+        int[] dp = new int[nums.length];
         dp[0] = 1;
         int max = 1;
         for (int i = 1; i < nums.length; i++) {
@@ -72,52 +72,50 @@ public class LongestIncreasingSubsequence {
 
     /**
      * Approach3. DP with Binary Search
-     * 这个不算是典型的DP吧，毕竟连转移方程都没有
+     * 思路是，遍历nums，对于每个数字，找到第一个比它大的数字的index，替换掉，这样就能得到一个更为平缓的slope。
+     * 关键在于，要定义一个len作为binary search的end，因为这个dp数组一开始都是0，只有前面几个不是0，不符合单调性，你会发现lo = mid+1会把你带到数组的结尾。
+     * 相似题目: cc150的马戏团人塔。
+     * 例如，对于case：
+     * [10, 9, 2, 5, 3, 7, 101, 18],
+     * 每次搜索后的结果：
+     * 10, 0, 0, 0, 0, 0, 0, 0,
+     * 9, 0, 0, 0, 0, 0, 0, 0,
+     * 2, 0, 0, 0, 0, 0, 0, 0,
+     * 2, 5, 0, 0, 0, 0, 0, 0,
+     * 2, 3, 0, 0, 0, 0, 0, 0,
+     * 2, 3, 7, 0, 0, 0, 0, 0,
+     * 2, 3, 7, 101, 0, 0, 0, 0,
+     * 2, 3, 7, 18, 0, 0, 0, 0,
      */
     public int lengthOfLIS_DP_BS(int[] nums) {
-        int[] dp = new int[nums.length];
-        int len = 0;
+        if (nums.length == 0) return 0;
+        int[] dp = new int[nums.length]; // dp[i]记录长度为i的LIS的结尾的最小数字
+        int len = 0; // 当前LIS的最大长度
+        // dp[0] = nums[0];
         for (int num : nums) {
-            int i = binarySearch(dp, 0, len, num);
-            if (i < 0) {
-                i = -(i + 1);//如果没找到，则返回插入位置
-            }
+            int i = lower_bound(dp, num, len); // 第一个 >= num的数字在dp中的index，case: [0,0..], num=1 => 返回0
             dp[i] = num;
-            if (i == len) {
-                len++;//如果在结尾插入了新的num, arr长度增加
-            }
+            if (i == len) len++;
+            // for (int j : dp) System.out.print(j + ", ");
+            // System.out.println();
         }
         return len;
     }
 
-    public static int binarySearch(int[] a, int fromIndex, int toIndex,
-                                   int key) {
-        return binarySearch0(a, fromIndex, toIndex, key);
-    }
-
-    // Like public version, but without range checks.
-    private static int binarySearch0(int[] a, int fromIndex, int toIndex,
-                                     int key) {
-        int low = fromIndex;
-        int high = toIndex - 1;
-
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            int midVal = a[mid];
-
-            if (midVal < key)
-                low = mid + 1;
-            else if (midVal > key)
-                high = mid - 1;
-            else
-                return mid; // key found
+    /**
+     * 返回第一个>=target的数的index
+     **/
+    private int lower_bound(int[] A, int target, int hi) {
+        int lo = 0;
+        while (lo < hi) {
+            int mid = (lo + hi) >> 1;
+            if (A[mid] >= target) hi = mid;
+            else lo = mid + 1;
         }
-        return -(low + 1);  // key not found.
+        return lo;
     }
 
     public static void main(String args[]) {
-        int[] nums = {1, 3, 2, 5, 4};
-        LongestIncreasingSubsequence longestIncreasingSubsequence = new LongestIncreasingSubsequence();
-        System.out.println(longestIncreasingSubsequence.lengthOfLIS_DP_BS(nums));
+        new LongestIncreasingSubsequence().lengthOfLIS_DP_BS(new int[]{10, 9, 2, 5, 3, 7, 101, 18});
     }
 }
