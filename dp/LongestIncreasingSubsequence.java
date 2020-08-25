@@ -21,7 +21,8 @@ public class LongestIncreasingSubsequence {
      * 题意：求最长上升子序列长度。
      * Approach1. DP
      * Time/Space : O(n^2)
-     * dp[i]表示[0,i]范围的LIS，但是一定要包含第i个元素。
+     * dp[i]表示[0,i]范围的LIS长度，但是一定要包含第i个元素。
+     * dp[i]=max(dp[j])+1,其中0≤j<i且num[j]<num[i]
      * 之所以必须包含第i个元素，是因为每次新增加的数是和nums[i](代码中是j)对比，比如1，2，0，..，4；4>0没有用，必须还要确定0就包含在了LIS里。
      * 这也是为什么用了一个max，保存每趟最优值，因为dp[dp.length - 1]保存的不一定是最大值，毕竟我们不一定要nums[nums.length - 1]
      */
