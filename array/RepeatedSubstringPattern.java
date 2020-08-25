@@ -42,21 +42,15 @@ public class RepeatedSubstringPattern {
 
     /**
      * 讨论区答案
+     * 如果字符串 S 包含一个重复的子字符串，那么这意味着可以多次 “移位和换行”字符串，并使其与原始字符串匹配。
+     * 例如：abcabc
+     * 移位一次：cabcab
+     * 移位两次：bcabca
+     * 移位三次：abcabc
+     * 现在字符串和原字符串匹配了，所以可以得出结论存在重复的子串。
      */
-    public boolean repeatedSubstringPattern__(String str) {
-        int len = str.length();
-        for (int i = len / 2; i >= 1; i--) {
-            if (len % i == 0) {
-                int m = len / i;
-                String subS = str.substring(0, i);
-                int j;
-                for (j = 1; j < m; j++) {
-                    if (!subS.equals(str.substring(j * i, i + j * i))) break;
-                }
-                if (j == m)
-                    return true;
-            }
-        }
-        return false;
+    public boolean repeatedSubstringPattern_(String s) {
+        String str = s + s;
+        return str.substring(1, str.length() - 1).contains(s);
     }
 }
