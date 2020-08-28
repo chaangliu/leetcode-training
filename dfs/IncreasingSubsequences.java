@@ -71,7 +71,7 @@ public class IncreasingSubsequences {
 
     private void dfs(List<List<Integer>> res, List<Integer> item, int[] nums, int start) {
         if (item.size() > 1) res.add(new ArrayList<>(item));
-        Set<Integer> used = new HashSet<>();//set不用代入递归，因为它只判断当前层是否使用过相同数字就行了；比如对于1，2，1，1；会过滤掉两个[1，1]组合
+        Set<Integer> used = new HashSet<>();// set不用代入递归，因为它只判断当前层是否使用过相同数字就行了；也就是，不要从同样数字的入口进入下一层递归
         for (int i = start; i < nums.length; i++) {
             if (!used.contains(nums[i]) && (item.size() == 0 || nums[i] >= item.get(item.size() - 1))) {
                 used.add(nums[i]);
@@ -79,6 +79,37 @@ public class IncreasingSubsequences {
                 dfs(res, item, nums, i + 1);
                 item.remove(item.size() - 1);
             }
+        }
+    }
+
+    /**
+     * 解法2， 不带for循环的dfs；
+     * 第一个dfs代表选当前元素，第二个dfs代表不选当前元素，相当于把每个数字选或不选都枚举了一遍。
+     * 初看其实还挺难理解的。。因为这种模式并不常见。中文讨论区很多讨论。
+     * 对于[1,2,3,4], 会打印出：
+     * [[1,2,3,4],[1,2,3],[1,2,4],[1,2],[1,3,4],[1,3],[1,4],[2,3,4],[2,3],[2,4],[3,4]]
+     */
+    class Solution {
+        public List<List<Integer>> findSubsequences(int[] nums) {
+            List<List<Integer>> res = new ArrayList<>();
+            if (nums == null || nums.length == 0) return res;
+            dfs(res, new ArrayList<Integer>(), nums, 0);
+            return res;
+        }
+
+        private void dfs(List<List<Integer>> res, List<Integer> item, int[] A, int index) {
+            // if (item.size() > 1) res.add(new ArrayList<>(item)); // 不能写在这儿
+            if (index == A.length) {
+                if (item.size() > 1) res.add(new ArrayList<>(item));
+                return;
+            }
+            if (item.size() == 0 || A[index] >= item.get(item.size() - 1)) {
+                item.add(A[index]);
+                dfs(res, item, A, index + 1); // 选当前元素
+                item.remove(item.size() - 1);
+            }
+            if (item.size() > 0 && A[index] == item.get(item.size() - 1)) return; // 当前元素和上一个相同，必须选当前元素，不能跳过当前元素
+            dfs(res, item, A, index + 1); // 不选当前元素
         }
     }
 }

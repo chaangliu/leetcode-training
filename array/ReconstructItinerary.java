@@ -1,5 +1,6 @@
 package array;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,152 +26,37 @@ import java.util.PriorityQueue;
  */
 
 public class ReconstructItinerary {
+    /**
+     * 题意：给你一些机票，让你整理出一个行程顺序，可以用完所有的机票。如果有多种路线，选择字典序靠前的。
+     * LC题解: 本题和 753. 破解保险箱 类似，是力扣平台上为数不多的求解欧拉回路 / 欧拉通路的题目。读者可以配合着进行练习。
+     * 这题其实不太常规，我一开始用了backtrack但是不行，这题是可以走回头路的。
+     * 整个图最多存在一个死胡同(出度和入度相差1），且这个死胡同一定是最后一个访问到的，否则无法完成一笔画。
+     * Hierholzer 算法
+     * 1. 从起点出发，进行深度优先搜索。
+     * 2. 每次沿着某条边从某个顶点移动到另外一个顶点的时候，都需要删除这条边。
+     * 3. 如果没有可移动的路径，则将所在节点加入到栈中，并返回。
+     */
+    Map<String, PriorityQueue<String>> map = new HashMap<String, PriorityQueue<String>>();
+    List<String> itinerary = new LinkedList<String>();
 
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for (List<String> ticket : tickets) {
+            String src = ticket.get(0), dst = ticket.get(1);
+            if (!map.containsKey(src)) {
+                map.put(src, new PriorityQueue<String>());
+            }
+            map.get(src).offer(dst);
+        }
+        dfs("JFK");
+        Collections.reverse(itinerary);
+        return itinerary;
+    }
 
-	//用hashmap模拟priority queue
-//	public List<String> findItinerary(String[][] tickets) {
-//		List<String> res = new ArrayList<>();
-//		Map<String, List<String>> map = new HashMap<>();
-//		for (int i = 0; i < tickets.length; i++) {
-//			List<String> list = map.getOrDefault(tickets[i][0], new ArrayList<String>());
-//			list.add(tickets[i][1]);
-//			map.put(tickets[i][0], list);
-//		}
-//
-//		for (List<String> list : map.values()) {
-//			Collections.sort(list);
-//		}
-//
-//		res.add("JFK");
-//		List<String> cur = new ArrayList<>();
-//		if (tickets.length == 0) return cur;
-//		dfs(res , tickets.length, map, "JFK");
-//		return res;
-//	}
-//
-//	private void dfs(List<String> res , int len, Map<String, List<String>> map, String depart) {
-//		List<String> list = map.get(depart);
-//		if (list == null) return;
-//
-//		for (int i = 0 ; i < list.size() ; i ++){
-//			String s = list.remove(i);
-//			dfs();
-//		}
-//
-//	}
-
-
-	//总觉得可以，但是无法找到第二个解的答案
-//	public List<String> findItinerary(String[][] tickets) {
-//		List<String> cur = new ArrayList<>();
-//		if (tickets.length == 0) return cur;
-//		List<List<String>> all = new ArrayList<>();
-//		boolean used[] = new boolean[tickets.length];
-//		boolean included[] = new boolean[tickets.length];
-//		dfs(tickets, "JFK", all, cur, used);
-//		return all.get(0);
-//	}
-//
-//	private void dfs(String[][] tickets, String depart, List<List<String>> all, List<String> cur, boolean used[]) {
-//		if (cur.size() == tickets.length + 1) {
-//			all.add(new ArrayList<>(cur));
-//			return;
-//		}
-//		for (int i = 0; i < tickets.length; i++) {
-//			if (!used[i] && tickets[i][0].equals(depart)) {
-//				cur.add(tickets[i][0]);
-//				if (cur.size() == tickets.length) {
-//					cur.add(tickets[i][1]);
-//				}
-//				depart = tickets[i][1];
-//				used[i] = true;
-//				dfs(tickets, depart, all, cur, used);
-//				used[i] = false;
-//				if (cur.size() == tickets.length + 1) {
-//					cur.remove(cur.size() - 1);
-//				}
-//				cur.remove(cur.size() - 1);
-//			}
-//		}
-//	}
-
-
-	public static void main(String args[]) {
-//		String[][] s = {{"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"}};
-//		String[][] s = {
-//				{"JFK", "SFO"},
-//				{"JFK", "ATL"},
-//				{"SFO", "ATL"},
-//				{"ATL", "JFK"},
-//				{"ATL", "SFO"}};
-		String[][] s = {{"JFK", "KUL"}, {"JFK", "NRT"}, {"NRT", "JFK"}};
-		new ReconstructItinerary().findItinerary(s);
-	}
-
-//	public List<String> findItinerary(String[][] tickets) {
-//		Map<String, List<String>> map = new HashMap<>();
-//
-//		for (String[] ticket : tickets) {
-//			List<String> dests = map.get(ticket[0]);
-//			if (dests == null) {
-//				dests = new ArrayList<>();
-//				dests.add(ticket[1]);
-//				map.put(ticket[0], dests);
-//			} else {
-//				dests.add(ticket[1]);
-//			}
-//		}
-//
-//		for (List<String> dests : map.values()) {
-//			Collections.sort(dests);
-//		}
-//
-//		List<String> res = new ArrayList<>();
-//		res.add("JFK");
-//
-//		dfs(res, map, "JFK", tickets.length);
-//
-//		return res;
-//	}
-//
-//	//
-//	public void dfs(List<String> res, Map<String, List<String>> map, String src, int length) {
-//		if (res.size() == length + 1) {
-//			return;
-//		}
-//
-//		List<String> dests = map.get(src);
-//
-//		if (dests != null && dests.size() > 0) {
-//			for (int i = 0; i < dests.size(); i++) {
-//				String dest = dests.remove(i);
-//				res.add(dest);
-//				dfs(res,  map, dest, length);
-//				if (res.size() == length + 1) return;
-//				dests.add(i, dest);
-//				res.remove(res.size() - 1);
-//			}
-//		}
-//	}
-
-	Map<String, PriorityQueue<String>> flights;
-	LinkedList<String> path;
-
-	public List<String> findItinerary(String[][] tickets) {
-		flights = new HashMap<>();
-		path = new LinkedList<>();
-		for (String[] ticket : tickets) {
-			flights.putIfAbsent(ticket[0], new PriorityQueue<String>());
-			flights.get(ticket[0]).add(ticket[1]);
-		}
-		dfs("JFK");
-		return path;
-	}
-
-	public void dfs(String departure) {
-		PriorityQueue<String> arrivals = flights.get(departure);
-		while (arrivals != null && !arrivals.isEmpty())
-			dfs(arrivals.poll());
-		path.addFirst(departure);
-	}
+    public void dfs(String curr) {
+        while (map.containsKey(curr) && map.get(curr).size() > 0) {
+            String tmp = map.get(curr).poll();
+            dfs(tmp);
+        }
+        itinerary.add(curr);
+    }
 }
