@@ -33,7 +33,7 @@ public class Sqrtx {
             if (mid * mid > x) hi = mid;
             else lo = mid + 1;
         }
-        return (int) lo - 1;
+        return (int) lo - 1; // 最后要-1，higher_bound-1
     }
 
     /**
