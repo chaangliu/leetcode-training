@@ -1,7 +1,10 @@
 package dfs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 
@@ -42,46 +45,51 @@ import java.util.Stack;
 public class KeysAndRooms {
 
     /**
-     * dfs；这题我一开始觉得是backtracking，但后来发现其实是floodfill，不需要重置状态的，
-     * 因为离开已经打开的房间之后不需要再重新锁上的，比如对于[[2,3],[],[2],[1,3,1]]。
+     * 题意：给你一些房间，房间里有钥匙，问从0开始能否visit所有房间。
+     * 解法：BFS或DFS。
      */
-    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        if (rooms == null || rooms.size() == 0) return false;
-        if (rooms.size() == 1) return true;
-        boolean res = dfs(rooms, 0, 0, new boolean[rooms.size()]);
-        System.out.print(res);
-        return res;
-    }
-
-    private boolean dfs(List<List<Integer>> rooms, int key, int vCount, boolean[] visited) {
-        //        if (vCount >= rooms.size())//不能这么判断，过不了[[2,3],[],[2],[1,3,1]] 这个case。vCount相当于递归栈的最大层数，那么如果一个房间里有100把钥匙，递归层数可能只有2，但也能打开全部房间
-        //            return true;
-        if (allVisited(visited)) return true;
-        if (key < 0 || key >= rooms.size()) return false;
-        if (!visited[key]) {
-            visited[key] = true;
-            List<Integer> room = rooms.get(key);
-            if (room.size() == 0) {
-                if (dfs(rooms, -1, vCount + 1, visited)) return true;
-            } else
-                for (int i = 0; i < room.size(); i++) {
-                    if (dfs(rooms, rooms.get(key).get(i), vCount + 1, visited)) return true;//找到true就不再递归，相当于全局标志位
-                }
-            //            visited[key] = false;//不需要backtracking
+    public boolean canVisitAllRooms_BFS(List<List<Integer>> rooms) {
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(0);
+        HashSet<Integer> visited = new HashSet<>();
+        visited.add(0);
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            for (Integer v : rooms.get(u)) {
+                if (visited.contains(v)) continue;
+                visited.add(v);
+                q.offer(v);
+            }
         }
-        return false;
+        return visited.size() == rooms.size();
     }
-
-    private boolean allVisited(boolean[] visited) {
-        for (int i = 0; i < visited.length; i++) {
-            if (!visited[i]) return false;
-        }
-        return true;
-    }
-
 
     /**
-     * solution用的stack，确实更巧妙，跟树的遍历类似，有node就push直到empty
+     * dfs；floodfill，不需要backtrack; 离开已经打开的房间之后不需要再重新锁上的，比如对于[[2,3],[],[2],[1,3,1]]。
+     */
+    boolean[] vis;
+    int num;
+
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        int n = rooms.size();
+        num = 0;
+        vis = new boolean[n];
+        dfs(rooms, 0);
+        return num == n;
+    }
+
+    public void dfs(List<List<Integer>> rooms, int x) {
+        vis[x] = true;
+        num++;
+        for (int it : rooms.get(x)) {
+            if (!vis[it]) {
+                dfs(rooms, it);
+            }
+        }
+    }
+
+    /**
+     * solution用的stack，其实就是bfs。
      */
     public boolean canVisitAllRooms___OFFICIALSOLUTION(List<List<Integer>> rooms) {
         boolean[] seen = new boolean[rooms.size()];
