@@ -45,17 +45,16 @@ public class PredictTheWinner {
     /**
      * 加上memo
      */
-    public boolean PredictTheWinner_with_memo(int[] nums) {
-        return helper(0, nums.length - 1, nums, new Integer[nums.length][nums.length]) >= 0;
+    public boolean PredictTheWinner_(int[] nums) {
+        return dfs(nums, 0, nums.length - 1, new Integer[21][21]) >= 0;
     }
 
-    //helper返回palyer1 - palyer2的score差值
-    private int helper(int l, int r, int[] nums, Integer[][] memo) {
-        if (l == r) return nums[l];
-        int ll = memo[l + 1][r] != null ? memo[l + 1][r] : helper(l + 1, r, nums, memo);
-        int rr = memo[l][r - 1] != null ? memo[l][r - 1] : helper(l, r - 1, nums, memo);
-        memo[l][r] = Math.max(nums[l] - ll, nums[r] - rr);
-        return memo[l][r];
+    private int dfs(int[] A, int l, int r, Integer[][] memo) {
+        if (l == r) return A[l];
+        if (memo[l][r] != null) return memo[l][r];
+        int left = A[l] - dfs(A, l + 1, r, memo);
+        int right = A[r] - dfs(A, l, r - 1, memo);
+        return memo[l][r] = Math.max(left, right);
     }
 
     /**
