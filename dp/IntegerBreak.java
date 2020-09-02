@@ -126,4 +126,21 @@ public class IntegerBreak {
         }
         return memo[n] = mustDivide ? divide : Math.max(not_divide, divide);
     }
+
+    class Solution_jianzhioffer14 {
+        public int cuttingRope(int n) {
+            return dfs(n, new Integer[59]);
+        }
+
+        private int dfs(int n, Integer[] memo) {
+            if (memo[n] != null) return memo[n];
+            int res = 0;
+            for (int i = 1; i < n; i++) {
+                int left_noCut = i, left_cut = dfs(i, memo);
+                int right_noCut = n - i, right_cut = dfs(n - i, memo);
+                res = Math.max(res, Math.max(left_cut, left_noCut) * Math.max(right_cut, right_noCut)); // 注意这儿不要忘记比较res
+            }
+            return memo[n] = res;
+        }
+    }
 }

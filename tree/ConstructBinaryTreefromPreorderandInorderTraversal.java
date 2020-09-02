@@ -24,7 +24,31 @@ public class ConstructBinaryTreefromPreorderandInorderTraversal {
      * 题意：给你一个前序遍历和中序遍历的数组，让你还原一棵树。
      * 解法：维护preOrder的index和inorder的左右子树的起始和结束index。
      * 20200522review: 这题关键在于右子树的root index的确定，如果不用全局变量记录，你需要跳过整颗左子树去定位右边子树的root位置。
+     * 20200902review: 这题其实就是给定边界，向左向右递归建树
      */
+    class Solution {
+        int rootIdx = 0;
+
+        public TreeNode buildTree(int[] preorder, int[] inorder) {
+            return dfs(preorder, inorder, 0, preorder.length - 1);
+        }
+
+        private TreeNode dfs(int[] preorder, int[] inorder, int l, int r) {
+            if (l > r) return null;
+            int num = preorder[rootIdx++];
+            int pivot = -1;
+            for (int i = 0; i < inorder.length; i++)
+                if (inorder[i] == num) {
+                    pivot = i;
+                    break;
+                }
+            TreeNode root = new TreeNode(num);
+            root.left = dfs(preorder, inorder, l, pivot - 1);
+            root.right = dfs(preorder, inorder, pivot + 1, r);
+            return root;
+        }
+    }
+
     int preOrderIndex;
 
     public TreeNode buildTree__2019(int[] preorder, int[] inorder) {
