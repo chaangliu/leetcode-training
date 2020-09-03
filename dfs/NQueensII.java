@@ -6,6 +6,10 @@ package dfs;
 
 public class NQueensII {
 
+    /**
+     * 题意：求n皇后的解法有多少个。
+     * 解法：跟1一样backtrack。
+     */
     int num = 0;
 
     public int totalNQueens(int n) {
@@ -19,7 +23,6 @@ public class NQueensII {
             num++;
             return;
         }
-
         for (int i = 0; i < n; i++) {
             col[row] = i;
             if (checkValid(row, col)) {
@@ -30,16 +33,10 @@ public class NQueensII {
 
     private boolean checkValid(int row, int[] col) {
         for (int i = 0; i < row; i++)
-//            for (int j = i + 1; j < row; j++) {
-            //不要用double for cycle，因为row之前的已经valid了不需要比对了，只需要把每个i跟row比
+            //  斜线 || 同一列
             if (Math.abs(i - row) == Math.abs(col[i] - col[row]) || col[i] == col[row]) {
                 return false;
-//                }
             }
         return true;
-    }
-
-    public static void main(String args[]){
-        System.out.println(new NQueensII().totalNQueens(4));
     }
 }
