@@ -36,8 +36,8 @@ class ReverseLinkedList {
     public static ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) return head;
         ListNode p = reverseList(head.next);
-        head.next.next = head;
-        head.next = null;
+        head.next.next = head; // 原来的第二个node成了倒数第二个node，要指向倒数第一个node
+        head.next = null; // 原来的head要指向null
         System.out.println(p.val);
         return p;
     }

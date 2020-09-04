@@ -8,8 +8,8 @@ import java.util.List;
  * <p>
  * For example, given the following binary tree:
  * <p>
- * 1
- * /   \
+ *    1
+ *  /   \
  * 2     3
  * \
  * 5
@@ -21,38 +21,29 @@ import java.util.List;
  */
 
 public class BinaryTreePaths {
-    //    public List<String> binaryTreePaths(TreeNode root) {
-//        List<String> res = new ArrayList<>();
-//        if (root == null) return res;
-//        String item = "";
-//        dfs(res, root, item);
-//        return res;
-//    }
-//
-//    private void dfs(List<String> res, TreeNode root, String item) {
-//        if (root == null) return;
-//        if (isLeaf(root)) {
-//            item += root.val;
-//            res.add(item);
-//            return;
-//        }
-//        dfs(res, root.left, item + root.val  + "->");
-//        dfs(res, root.right, item + root.val + "->" );
-//    }
-//
-//    private boolean isLeaf(TreeNode node) {
-//        return (node != null && node.left == null && node.right == null);
-//    }
-    public List<String> binaryTreePaths(TreeNode root) {
-        List<String> res = new ArrayList<>();
-        if (root == null) return res;
-        StringBuilder sb = new StringBuilder();
-        dfs(res, root, sb);
-        return res;
+    /**
+     * 题意：给定一个二叉树，返回所有从根节点到叶子节点的路径。
+     * 解法：DFS或者BFS。DFS用StringBuilder的话需要手动回溯。BFS就是找到root就add到解集里。
+     */
+    class Solution {
+        public List<String> binaryTreePaths(TreeNode root) {
+            List<String> res = new ArrayList<>();
+            dfs(root, res, "");
+            return res;
+        }
+
+        private void dfs(TreeNode root, List<String> res, String cur) {
+            if (root == null) return;
+            if (root.left == null && root.right == null) {
+                res.add(cur + root.val);
+                return;
+            }
+            dfs(root.left, res, cur + root.val + "->");
+            dfs(root.right, res, cur + root.val + "->");
+        }
     }
 
     private void dfs(List<String> res, TreeNode root, StringBuilder sb) {
-//        if (root == null) return;
         if (isLeaf(root)) {
             sb.append(root.val);
             res.add(new String(sb));
@@ -77,13 +68,4 @@ public class BinaryTreePaths {
         return (node != null && node.left == null && node.right == null);
     }
 
-    public static void main(String args[]) {
-        BinaryTreePaths instance = new BinaryTreePaths();
-        TreeNode root = new TreeNode(2);
-        TreeNode left = new TreeNode(1);
-        TreeNode right = new TreeNode(3);
-        root.left = left;
-        root.right = right;
-        instance.binaryTreePaths(root);
-    }
 }

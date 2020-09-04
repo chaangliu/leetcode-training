@@ -7,7 +7,27 @@ import tree.TreeNode;
  * <p>
  * 参考：https://www.jianshu.com/p/2d1703364032
  */
-public class HasSubTree {
+public class HasSubTree_LC26 {
+    /**
+     * 题意：判断B是否是A的子结构。
+     * 解法：DFS，但是刚开始写犯了个错，找到第一个val相同的入口，就没继续向下找了。。
+     */
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        if (B == null) return false;
+        if (A == null) return false;
+        if (A.val == B.val) {
+            if (checkContain(A, B)) return true; // 这儿WA了一次
+        }
+        return isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    }
+
+    private boolean checkContain(TreeNode A, TreeNode B) {
+        if (B == null) return true;
+        if (A == null) return false;
+        if (A.val != B.val) return false;
+        return checkContain(A.left, B.left) && checkContain(A.right, B.right);
+    }
+
     public boolean HasSubtree(TreeNode root1, TreeNode root2) {
         if (root1 == null || root2 == null)
             return false;
@@ -72,7 +92,7 @@ public class HasSubTree {
         root2.right = new TreeNode(2);
 
 //        System.out.println(new HasSubTree().HasSubtree(p, root2));
-        System.out.println(new HasSubTree().isSubtree(p, root2));
+        System.out.println(new HasSubTree_LC26().isSubtree(p, root2));
         int a = 1;
     }
 }
