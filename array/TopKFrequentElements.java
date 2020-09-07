@@ -31,18 +31,13 @@ import java.util.TreeMap;
 public class TopKFrequentElements {
     /**
      * 题意：给你一个数组，找出出现频率最高的k个数字。要求时间复杂度低于O(n log n)。
-     * 解法：低于O(n log n)，可以是O(n)；也可以是O(n log k), 也就是维持一个size为k的heap。
-     */
-    /**
-     * =========================================================================================================================
-     * 很简单的BucketSort，每个桶的长度是1，很巧妙，同样是先取得一个FrequencyMap，
+     * 解法1：很简单的BucketSort，每个桶的长度是1，很巧妙，同样是先取得一个FrequencyMap，
      * 取得Map之后根据frequency来散列到一个一些桶里（把出现次数同样多的放到一个桶里），在从桶从后往前加入到结果集。
      * Idea is simple. Build a array of list to be buckets with length 1 to sort.
      * Time: O(n)
-     * =========================================================================================================================
      */
     public List<Integer> topKFrequent(int[] nums, int k) {
-        List<Integer>[] bucket = new List[nums.length + 1];
+        List<Integer>[] bucket = new List[nums.length + 1]; // 这儿用了new List,如果用new ArrayList会提示Generic List Creation错误
         Map<Integer, Integer> frequencyMap = new HashMap<Integer, Integer>();
         for (int n : nums) {
             frequencyMap.put(n, frequencyMap.getOrDefault(n, 0) + 1);
@@ -63,12 +58,36 @@ public class TopKFrequentElements {
         return res;
     }
 
+    // 返回定长数组
+    public int[] topKFrequent__(int[] nums, int k) {
+        Map<Integer, Integer> occurenceMap = new HashMap<>();
+        for (int num : nums) {
+            occurenceMap.put(num, occurenceMap.getOrDefault(num, 0) + 1);
+        }
+        int[] res = new int[k];
+        ArrayList[] bucket = new ArrayList[nums.length + 1]; // 桶最大的情况：数组里只有同一个数字重复了n次
+        int idx = 0;
+        for (Map.Entry<Integer, Integer> e : occurenceMap.entrySet()) {
+            if (bucket[e.getValue()] == null) bucket[e.getValue()] = new ArrayList();
+            bucket[e.getValue()].add(e.getKey());
+        }
+        for (int i = bucket.length - 1; i >= 0; i--) {
+            ArrayList list = bucket[i];
+            if (list == null) continue;
+            int listIdx = 0;
+            while (idx < k && listIdx < list.size()) {
+                res[idx++] = (int) list.get(listIdx++);
+            }
+            if (idx == k) break;
+        }
+        return res;
+    }
 
     /**
-     * =========================================================================================================================
+     * 解法2. heap。
+     * 低于O(n log n)，可以是O(n)；也可以是O(n log k), 也就是维持一个size为k的heap。
      * leetcode的official solution，最后还有用一次heap的遍历，跟KSmallestNumbers那题一个操作
      * Time complexity : O(Nlog(k))
-     * =========================================================================================================================
      */
     public List<Integer> topKFrequent____LeetCode(int[] nums, int k) {
         // build hash map : character and how often it appears
@@ -97,80 +116,56 @@ public class TopKFrequentElements {
     }
 
     /**
-     * 题目变了，现在给的数组是string[]了，不是int[]。
-     * 做法是，建立最小堆，堆顶是出现次数最少的，如果出现次数相同，那么逆字典序排列，这样就可以保证q pop出去的是没用的。
+     * 解法3，力扣官方的quick select；跟topk大元素类似了。。
+     * 时间O(n)
      */
-    public List<String> topKFrequent(String[] words, int k) {
-        Map<String, Integer> count = new HashMap();
-        for (String word : words) {
-            count.put(word, count.getOrDefault(word, 0) + 1);
+    class Solution {
+        public int[] topKFrequent(int[] nums, int k) {
+            Map<Integer, Integer> occurrences = new HashMap<Integer, Integer>();
+            for (int num : nums) {
+                occurrences.put(num, occurrences.getOrDefault(num, 0) + 1);
+            }
+            List<int[]> values = new ArrayList<int[]>();
+            for (Map.Entry<Integer, Integer> entry : occurrences.entrySet()) {
+                int num = entry.getKey(), count = entry.getValue();
+                values.add(new int[]{num, count});
+            }
+            int[] ret = new int[k];
+            qsort(values, 0, values.size() - 1, ret, 0, k);
+            return ret;
         }
-        PriorityQueue<String> heap = new PriorityQueue<String>(
-                (w1, w2) -> count.get(w1).equals(count.get(w2)) ?
-                        w2.compareTo(w1) : count.get(w1) - count.get(w2));
 
-        for (String word : count.keySet()) {
-            heap.offer(word);
-            if (heap.size() > k) heap.poll();
+        public void qsort(List<int[]> values, int start, int end, int[] ret, int retIndex, int k) {
+            // partition
+            int picked = (int) (Math.random() * (end - start + 1)) + start;
+            Collections.swap(values, picked, start);
+            int pivot = values.get(start)[1];
+            int index = start;
+            for (int i = start + 1; i <= end; i++) {
+                if (values.get(i)[1] >= pivot) {
+                    Collections.swap(values, index + 1, i);
+                    index++;
+                }
+            }
+            Collections.swap(values, start, index);
+            if (k <= index - start) {
+                qsort(values, start, index - 1, ret, retIndex, k);
+            } else {
+                for (int i = start; i <= index; i++) {
+                    ret[retIndex++] = values.get(i)[0];
+                }
+                if (k > index - start + 1) {
+                    qsort(values, index + 1, end, ret, retIndex, k - (index - start + 1));
+                }
+            }
         }
-
-        List<String> ans = new ArrayList();
-        while (!heap.isEmpty()) ans.add(heap.poll());
-        Collections.reverse(ans);
-        return ans;
     }
 
     /**
-     * =========================================================================================================================
-     * 我的Solution：HashMap + PriorityQueue(最大堆)
-     * =========================================================================================================================
-     */
-//    public class Pair {
-//        int val;
-//        int count;
-//
-//        Pair(int v, int c) {
-//            val = v;
-//            count = c;
-//        }
-//    }
-//
-//    public List<Integer> topKFrequent(int[] nums, int k) {
-//        List<Integer> res = new ArrayList<>();
-//        if (nums == null || nums.length == 0) return res;
-//        Map<Integer, Pair> map = new HashMap<>();
-//        for (int num : nums) {
-//            if (!map.containsKey(num)) {
-//                map.put(num, new Pair(num, 1));
-//            } else {
-//                map.get(num).count++;
-//            }
-//        }
-//        PriorityQueue<Pair> priorityQueue = new PriorityQueue<>(100, new Comparator<Pair>() {
-//            @Override
-//            public int compare(Pair o1, Pair o2) {
-//                return o2.count - o1.count;
-//            }
-//        });
-//        //最大堆，先poll的是最大数
-//        int count = 0;
-//        for (Map.Entry entry : map.entrySet()) {
-//            //留在queue里的数量
-//            count++;
-//            priorityQueue.offer((Pair) entry.getValue());
-//            if (k + count > map.size()) {
-//                res.add(priorityQueue.poll().val);
-//            }
-//        }
-//        return res;
-//    }
-
-    /**
-     * =========================================================================================================================
+     * 解法4
      * use treeMap. Use freqncy as the key so we can get all freqencies in order
      * <p>
      * TreeMap可以自定义Comparator，默认是好像是顺序，所以每次pollLastEntry()就是key最大的
-     * =========================================================================================================================
      */
     public List<Integer> topKFrequent_____TREEMAP(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
@@ -193,10 +188,5 @@ public class TopKFrequentElements {
             res.addAll(entry.getValue());
         }
         return res;
-    }
-
-    public static void main(String args[]) {
-        int nums[] = {1, 1, 1, 2, 2, 3};
-        new TopKFrequentElements().topKFrequent_____TREEMAP(nums, 2);
     }
 }

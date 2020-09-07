@@ -43,7 +43,7 @@ public class KthLargestElementInAnArray {
 
     public int randomPartition(int[] A, int l, int r) {
         int i = random.nextInt(r - l + 1) + l;
-        swap(A, i, r);
+        swap(A, i, l);
         return partition(A, l, r);
     }
 
