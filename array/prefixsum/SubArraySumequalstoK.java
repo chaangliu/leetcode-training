@@ -18,7 +18,8 @@ public class SubArraySumequalstoK {
 
     /**
      * 题意：给你一个int数组和一个k，找出有多少个和=k的连续子串。
-     * 解法：看着像sliding window，但其实是prefix sum，但是这个prefix sum不关心index，只关心过去是否有一段subarray的sum是k
+     * 解法：看着像sliding window，但其实是prefix sum，不能用slidingwindow的原因是有负数。
+     * 这个prefix sum不关心index，只关心过去是否有一段subarray的sum是k
      * preSum + HashMap，one pass
      */
     public int subarraySum(int[] nums, int k) {
