@@ -11,36 +11,31 @@ import tree.TreeNode;
  */
 
 public class PathSumII {
-    List<List<Integer>> res = new ArrayList<>();
-
+    /**
+     * 题意：打印出所有的path sum（root到leaf）
+     * 解法：backtrack，注意一个add要对应一个remove。
+     */
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
-        if (root == null) return res;
-        cell.add(root.val);
-        helper(root, sum - root.val);
-
+        List<List<Integer>> res = new ArrayList<>();
+        dfs(res, new ArrayList<>(), sum, root);
         return res;
     }
 
-    List<Integer> cell = new ArrayList<>();
-
-    private void helper(TreeNode root, int sum) {
+    private void dfs(List<List<Integer>> res, List<Integer> item, int sum, TreeNode root) {
+        //System.out.println(item);
         if (root == null) return;
-
-        if (root.left == null && root.right == null && 0 == sum) {
-            res.add(cell);
-            cell = new ArrayList<>();
-            //相当于else
+        if (root.left == null && root.right == null) {
+            if (root.val == sum) {
+                item.add(root.val);
+                //System.out.println(item);
+                res.add(new ArrayList<>(item));
+                item.remove(item.size() - 1); // 已犯错误，忘了remove当前这层添加的元素。注意，一个add对应一个remove。
+            }
             return;
         }
-        if (root.left != null && sum > 0) {
-            cell.add(root.left.val);
-            helper(root.left, sum - root.left.val);
-            cell.remove(cell.size() - 1);
-        }
-        if (root.right != null && sum > 0) {
-            cell.add(root.right.val);
-            helper(root.right, sum - root.right.val);
-            cell.remove(cell.size() - 1);
-        }
+        item.add(root.val);
+        dfs(res, item, sum - root.val, root.left);
+        dfs(res, item, sum - root.val, root.right);
+        item.remove(item.size() - 1);
     }
 }
