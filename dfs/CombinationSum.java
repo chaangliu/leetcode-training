@@ -23,72 +23,58 @@ import java.util.List;
  */
 
 public class CombinationSum {
-    //############# 2018-09-22 Review #############
+    /**
+     * 题意：给你一个集合（不含重复数字），让你求出里面的元素加起来等于target的方案数，同一个数字可以重复用。
+     * 解法：backtrack，注意要先排序，这样可以在target<0的时候剪枝。
+     */
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> res = new ArrayList<>();
-        if (candidates == null || candidates.length == 0) {
-            return res;
-        }
-        Arrays.sort(candidates);//要点0. 要先sort
-        backtrack(candidates, target, res, new ArrayList<Integer>(), 0);
+        Arrays.sort(candidates);
+        dfs(res, new ArrayList<>(), candidates, target, 0);
         return res;
     }
 
-    //#my version:
-    // (我觉得下次还是不要用有返回值的backtrack比较清晰)
-    private List<List<Integer>> backtracking(int[] candidates, int target, List<List<Integer>> res, List<Integer> item, int start) {
-        for (int i = start; i < candidates.length; i++) {//要点1. 重复利用一个数，不代表可以用之前的数
-            if (target < candidates[i]) return res;
-            item.add(candidates[i]);//要点2. 这次写的时候判断了candidates[i] == target，导致无论candidates[i] == target是否成立，都要先add candidate。写成target == 0比较好。
-            if (candidates[i] == target) {
-                res.add(new ArrayList<Integer>(item));
-                item.remove(item.size() - 1);//要点3. candidates[i] == target，要额外add和remove
-                return res;
-            }
-            backtracking(candidates, target - candidates[i], res, item, i);
-            item.remove(item.size() - 1);
-        }
-        return res;
-    }
-
-    //good version:
-    private void backtrack(int[] nums, int remain, List<List<Integer>> list, List<Integer> tempList, int start) {
-        if (remain < 0) return;
-        if (remain == 0) {
-            list.add(new ArrayList<>(tempList));
+    private void dfs(List<List<Integer>> res, List<Integer> item, int[] candidates, int target, int start) {
+        if (target == 0) {
+            res.add(new ArrayList<>(item));
             return;
         }
-        for (int i = start; i < nums.length; i++) {
-            //加上下面这句对结果没有影响，但会减少很多次循环，因为同一个数字可以复用（每次从i开始），所以重复数字就没有意义了
-            if (i > 0 && nums[i] == nums[i - 1]) continue;
-            tempList.add(nums[i]);
-            backtrack(nums, remain - nums[i], list, tempList, i); // not i + 1 because we can reuse same elements
-            tempList.remove(tempList.size() - 1);
+        for (int i = start; i < candidates.length; i++) {
+            if (target - candidates[i] < 0) break; // 注意这里是break而不是continue哦，因为数组已经排序了。
+            item.add(candidates[i]);
+            dfs(res, item, candidates, target - candidates[i], i); // 因为可以重复用，所以这里是i不是i+1
+            item.remove(item.size() - 1);
         }
     }
 
-//	List<List<Integer>> result = new ArrayList<>();
-//
-//	public List<List<Integer>> combinationSum(int[] candidates, int target) {
-//
-//		if (candidates == null || candidates.length == 0) return result;
-//		dfs(target, new ArrayList<Integer>(), candidates, 0);
-//		return result;
-//	}
-//
-//	private void dfs(int target, List<Integer> item, int[] candidates, int start) {
-//
-//		if (target < 0) return;
-//		if (target == 0) {
-//			result.add(new ArrayList<>(item));
-//			return;
-//		}
-//		for (int i = start; i < candidates.length; i++) {
-//			//加上下面这句对结果没有影响，但会减少很多次循环，因为同一个数字可以复用（每次从i开始），所以重复数字就没有意义了
-//			if (i > 0 && candidates[i] == candidates[i - 1]) continue;
-//			item.add(candidates[i]);
-//			dfs(target - candidates[i], item, candidates, i);
-//			item.remove(item.size() - 1);
-//		}
-//	}
+    /**
+     * 同样的，类似combinations等题目，lc给出了不用for循环的解法，选与不选当前数字。其实反过来看，上面的用for循环的解法其实也是选与不选，不选就是先把刚才加的删掉，去选下一个数字。
+     * https://leetcode-cn.com/problems/combination-sum/solution/zu-he-zong-he-by-leetcode-solution/
+     */
+    class Solution {
+        public List<List<Integer>> combinationSum(int[] candidates, int target) {
+            List<List<Integer>> ans = new ArrayList<List<Integer>>();
+            List<Integer> combine = new ArrayList<Integer>();
+            dfs(candidates, target, ans, combine, 0);
+            return ans;
+        }
+
+        public void dfs(int[] candidates, int target, List<List<Integer>> ans, List<Integer> combine, int idx) {
+            if (idx == candidates.length) {
+                return;
+            }
+            if (target == 0) {
+                ans.add(new ArrayList<Integer>(combine));
+                return;
+            }
+            // 直接跳过
+            dfs(candidates, target, ans, combine, idx + 1);
+            // 选择当前数
+            if (target - candidates[idx] >= 0) {
+                combine.add(candidates[idx]);
+                dfs(candidates, target - candidates[idx], ans, combine, idx);
+                combine.remove(combine.size() - 1);
+            }
+        }
+    }
 }
