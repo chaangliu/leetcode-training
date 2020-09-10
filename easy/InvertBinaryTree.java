@@ -22,11 +22,11 @@ public class InvertBinaryTree {
      * 题意：翻转二叉树。
      * 解法：DFS。也可以BFS。
      */
-    public TreeNode mirrorTree(TreeNode root) {
+    public TreeNode mirrorTree__(TreeNode root) {
         if (root == null) return null;
         TreeNode tmp = root.left;
-        root.left = mirrorTree(root.right);
-        root.right = mirrorTree(tmp);
+        root.left = mirrorTree__(root.right);
+        root.right = mirrorTree__(tmp);
         return root;
     }
 
@@ -44,7 +44,7 @@ public class InvertBinaryTree {
     // BFS
     public TreeNode mirrorTree(TreeNode root) {
         if (root == null) return null;
-        Stack<TreeNode> stack = new Stack<>() {{
+        Stack<TreeNode> stack = new Stack<TreeNode>() {{
             add(root);
         }};
         while (!stack.isEmpty()) {

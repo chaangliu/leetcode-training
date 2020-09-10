@@ -25,67 +25,97 @@ import java.util.List;
 
 public class CombinationSum2 {
 
-    //############# 2018-09-22 Review #############
-    //这题有必要再多做几遍啊
-    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    /**
+     * 题意：求combination sum，要求1. 同一个数字只能用一次，2. 不能出现相同的组合
+     * 解法：为了达到上述两个要求，这题需要在combination sum 1的基础上有两个改动，
+     * 第一就是dfs的下一个start变成了i + 1，
+     * 第二是有点难度的，就是如何避免重复从同一个入口进入。这里有三种方法；
+     * 1. dfs之前 if (i > start && candidates[i] == candidates[i - 1]) continue;
+     * 2. dfs之后记录remove的数字，然后dfs之前判断刚才remove的数字是否和这次进入的相同
+     * 3. dfs之后(之前也行，用i > start)用while跳过相同的数字
+     */
+
+    /**
+     * 第一种
+     */
+    public List<List<Integer>> combinationSum2___(int[] candidates, int target) {
         List<List<Integer>> res = new ArrayList<>();
-        if (candidates == null || candidates.length == 0) {
-            return res;
-        }
         Arrays.sort(candidates);
-        backtrack(res, new ArrayList<Integer>(), candidates, target, 0);
+        dfs___(res, new ArrayList<>(), candidates, target, 0);
         return res;
     }
 
-    private void backtrack(List<List<Integer>> res, List<Integer> item, int[] candidates, int remain, int start) {
-        if (remain < 0)
-            return; //已犯错误: 写成了remain < candidates[i]， 2. start = i + 1的情况，if语句一定要放for的外面，不然target == candidates[len -1 ]的case会漏掉
-        if (remain == 0) {
-            res.add(new ArrayList<Integer>(item));
+    private void dfs___(List<List<Integer>> res, List<Integer> item, int[] candidates, int target, int start) {
+        if (target == 0) {
+            res.add(new ArrayList<>(item));
             return;
         }
         for (int i = start; i < candidates.length; i++) {
-            if (i > 0 && candidates[i] == candidates[i - 1] && i != start)//已犯错误：这里尤其要注意，i != start(或者i > start)才代表这个数应该跳过，而不是i == start。有一定思维难度，调试才能看出。
-                continue;
+            if (target - candidates[i] < 0) break;
+            if (i > start && candidates[i] == candidates[i - 1])
+                continue; // 考虑[1, 1, 2]，3; 找到item[1, 2], 然后把2remove；然后从第二个1进入，这时候 start是0，i是1，跳过。
             item.add(candidates[i]);
-            backtrack(res, item, candidates, remain - candidates[i], i + 1);
+            dfs___(res, item, candidates, target - candidates[i], i + 1);
             item.remove(item.size() - 1);
         }
     }
 
-    //############# 2017/1/2 #############
-//    List<List<Integer>> result = new ArrayList<>();
-//    int[] mCandidates = {};
-//
-//    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-//        this.mCandidates = candidates;
-//        Arrays.sort(mCandidates);
-//        dfs(new ArrayList<Integer>(), target, 0);
-//        return result;
-//    }
-//
-//    public void dfs(List<Integer> currentList, int target, int startPoint) {
-//        ArrayList<Integer> newList = new ArrayList<>(currentList);
-//        if (target == 0) {
-//            result.add(newList);
-//            return;
-//        }
-//        for (int i = startPoint; i < mCandidates.length && mCandidates[i] <= target; i++) {
-//            currentList.add(mCandidates[i]);
-//            dfs(currentList, target - mCandidates[i], i + 1);
-//            currentList.remove(Integer.valueOf(mCandidates[i]));
-//            while (i < mCandidates.length - 1 && mCandidates[i] == mCandidates[i + 1]) {
-////                continue;
-//                i++;
-//            }
-//        }
-//    }
 
-//    public static void main(String args[]) {
-//        CombinationSum2 combinationSum2 = new CombinationSum2();
-//        int[] candidates = new int[]{10, 1, 2, 7, 6, 1, 5};
-//        combinationSum2.combinationSum2(candidates, 7);
-//        System.out.println(combinationSum2.result);
-//
-//    }
+    /**
+     * 第二种
+     */
+    public List<List<Integer>> combinationSum2_(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(candidates);
+        dfs(res, new ArrayList<>(), candidates, target, 0);
+        return res;
+    }
+
+    private void dfs(List<List<Integer>> res, List<Integer> item, int[] candidates, int target, int start) {
+        if (target == 0) {
+            res.add(new ArrayList<>(item));
+            return;
+        }
+        Integer removed = null;
+        for (int i = start; i < candidates.length; i++) {
+            if (target - candidates[i] < 0) break;
+            if (removed != null && candidates[i] == removed) continue; // 如果现在又要从刚才移除的入口进来，就会重复，跳过即可
+            item.add(candidates[i]);
+            dfs(res, item, candidates, target - candidates[i], i + 1);
+            removed = item.remove(item.size() - 1); // 记录刚才移除的数字
+        }
+    }
+
+    /**
+     * 第三种
+     */
+    List<List<Integer>> result = new ArrayList<>();
+    int[] mCandidates = {};
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        this.mCandidates = candidates;
+        Arrays.sort(mCandidates);
+        dfs(new ArrayList<Integer>(), target, 0);
+        return result;
+    }
+
+    public void dfs(List<Integer> currentList, int target, int startPoint) {
+        ArrayList<Integer> newList = new ArrayList<>(currentList);
+        if (target == 0) {
+            result.add(newList);
+            return;
+        }
+        for (int i = startPoint; i < mCandidates.length && mCandidates[i] <= target; i++) {
+            currentList.add(mCandidates[i]);
+            dfs(currentList, target - mCandidates[i], i + 1);
+            currentList.remove(Integer.valueOf(mCandidates[i]));
+            while (i < mCandidates.length - 1 && mCandidates[i] == mCandidates[i + 1]) {
+                i++;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new CombinationSum2().combinationSum2___(new int[]{1, 1, 2}, 3);
+    }
 }
