@@ -26,7 +26,7 @@ import java.util.Queue;
 public class FindMedianfromDataStream {
     /**
      * 题意：给你一个数据流，让你用O(1)时间获取中位数。剑指offer原题。
-     * 做法是用一个最小堆和一个最大堆。如果最小的的peek>最大堆的peek，交换两个数字。
+     * 做法是用一个最小堆和一个最大堆。如果最小的的peek>最大堆的peek，交换两个数字。注意小顶堆存放较大的数。
      */
     class MedianFinder {
         //small:24
@@ -59,7 +59,7 @@ public class FindMedianfromDataStream {
     }
 
     /**
-     * solutions里的模拟方法，每次往large里加。
+     * solutions里的模拟方法，每次往large里加，并且把large顶部的移动到small里；这时如果small的size较大，再把small顶部的放到large里，保证large的size更大。
      */
     class MedianFinder__ {
         PriorityQueue<Integer> small = new PriorityQueue<Integer>((a, b) -> b - a);
@@ -78,6 +78,45 @@ public class FindMedianfromDataStream {
             return large.size() > small.size()
                     ? large.peek()
                     : (large.peek() + small.peek()) / 2.0;
+        }
+    }
+
+
+    /**
+     * 还有种做法，每次往少的那堆去加。
+     */
+    class MedianFinder_ {
+
+        /**
+         * initialize your data structure here.
+         */
+        PriorityQueue<Integer> big = new PriorityQueue<>(), small = new PriorityQueue<>((a, b) -> b - a);
+
+        public MedianFinder_() {
+
+        }
+
+        public void addNum(int num) {
+            if (small.size() <= big.size()) {
+                if (big.isEmpty() || num < big.peek()) {
+                    small.offer(num);
+                } else {
+                    small.offer(big.poll());
+                    big.offer(num);
+                }
+            } else {
+                if (small.isEmpty() || num < small.peek()) {
+                    big.offer(small.poll());
+                    small.offer(num);
+                } else {
+                    big.offer(num);
+                }
+            }
+            // System.out.println("after " + num + ", small is " + small + " big is " + big);
+        }
+
+        public double findMedian() {
+            return small.size() > big.size() ? small.peek() : small.size() < big.size() ? big.peek() : small.size() == 0 ? 0 : (small.peek() + big.peek()) / 2.0d;
         }
     }
 
