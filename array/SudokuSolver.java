@@ -133,7 +133,7 @@ public class SudokuSolver {
         checkUsed(board, i, j, used);
         for (int k = 1; k <= 9; k++) {
             if (!used.contains(k)) {
-                board[i][j] = (char) ('0' + k);
+                board[i][j] = (char) ('0' + k); // 把行、列、小方格都没用过的数字填进去试试
                 if (dfs__(board, d + 1)) return true;
             }
         }
@@ -143,11 +143,11 @@ public class SudokuSolver {
 
     private void checkUsed(char[][] board, int i, int j, HashSet<Integer> used) {
         for (int k = 0; k < 9; k++) {
-            if (board[i][k] != '.') used.add(board[i][k] - '0');
-            if (board[k][j] != '.') used.add(board[k][j] - '0');
+            if (board[i][k] != '.') used.add(board[i][k] - '0'); // 检查第i行有哪些数字用过了
+            if (board[k][j] != '.') used.add(board[k][j] - '0'); // 检查第j列有那些数字用过了
             int r = i / 3 * 3 + k / 3;
             int c = j / 3 * 3 + k % 3;
-            if (board[r][c] != '.') used.add(board[r][c] - '0');
+            if (board[r][c] != '.') used.add(board[r][c] - '0'); // 检查当前小方格有那些数字用过了
         }
     }
 
