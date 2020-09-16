@@ -22,20 +22,11 @@ package easy;
  * Explanation: 14 is not ugly since it includes another prime factor 7.
  */
 public class UglyNumber {
-    //先除谁后除谁的顺序无所谓的，所以顺序除下去就行
-
-    //看了StefanPochmann的答案
+    /**
+     * 题意：判断一个数是否是丑数。
+     * 先除谁后除谁的顺序无所谓的，顺序除下去就行。
+     */
     public boolean isUgly(int num) {
-        if (num <= 0) return false;
-        for (int i = 2; i < 6; i++) {
-            while (num % i == 0)
-                num /= i;
-        }
-        return num == 1;
-    }
-
-    //Or:
-    public boolean isUgly2(int num) {
         if (num == 1) return true;
         if (num == 0) return false;
         while (num % 2 == 0) num = num >> 1;
