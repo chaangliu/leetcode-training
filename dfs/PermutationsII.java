@@ -28,8 +28,7 @@ public class PermutationsII {
         if (nums == null || nums.length == 0) {
             return res;
         }
-        //!!!要先sort！！！
-        Arrays.sort(nums);
+        Arrays.sort(nums); //!!!要先sort！！！
         backtrack(nums, res, new ArrayList<Integer>(), new boolean[nums.length]);
         return res;
     }
@@ -56,9 +55,29 @@ public class PermutationsII {
         }
     }
 
-    public static void main(String args[]) {
-        int[] nums = {3, 3, 3};
-        List<List<Integer>> res = new PermutationsII().permuteUnique(nums);
-        System.out.println();
+    /**
+     * 自创写法，记录上次入口元素
+     */
+    public List<List<Integer>> permuteUnique_(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums); // 这种写法也需要sort
+        dfs(res, new ArrayList<>(), nums, new boolean[nums.length]);
+        return res;
+    }
+
+    private void dfs(List<List<Integer>> res, List<Integer> item, int[] A, boolean[] visited) {
+        if (item.size() == A.length) {
+            res.add(new ArrayList<>(item));
+            return;
+        }
+        Integer prev = null;
+        for (int i = 0; i < A.length; i++) {
+            if (visited[i] || prev != null && prev == A[i]) continue;
+            item.add(A[i]);
+            visited[i] = true;
+            dfs(res, item, A, visited);
+            prev = item.remove(item.size() - 1);
+            visited[i] = false;
+        }
     }
 }
