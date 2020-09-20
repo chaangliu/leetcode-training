@@ -13,31 +13,22 @@ package easy;
  * n does not exceed 1690.
  */
 public class UglyNumberII {
-    //有时候dp不仅仅依赖dp[i - 1]位
+    /**
+     * 题意：找出第n个丑数。
+     * 解法：递推dp[i], dp[i] = min(n2,n3,n5)
+     */
     public int nthUglyNumber(int n) {
-        if (n <= 0) return -1;
-        int dp[] = new int[n];
+        int idx1 = 0, idx2 = 0, idx3 = 0;
+        int[] dp = new int[n];
         dp[0] = 1;
-        int index2 = 0, index3 = 0, index5 = 0;
-        int factor2 = 2, factor3 = 3, factor5 = 5;
         for (int i = 1; i < n; i++) {
-            int min = Math.min(factor2, Math.min(factor3, factor5));
-            dp[i] = min;
-            if (min == factor2) {
-                factor2 = 2 * dp[++index2]; // 1 * 2, 2* 2, 3 * 2...
-            }
-            //注意这里不能加else......
-            if (min == factor3) {
-                factor3 = 3 * dp[++index3];// 3 * 2, 3 * 3..
-            }
-            if (min == factor5) {
-                factor5 = 5 * dp[++index5];
-            }
+            int n2 = dp[idx1] * 2, n3 = dp[idx2] * 3, n5 = dp[idx3] * 5;
+            dp[i] = Math.min(Math.min(n2, n3), n5);
+            // 判断取用了哪个数，就给那个数的idx+1
+            if (dp[i] == n2) idx1++;
+            if (dp[i] == n3) idx2++;
+            if (dp[i] == n5) idx3++;
         }
         return dp[n - 1];
-    }
-
-    public static void main(String args[]) {
-        new UglyNumberII().nthUglyNumber(10);
     }
 }

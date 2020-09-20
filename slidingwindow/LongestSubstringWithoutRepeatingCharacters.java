@@ -65,27 +65,31 @@ public class LongestSubstringWithoutRepeatingCharacters {
         return ans;
     }
 
-    public int lengthOfLongestSubstring____Set(String s) {
-        if (s.length() == 0) return 0;
-        int runner = 0, walker = 0;
-        int maxLen = 0;
+    /**
+     * 又写了一遍，其实在set contains的时候不需要第二个while，仍用外层while就好
+     */
+    public int lengthOfLongestSubstring_2020(String s) {
+        int l = 0, r = 0, res = 0;
         HashSet<Character> set = new HashSet<>();
-        while (runner < s.length()) {
-            if (!set.contains(s.charAt(runner))) {
-                set.add(s.charAt(runner));
-                runner++;
+        while (r < s.length()) {
+            char c = s.charAt(r);
+            if (!set.contains(c)) {
+                set.add(c);
+                // System.out.println("adding: " + c);
+                res = Math.max(res, set.size());
+                r++;
             } else {
-                if (runner - walker > maxLen) maxLen = runner - walker;
-                while (s.charAt(runner) != s.charAt(walker)) {
-                    set.remove(s.charAt(walker));
-                    walker++;
+                while (l < r && s.charAt(l) != c) {
+                    // System.out.println("removing: " + s.charAt(l));
+                    set.remove(s.charAt(l));
+                    l++;
                 }
-//                分别再走一步
-                walker++;
-                runner++;
+                set.remove(s.charAt(l));
+                // System.out.println("removing: " + s.charAt(l));
+                l++;
             }
         }
-        return Math.max(maxLen, runner - walker);
+        return res;
     }
 
 
