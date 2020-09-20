@@ -46,6 +46,28 @@ public class Subsets {
         }
     }
 
+    /**
+     * 不用for循环的方法
+     */
+    List<Integer> t = new ArrayList<Integer>();
+    List<List<Integer>> ans = new ArrayList<List<Integer>>();
+
+    public List<List<Integer>> subsets__(int[] nums) {
+        dfs(0, nums);
+        return ans;
+    }
+
+    public void dfs(int cur, int[] nums) {
+        if (cur == nums.length) {
+            ans.add(new ArrayList<Integer>(t));
+            return;
+        }
+        t.add(nums[cur]);
+        dfs(cur + 1, nums);
+        t.remove(t.size() - 1);
+        dfs(cur + 1, nums);
+    }
+
     //############# 2018-09-21 Review #############
     public List<List<Integer>> subsets_(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();

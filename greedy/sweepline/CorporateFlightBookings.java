@@ -1,4 +1,4 @@
-package greedy;
+package greedy.sweepline;
 
 import java.util.HashMap;
 import java.util.Map;
