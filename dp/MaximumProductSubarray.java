@@ -19,28 +19,23 @@ package dp;
 public class MaximumProductSubarray {
     /**
      * 题意：求最长乘积子串。
-     * 解法：对A[i]正负分情况讨论。
+     * 解法：注意这里记录最大最小值就行，不要强求正负。另外不要对A[i]正负分情况讨论，否则情况会比较复杂。
      **/
-    public int maxProduct_(int[] A) {
-        int res = A[0];
-        int[] pos = new int[A.length];
-        int[] neg = new int[A.length];
-        pos[0] = Math.max(0, A[0]);
-        neg[0] = Math.min(0, A[0]);
-        for (int i = 1; i < A.length; i++) {
-            int p, n;
-            if (A[i] > 0) {
-                p = A[i] * pos[i - 1];
-                n = A[i] * neg[i - 1];
-            } else {
-                p = A[i] * neg[i - 1];
-                n = A[i] * pos[i - 1];
-            }
-            pos[i] = Math.max(p, A[i]);
-            neg[i] = Math.min(n, A[i]);
-            res = Math.max(res, pos[i]);
+    public int maxProduct_(int[] nums) {
+        int length = nums.length;
+        int[] maxF = new int[length];
+        int[] minF = new int[length];
+        System.arraycopy(nums, 0, maxF, 0, length);
+        System.arraycopy(nums, 0, minF, 0, length);
+        for (int i = 1; i < length; ++i) {
+            maxF[i] = Math.max(maxF[i - 1] * nums[i], Math.max(nums[i], minF[i - 1] * nums[i]));
+            minF[i] = Math.min(minF[i - 1] * nums[i], Math.min(nums[i], maxF[i - 1] * nums[i]));
         }
-        return res;
+        int ans = maxF[0];
+        for (int i = 1; i < length; ++i) {
+            ans = Math.max(ans, maxF[i]);
+        }
+        return ans;
     }
 
     /**
