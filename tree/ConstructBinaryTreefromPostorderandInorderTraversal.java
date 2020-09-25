@@ -38,6 +38,40 @@ import java.util.Map;
  */
 
 public class ConstructBinaryTreefromPostorderandInorderTraversal {
+    /**
+     * 题意：从inorder和postorder序列恢复二叉树。
+     * 解法：和给出inorder+preorder一样，维护一个全局rootIdx然后--，注意先生成右子树。
+     */
+    class Solution {
+        public TreeNode buildTree(int[] inorder, int[] postorder) {
+            rootIdx = postorder.length - 1;
+            return dfs(inorder, postorder, 0, inorder.length - 1);
+        }
+
+        int rootIdx;
+
+        private TreeNode dfs(int[] inorder, int[] postorder, int l, int r) {
+            if (l > r) return null;
+            if (rootIdx < 0) return null;
+            int rootVal = postorder[rootIdx--];
+            int mid = -1;
+            for (int i = l; i <= r; i++) {
+                if (inorder[i] == rootVal) {
+                    mid = i;
+                    break;
+                }
+            }
+            TreeNode node = new TreeNode(rootVal);
+            node.right = dfs(inorder, postorder, mid + 1, r);
+            node.left = dfs(inorder, postorder, l, mid - 1);
+            return node;
+        }
+    }
+
+
+    /**
+     * 过往提交
+     */
     //20190210 review
     int postRightIndex;
 
@@ -83,62 +117,4 @@ public class ConstructBinaryTreefromPostorderandInorderTraversal {
         root.right = helper(postorder, postIdx - 1, pivot + 1, inEnd, idxMap);
         return root;
     }
-
-
-    //----- original thread -----
-
-//    public TreeNode buildTree(int[] inorder, int[] postorder) {
-//        if (inorder == null || postorder == null) return null;
-//        return construct(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
-//    }
-//
-//    public TreeNode construct(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
-//
-//        if (inStart > inEnd || postStart > postEnd) return null;
-//
-//        int val = postorder[postEnd];
-//        TreeNode p = new TreeNode(val);
-//        int pivot = 0;
-//        for (int i = 0; i < inorder.length; i++) {
-//            if (inorder[i] == val) {
-//                pivot = i;
-//            }
-//        }
-//
-//        //pivot is not the length !!! needs to - inStart to get the length
-//        p.left = construct(inorder, inStart, pivot - 1, postorder, postStart, postStart + pivot - inStart - 1);
-//        p.right = construct(inorder, pivot + 1, inEnd, postorder, postStart + pivot - inStart, postEnd - 1);
-//        return p;
-//    }
-//
-//
-//    private void preorderTraverse(TreeNode root) {
-//        if (root != null) {
-//            System.out.println(root.val);
-//            preorderTraverse(root.left);
-//            preorderTraverse(root.right);
-//        }
-//    }
-//    @Override
-//    protected void finalize() throws Throwable
-//    {
-//        super.finalize();
-//        System.out.println("finalize.");
-//    }
-//
-//
-//    /**
-//     * preorder:  {7}, {10,4,3,1}, {2,8,11}
-//     * inorder:   {4,10,3,1}, {7}, {11, 8,2}
-//     */
-//    public static void main(String args[]) {
-////        ConstructBinaryTreefromPostorderandInorderTraversal constructBinaryTreefromPreorderandInorderTraversal = new ConstructBinaryTreefromPostorderandInorderTraversal();
-////        int[] preorder = {7, 10, 4, 3, 1, 2, 8, 11};
-////        int[] inorder = {4, 10, 3, 1, 7, 11, 8, 2};
-////        TreeNode result = constructBinaryTreefromPreorderandInorderTraversal.buildTree(preorder, inorder);
-////		String s = "asd";
-////		s.intern();
-////        constructBinaryTreefromPreorderandInorderTraversal.preorderTraverse(result);
-//		System.out.println(Integer.parseInt("00"));
-//    }
 }
