@@ -31,12 +31,14 @@ package tree;
  * 4   4
  * Return false.
  * Created by DrunkPiano on 2017/4/2.
+ * reviewed on 20200926
  */
 
 public class BalancedBinaryTree {
     /**
      * 题意：判断是否是平衡二叉树。
-     * 这题是剑指offer原题。top down写法判断条件是：左右都平衡并且左右相差不超过1.
+     * 这题是剑指offer原题(lcof55)。top down比较容易，我主要是bottom up不太会写。
+     * top down写法判断条件是：左右都平衡并且左右相差不超过1.
      * 时间：O(n^2)
      */
     public boolean isBalanced(TreeNode root) {
@@ -51,7 +53,8 @@ public class BalancedBinaryTree {
     }
 
     /**
-     * bottom up写法，因为求节点高度也会顺便遍历左右子树高度，所以只需要在求root节点的depth过程中顺便判断左右子树高度是否相差<=1即可；而且一旦遇到某子树是不平衡的就返回-1，可以节约一些遍历
+     * bottom up写法，后序遍历。这个词一开始就出现在脑子里，但是实现起来情不自禁地写成了top down..
+     * 因为求节点高度也会顺便遍历左右子树高度，所以只需要在求root节点的depth过程中顺便判断左右子树高度是否相差<=1即可；而且一旦遇到某子树是不平衡的就返回-1，可以节约一些遍历
      * 时间：O(n)
      */
     public boolean isBalanced_(TreeNode root) {
