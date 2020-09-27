@@ -16,13 +16,31 @@ class LowestCommonAncestorOfaBinarySearchTree {
         return (root.val - p.val) * (root.val - q.val) < 1 ? root : lowestCommonAncestor(p.val < root.val ? root.left : root.right, p, q);
     }
 
-    //20190212 review
-    //BST隐含的条件是root比left大比right小
+    /**
+     * 递归写法
+     */
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if ((root.val - p.val) * (root.val - q.val) < 1)//如果 == 0，说明p == root 或 q == root，如果小于0，说明p q在root两侧
             return root;
         if (root.val - p.val > 0)
             return lowestCommonAncestor(root.left, p, q);
         return lowestCommonAncestor(root.right, p, q);
+    }
+
+    /**
+     * 迭代写法
+     */
+    public TreeNode lowestCommonAncestor_(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode ancestor = root;
+        while (true) {
+            if (p.val < ancestor.val && q.val < ancestor.val) {
+                ancestor = ancestor.left;
+            } else if (p.val > ancestor.val && q.val > ancestor.val) {
+                ancestor = ancestor.right;
+            } else {
+                break;
+            }
+        }
+        return ancestor;
     }
 }
