@@ -8,3 +8,12 @@ public class TreeLinkNode {
         val = x;
     }
 }
+
+class Node {
+    int val;
+    Node left, right, next;
+
+    Node(int x) {
+        val = x;
+    }
+}
