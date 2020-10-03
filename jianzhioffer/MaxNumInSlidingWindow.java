@@ -11,6 +11,33 @@ import java.util.ArrayList;
  * {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。
  */
 public class MaxNumInSlidingWindow {
+    /**
+     * better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
+     * 链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
+     * 这题同leetcode 239. Sliding Window Maximum，以下是O(n)解法
+     */
+    public ArrayList<Integer> maxInWindows(int[] num, int size) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (size == 0) return res;
+        int begin;
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < num.length; i++) {
+            begin = i - size + 1;
+            if (q.isEmpty())
+                q.add(i);
+            else//左边界大于最大值所在的index了，就把最大值的index出列
+                if (begin > q.peekFirst())
+                    q.pollFirst();
+            //右边进来的数比队尾的数大，就从后往前把所有比它小的数的index出列，然后自己入列(有可能最后queue只有它一个)，保证左边peek永远是最大值
+            while ((!q.isEmpty()) && num[q.peekLast()] <= num[i])
+                q.pollLast();
+            q.add(i);
+            if (begin >= 0)
+                res.add(num[q.peekFirst()]);
+        }
+        return res;
+    }
+
 
     ///my approach, 每次slide都更新最大值和第二大的值；但是这种方法在滑出的数是最大或者第二大的数的时候仍然需要遍历。
 //    public ArrayList<Integer> maxInWindows(int[] num, int size) {
@@ -54,39 +81,4 @@ public class MaxNumInSlidingWindow {
 //    private int getSecondMax() {
 //        //not implemented
 //    }
-
-    /**
-     * better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
-     * 链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
-     * <p>
-     * 这题同leetcode 239. Sliding Window Maximum，以下是O(n)解法
-     */
-
-
-    public ArrayList<Integer> maxInWindows(int[] num, int size) {
-        ArrayList<Integer> res = new ArrayList<>();
-        if (size == 0) return res;
-        int begin;
-        ArrayDeque<Integer> q = new ArrayDeque<>();
-        for (int i = 0; i < num.length; i++) {
-            begin = i - size + 1;
-            if (q.isEmpty())
-                q.add(i);
-            else//左边界大于最大值所在的index了，就把最大值的index出列
-                if (begin > q.peekFirst())
-                    q.pollFirst();
-            //右边进来的数比队尾的数大，就从后往前把所有比它小的数的index出列，然后自己入列(有可能最后queue只有它一个)，保证左边peek永远是最大值
-            while ((!q.isEmpty()) && num[q.peekLast()] <= num[i])
-                q.pollLast();
-            q.add(i);
-            if (begin >= 0)
-                res.add(num[q.peekFirst()]);
-        }
-        return res;
-    }
-
-    public static void main(String args[]) {
-        int[] arr = {2, 3, 4, 2, 6, 2, 5, 1};
-        new MaxNumInSlidingWindow().maxInWindows(arr, 3);
-    }
 }
