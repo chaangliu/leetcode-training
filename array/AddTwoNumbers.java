@@ -21,7 +21,7 @@ public class AddTwoNumbers {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(-1), cur = dummy;
         int carry = 0;
-        while (l1 != null || l2 != null) {
+        while (l1 != null || l2 != null) { // 因为可能某条链表一直有进位，所以这里用||来处理，不用&&
             int v1 = l1 != null ? l1.val : 0;
             int v2 = l2 != null ? l2.val : 0;
             int sum = v1 + v2 + carry;
@@ -29,10 +29,10 @@ public class AddTwoNumbers {
             carry = sum / 10;
             cur.next = new ListNode(num);
             cur = cur.next;
-            if (l1 != null) l1 = l1.next;//已犯错误1. 忘记迭代l1 l2
+            if (l1 != null) l1 = l1.next; // 已犯错误1. 忘记迭代l1 l2
             if (l2 != null) l2 = l2.next;
         }
-        if (carry == 1) cur.next = new ListNode(1);//已犯错误2. 忘记考虑有没有额外的进位
+        if (carry == 1) cur.next = new ListNode(1); // 已犯错误2. 忘记考虑有没有额外的进位
         return dummy.next;
     }
 

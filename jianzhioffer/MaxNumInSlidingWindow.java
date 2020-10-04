@@ -12,9 +12,11 @@ import java.util.ArrayList;
  */
 public class MaxNumInSlidingWindow {
     /**
-     * better approach，利用双端队列的pollFirst, pollLast功能，操作有一定技巧（想想，这种解法在队尾比较大小的时候复杂度也不低）
+     * 题意：给你一个数字数组，给定窗口大小，让你从左往右滑，依次记录窗口中最大的数字。
+     * 最优解法：单调栈。利用双端队列的pollFirst, pollLast功能，保存index。
+     * 时间：O(n)
      * 链接：https://www.nowcoder.com/questionTerminal/1624bc35a45c42c0bc17d17fa0cba788
-     * 这题同leetcode 239. Sliding Window Maximum，以下是O(n)解法
+     * 这题同leetcode 239. Sliding Window Maximum
      */
     public ArrayList<Integer> maxInWindows(int[] num, int size) {
         ArrayList<Integer> res = new ArrayList<>();
