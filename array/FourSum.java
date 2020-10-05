@@ -34,45 +34,56 @@ public class FourSum {
      * 解法：没有捷径，在3sum外面加一层； 固定两个pivot，然后两个双指针移动。
      * 时间: O(n^3)
      */
-    public static List<List<Integer>> fourSum(int[] nums, int target) {
-        List<List<Integer>> list_result = new ArrayList<>();
-        if (nums == null || nums.length < 4) return list_result;
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> quadruplets = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length < 4) {
+            return quadruplets;
+        }
         Arrays.sort(nums);
-        for (int i = 0; i < nums.length - 3; i++) {
+        int length = nums.length;
+        for (int i = 0; i < length - 3; i++) {
             if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
             }
-            for (int j = i + 1; j < nums.length - 2; j++) {
+            if (nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3] > target) {
+                break;
+            }
+            if (nums[i] + nums[length - 3] + nums[length - 2] + nums[length - 1] < target) {
+                continue;
+            }
+            for (int j = i + 1; j < length - 2; j++) {
                 if (j > i + 1 && nums[j] == nums[j - 1]) {
                     continue;
                 }
-                int low = j + 1;
-                int high = nums.length - 1;
-//                int sum = nums[i] + nums[j] + nums[low] + nums[high];
-                while (low < high) {
-                    List<Integer> list_cell = new ArrayList<>();
-                    if (nums[i] + nums[j] + nums[low] + nums[high] == target) {
-                        list_cell.add(nums[i]);
-                        list_cell.add(nums[j]);
-                        list_cell.add(nums[low]);
-                        list_cell.add(nums[high]);
-                        list_result.add(list_cell);
-                        low++;
-                        high--;
-                        while (low < high && nums[low] == nums[low - 1]) low++;
-                        while (low < high && nums[high] == nums[high + 1]) high--;
-                        while (low + 1 < high && nums[low] == nums[low + 1]) low++;
-                    } else if (nums[i] + nums[j] + nums[low] + nums[high] > target) {
-                        high--;
+                if (nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) {
+                    break;
+                }
+                if (nums[i] + nums[j] + nums[length - 2] + nums[length - 1] < target) {
+                    continue;
+                }
+                int left = j + 1, right = length - 1;
+                while (left < right) {
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        quadruplets.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        while (left < right && nums[left] == nums[left + 1]) {
+                            left++;
+                        }
+                        left++;
+                        while (left < right && nums[right] == nums[right - 1]) {
+                            right--;
+                        }
+                        right--;
+                    } else if (sum < target) {
+                        left++;
                     } else {
-                        low++;
+                        right--;
                     }
                 }
             }
         }
-        return list_result;
+        return quadruplets;
     }
-
 
     /**
      * kSum 的通用解法
