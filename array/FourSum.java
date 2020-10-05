@@ -29,6 +29,11 @@ import java.util.List;
  */
 
 public class FourSum {
+    /**
+     * 题意：求4sum的解集。
+     * 解法：没有捷径，在3sum外面加一层； 固定两个pivot，然后两个双指针移动。
+     * 时间: O(n^3)
+     */
     public static List<List<Integer>> fourSum(int[] nums, int target) {
         List<List<Integer>> list_result = new ArrayList<>();
         if (nums == null || nums.length < 4) return list_result;
@@ -52,22 +57,10 @@ public class FourSum {
                         list_cell.add(nums[low]);
                         list_cell.add(nums[high]);
                         list_result.add(list_cell);
-//                        while (low < high) {
-//                            if (nums[low + 1] == nums[low]) {
-//                                low++;
-//                            }
-//                            if (nums[high - 1] == nums[high]) {
-//                                high--;
-//                            }
-//                        }
-                        //只变一个肯定不行的，要两个同时移动
-
                         low++;
                         high--;
                         while (low < high && nums[low] == nums[low - 1]) low++;
                         while (low < high && nums[high] == nums[high + 1]) high--;
-
-
                         while (low + 1 < high && nums[low] == nums[low + 1]) low++;
                     } else if (nums[i] + nums[j] + nums[low] + nums[high] > target) {
                         high--;
