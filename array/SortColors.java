@@ -16,21 +16,25 @@ package array;
 
 public class SortColors {
     /**
-     * 题意：一个字符串里有乱序排列的0，1，2；把0，1，2 in place排序。
-     * 解法：这种要求in place的题一般就是swap。这题的技巧是，
+     * 题意：荷兰国旗问题；一个字符串里有乱序排列的0，1，2；把0，1，2 in place排序。
+     * 最好的方法：双指针; low,high指向0，2；A[i] == 2的时候不需要i++
+     * 为什么A[i]等于2的时候不需要i++，因为把2换到后面之后 ，A[i]并不一定就是正确的数字；而A[i]是0或1的时候都可以move on了。
+     * [2,0,2,1,1,0]
      */
-    public void sortColors(int[] A) {
-        int left = 0, right = A.length - 1, n = A.length;
-        for (int i = 0; i <= right; i++) {
-
-            // 如果先把0换到前面去，过不了case：[1,2,0] -> [1,0,2], 挺难想的，大致就是因为是从左往右遍历的
-            while (A[i] == 2 && i < right) {
-                swap(right, i, A);
-                right--;
-            }
-            while (A[i] == 0 && i > left) {
-                swap(left, i, A);
-                left++;
+    public void sortColors_(int[] A) {
+        if (A == null || A.length < 2) return;
+        int low = 0;
+        int high = A.length - 1;
+        for (int i = low; i <= high; ) {
+            if (A[i] == 0) {
+                // swap A[i] and A[low] and i,low both ++
+                swap(i++, low++, A);
+            } else if (A[i] == 2) {
+                // swap A[i] and A[high] and high--;
+                // 为什么A[i]等于2的时候不需要i++，因为把2换到后面之后 ，A[i]并不一定就是正确的数字；而A[i]是0或1的时候都可以move on了。
+                swap(i, high--, A);
+            } else {
+                i++;
             }
         }
     }
@@ -40,49 +44,4 @@ public class SortColors {
         A[a] = A[b];
         A[b] = tmp;
     }
-
-    /**
-     * 第二种方法，i是iterator，low,high指向0，2
-     */
-    public void sortColors_(int[] A) {
-        if (A == null || A.length < 2) return;
-        int low = 0;
-        int high = A.length - 1;
-        for (int i = low; i <= high; ) {
-            if (A[i] == 0) {
-                // swap A[i] and A[low] and i,low both ++
-                int temp = A[i];
-                A[i] = A[low];
-                A[low] = temp;
-                i++;
-                low++;
-            } else if (A[i] == 2) {
-                //swap A[i] and A[high] and high--;
-                int temp = A[i];
-                A[i] = A[high];
-                A[high] = temp;
-                high--;
-            } else {
-                i++;
-            }
-        }
-    }
-
-
-    public static void main(String args[]) {
-        int a[] = {2};
-        SortColors sortColors = new SortColors();
-        sortColors.sortColors(a);
-    }
-//    private void swap(Object a , Object b){
-//        Object temp;
-//        temp = a ;
-//        a = b ;
-//        b = temp;
-//    }
 }
-
-//201021
-//101022
-//011022
-
