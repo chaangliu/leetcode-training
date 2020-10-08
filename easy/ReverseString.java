@@ -7,10 +7,20 @@ import java.util.Stack;
  */
 
 public class ReverseString {
-    //	三种方法
-//	1. two pointers, i < j
-//	2. j >= 0 ; j --
-//	3. Stack
+    /**
+     * 题意：翻转字符串。
+     * 解法：two pointers, left < right
+     */
+    public void reverseString(char[] s) {
+        int n = s.length;
+        for (int left = 0, right = n - 1; left < right; ++left, --right) {
+            char tmp = s[left];
+            s[left] = s[right];
+            s[right] = tmp;
+        }
+    }
+
+    // 如果不要求inplace可以借助stack
     public String reverse(String s) {
         Stack<Character> stack = new Stack<>();
         for (int i = 0; i < s.length(); i++) {
