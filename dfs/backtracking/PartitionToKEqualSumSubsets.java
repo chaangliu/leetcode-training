@@ -1,5 +1,8 @@
 package dfs.backtracking;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 /**
  * Given an array of integers nums and a positive integer k, find whether it's possible to divide this array into k non-empty subsets whose sums are all equal.
  * Example 1:
@@ -44,23 +47,38 @@ public class PartitionToKEqualSumSubsets {
         return false;
     }
 
-    //    public boolean canPartitionKSubsets(int[] nums, int k) {
-//        if (nums == null || nums.length < k) return false;
-//        int sum = 0;
-//        for (int n : nums) {
-//            sum += n;
-//        }
-//        if (sum % k != 0) return false;
-//        return helper(nums, sum / k, new boolean[nums.length], 0, k);
-//    }
-//
-//    private boolean helper(int[] nums, int target, boolean[] used, int index, int k) {
-//        if (target == 0) return true;
-//        if (k == 0) return true;
-//        if (used[index]) return false;
-//        used[index] = true;
-//        helper(nums, target - nums[k], used, index + 1, k - 1);
-//        used[index] = false;
-//        return false;
-//    }
+    /**
+     * 20201011review, 今天的每日一题；solutions都是bottom up;，我用top down, 思路很简单，找subsets sum，写了十几分钟，两个WA。
+     */
+    public boolean canPartition(int[] A) {
+        int sum = 0, n = A.length;
+        if (n == 0) return false;
+        for (int i : A) sum += i;
+        if (sum % 2 == 1) return false;
+        int half = sum / 2;
+        Arrays.sort(A);
+        if (A[n - 1] > half) return false;
+        return dfs(half, A, new HashMap<>(), n - 1);
+    }
+
+    private boolean dfs(int target, int[] A, HashMap<Integer, Boolean> memo, int end) {
+        // System.out.println("target is " + target + ", end is " + end);
+        if (memo.containsKey(target)) return memo.get(target);
+        if (target == 0) {
+            return true;
+        } else {
+            for (int i = end; i >= 0; i--) {
+                if (target - A[i] < 0) {
+                    // memo.put(target, false); // 已犯错误，这儿写成return false了；其实应该continue，因为前面可能有更小的数。
+                    continue;
+                }
+                if (dfs(target - A[i], A, memo, i - 1)) { // 已犯错误：这儿写成end - 1了
+                    memo.put(target, true);
+                    return true;
+                }
+            }
+        }
+        memo.put(target, false);
+        return false;
+    }
 }
