@@ -75,10 +75,8 @@ public class SlidingWindowMaximum {
             while (!q.isEmpty() && A[q.peekLast()] < A[i]) {
                 // 从队尾（也就是栈顶（右边），也就是最近加入的）开始，把小于即将加入的a[i]的数出队，因为这些数都没用利用价值了，要用也是用a[i]；
                 // 这里因为要保证队头(peek)永远是window中的最大数，所以从右边开始比较；
-                // 也可以从左边开始比较，入队就offerFirst就行了，原则就是入栈之前先把栈顶比它小的拿掉，也就是从哪边取往哪边加。
                 q.pollLast();
             }
-            // q contains index... r contains content
             q.offer(i);
             if (i >= k - 1) {
                 //队头(peek)永远是window中的最大数
@@ -89,7 +87,7 @@ public class SlidingWindowMaximum {
     }
 
     /**
-     * offerFirst写法
+     * offerFirst写法，无法通过[7,2,4], 2
      */
     public int[] maxSlidingWindow_OFFERFIRST(int[] A, int k) {
         if (A == null || k <= 0) return new int[0];
