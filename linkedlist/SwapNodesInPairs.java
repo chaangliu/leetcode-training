@@ -11,52 +11,34 @@ package linkedlist;
  */
 
 public class SwapNodesInPairs {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
-
+    /**
+     * 题意：两两反转链表。
+     * 解法：迭代写了挺久没写出来，递归写出来了，技巧是把next1,2都保存下来，不然很容易覆盖。
+     */
     public ListNode swapPairs(ListNode head) {
-        if (head == null) return null;
-        //因为要return its head，所以把head保存下来
-        ListNode fakeHead = new ListNode(-1);
-        ListNode pre = fakeHead;
-        fakeHead.next = head;
-        ListNode curS = head;
-        while (curS != null && curS.next != null) {
-            ListNode nextS = curS.next.next;
-            pre.next = curS.next;
-            curS.next.next = curS;
-            curS.next = nextS;
-
-            pre = curS;
-            //这里亦可以写成：curS = nextS; 因为虽然nextS指向的是curS的引用，但是curS对象迄今为止并没有被改变过
-            curS = curS.next;
-        }
-        return fakeHead.next;
+        if (head == null || head.next == null) return head;
+        ListNode next2 = head.next.next;
+        ListNode next1 = head.next;
+        head.next.next = head;
+        head.next = swapPairs(next2);
+        return next1;
     }
-
 
     /**
-     * approach 2. recursion
-     * 20190304
+     * 迭代, 也是同时保存后两个node
      */
-    //    First, we swap the first two nodes in the list, i.e. head and head.next;
-    //    Then, we call the function self as swap(head.next.next) to swap the rest of the list following the first two nodes.
-    //    Finally, we attach the returned head of the sub-list in step (2) with the two nodes swapped in step (1) to form a new linked list.
-    //    1234 2143
-    public linkedlist.ListNode swapPairs(linkedlist.ListNode head) {
-        if (head != null && head.next != null) {
-            linkedlist.ListNode n = head.next;
-            linkedlist.ListNode tmp = head.next.next;
-            head.next.next = head;
-            head.next = swapPairs(tmp);
-            return n;
+    public ListNode swapPairs__(ListNode head) {
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode temp = dummyHead;
+        while (temp.next != null && temp.next.next != null) {
+            ListNode node1 = temp.next;
+            ListNode node2 = temp.next.next;
+            temp.next = node2;
+            node1.next = node2.next;
+            node2.next = node1;
+            temp = node1;
         }
-        return head;
+        return dummyHead.next;
     }
 }
