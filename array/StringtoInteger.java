@@ -37,8 +37,8 @@ package array;
 
 public class StringtoInteger {
     /**
-     * 题意：把string转换成int。
-     * 这题目测有很多corner case，比如空格，empty什么的；不过最重要的还是判断overflow的技巧。
+     * 题意：把string转换成int。如果超过 32 位有符号整数范围，返回INT_MAX或者INT_MIN
+     * 这题直接从左到右扫描；有很多corner case，比如空格，empty什么的；不过最重要的还是判断overflow的技巧。
      */
     public int myAtoi(String str) {
         int index = 0, sign = 1, total = 0;
@@ -60,7 +60,7 @@ public class StringtoInteger {
             int digit = str.charAt(index) - '0';
             if (digit < 0 || digit > 9) break;
 
-            //check if total will be overflow after 10 times and add digit
+            //check if total will be overflow after 10 times and add digit，这里检查溢出的手段很巧妙，用除法
             if (Integer.MAX_VALUE / 10 < total || Integer.MAX_VALUE / 10 == total && Integer.MAX_VALUE % 10 < digit)//total*10超了 或者乘以10没超但是加上digit超了
                 return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
 

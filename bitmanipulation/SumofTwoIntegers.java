@@ -23,10 +23,9 @@ public class SumofTwoIntegers {
      */
     public int getSum(int num1, int num2) {
         while (num2 != 0) {//进位==0的时候停止，表示无法再改变num1了。 可以是负数。
-            System.out.println(num2);
-            //不进位计算各位的和，对于二进制就是异或
+            // 不进位计算各位的和，对于二进制就是异或
             int sum = num1 ^ num2;
-            //各位相与，然后左移一位，表示哪些位需要进位，下一轮处理
+            // 各位相与，然后左移一位（只有两个bit都是1的时候，它们左边的一位才需要+1），表示哪些位需要进位，下一轮处理
             int carry = (num1 & num2) << 1;
             num1 = sum;
             num2 = carry;
