@@ -57,7 +57,9 @@ public class PopulatingNextRightPointersinEachNode {
     }
 
     /**
-     * approach 2. iteration，比较tricky，主要是cur.right.next = cur.next.left; 如下
+     * approach 2. iteration，比较tricky，主要两步；
+     * 第一步，cur.left.next = cur.right; // 把每个node的左右两个node连接起来
+     * 第二步，cur.right.next = cur.next.left; // 把cur的右孩子指向next的左孩子
      */
     public void connect(TreeLinkNode root) {
         if (root == null) return;
@@ -66,9 +68,9 @@ public class PopulatingNextRightPointersinEachNode {
         while (pre.left != null) {
             cur = pre;
             while (cur != null) {
-                //pre.left!=null保证了cur.left不为Null
-                cur.left.next = cur.right;//把每个node的左右两个node连接起来
-                //把下一层的最左边的node跟右边连接起来了
+                // pre.left!=null保证了cur.left不为Null
+                cur.left.next = cur.right; // 把每个node的左右两个node连接起来
+                // 把下一层的最左边的node跟右边连接起来了
                 if (cur.right != null && cur.next != null) {
                     cur.right.next = cur.next.left;
                 }

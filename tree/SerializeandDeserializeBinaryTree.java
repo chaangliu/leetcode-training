@@ -11,12 +11,12 @@ import java.util.Queue;
  * Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
  * Example:
  * You may serialize the following tree:
- *
- *     1
- *    / \
- *   2   3
- *      / \
- *     4   5
+ * <p>
+ * 1
+ * / \
+ * 2   3
+ * / \
+ * 4   5
  * as "[1,2,3,null,null,4,5]"
  * Clarification: The above format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
  * Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
@@ -26,8 +26,41 @@ import java.util.Queue;
 public class SerializeandDeserializeBinaryTree {
     /**
      * 题意：实现树的序列化函数的反序列化函数。
-     * 解法：可以用BFS或者DFS，关键在于标记空节点。
+     * 解法：可以用BFS或者DFS，关键在于标记逗号和空节点。DFS比较简洁，preorder就行。
      */
+    public class Codec {
+        final String SEPARATOR = ",", NULL = "N";
+
+        // Encodes a tree to a single string.
+        public String serialize(TreeNode root) {
+            if (root == null) return NULL;
+            String res = root.val + SEPARATOR; // preorder
+            res += serialize(root.left) + "," + serialize(root.right);
+            return res;
+        }
+
+        // Decodes your encoded data to tree.
+        public TreeNode deserialize(String data) {
+            String[] A = data.split(",");
+            // System.out.println(data);
+            return buildTree(A);
+        }
+
+        int index = 0;
+
+        private TreeNode buildTree(String[] A) {
+            if (index >= A.length) return null;
+            if (A[index].equals(NULL)) {
+                index++; // 已犯错误：这儿没有index++，会导致遇到第一个NULL结点的时候，index不会再继续增加。也可以像下面一样，用Queue.poll()避免index。
+                return null;
+            }
+            TreeNode node = new TreeNode(Integer.parseInt(A[index++]));
+            node.left = buildTree(A);
+            node.right = buildTree(A);
+            return node;
+        }
+    }
+
     private static final String spliter = ",";
     private static final String NN = "X";
 
@@ -107,100 +140,4 @@ public class SerializeandDeserializeBinaryTree {
         }
         return root;
     }
-
-    public static void main(String args[]) {
-        TreeNode one = new TreeNode(1);
-        TreeNode two = new TreeNode(2);
-        TreeNode three = new TreeNode(3);
-        TreeNode four = new TreeNode(4);
-        TreeNode five = new TreeNode(5);
-        one.left = two;
-        one.right = three;
-        three.left = four;
-        three.right = five;
-//		System.out.println(new SerializeandDeserializeBinaryTree().serialize(one));
-        String s = new SerializeandDeserializeBinaryTree().serialize(one);
-        new SerializeandDeserializeBinaryTree().deserialize(s);
-//		new SerializeandDeserializeBinaryTree().deserialize("1,2,X,X,3,4,X,X,5,X,X,");
-    }
 }
-//BFS
-//	public String serialize(TreeNode root) {
-//		if (root == null) return "";
-//		Queue<TreeNode> q = new LinkedList<>();
-//		StringBuilder res = new StringBuilder();
-//		q.add(root);
-//		while (!q.isEmpty()) {
-//			TreeNode node = q.poll();
-//			if (node == null) {
-//				res.append("n ");
-//				continue;
-//			}
-//			res.append(node.val + " ");
-//			q.add(node.left);
-//			q.add(node.right);
-//		}
-//		return res.toString();
-//	}
-//
-//	public TreeNode deserialize(String data) {
-//		if (data == "") return null;
-//		Queue<TreeNode> q = new LinkedList<>();
-//		String[] values = data.split(" ");
-//		TreeNode root = new TreeNode(Integer.parseInt(values[0]));
-//		q.add(root);
-//		for (int i = 1; i < values.length; i++) {
-//			TreeNode parent = q.poll();
-//			if (!values[i].equals("n")) {
-//				TreeNode left = new TreeNode(Integer.parseInt(values[i]));
-//				parent.left = left;
-//				q.add(left);
-//			}
-//			if (!values[++i].equals("n")) {
-//				TreeNode right = new TreeNode(Integer.parseInt(values[i]));
-//				parent.right = right;
-//				q.add(right);
-//			}
-//		}
-//		return root;
-//	}
-
-
-//449题，bST
-
-// Encodes a tree to a single string.
-//	public String serialize(TreeNode root) {
-//		//base case
-//		if(root==null)
-//			return "$,";
-//		//ensure
-//		return root.val+","+serialize(root.left)+serialize(root.right);
-//	}
-//	// Decodes your encoded data to tree.
-//	public TreeNode deserialize(String data) {
-//		//require
-//		Queue<String> q=new LinkedList<String>();
-//		//convert to string[] by " "
-//		String[] strs=data.split(",");
-//		for(String str:strs){
-//			q.add(str);
-//		}
-//		return dfs(q);
-//	}
-//	private TreeNode dfs(Queue<String> q){
-//		String str=q.remove();
-//		//base case
-//		if(str.equals("$"))
-//			return null;
-//
-//		TreeNode root=new TreeNode(Integer.valueOf(str));
-//		root.left=dfs(q);
-//		root.right=dfs(q);
-//		//ensure
-//		return root;
-//	}
-//}
-
-// Your Codec object will be instantiated and called as such:
-// Codec codec = new Codec();
-// codec.deserialize(codec.serialize(root));
