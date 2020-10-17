@@ -18,15 +18,15 @@ public class NQueensII {
         return num;
     }
 
-    private void dfsHelper(int n, int[] col, int row) {
+    private void dfsHelper(int n, int[] coord, int row) {
         if (row == n) {
             num++;
             return;
         }
-        for (int i = 0; i < n; i++) {
-            col[row] = i;
-            if (checkValid(row, col)) {
-                dfsHelper(n, col, row + 1);
+        for (int col = 0; col < n; col++) {
+            coord[row] = col; // 代表在第row行的第col列放置皇后
+            if (checkValid(row, coord)) {
+                dfsHelper(n, coord, row + 1);
             }
         }
     }
