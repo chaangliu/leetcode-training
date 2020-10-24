@@ -43,7 +43,26 @@ import java.util.Arrays;
 public class VideoStitching {
     /**
      * 题意：给你一连串视频片段，求最小需要几个片段能剪接成一个[0,T]的视频。
-     * 做法1：贪心，类似jump game ii,按照开始时间从小到大排序，然后确定第res块clip能覆盖到的最远距离curFarest。
+     * 做法1，DP
+     * dp[i]代表覆盖区间[0,i)需要的最少clips。
+     * dp[i] = min{dp[aj]} + 1
+     * Time O(NT), Space O(T)
+     */
+    public int videoStitching__DP(int[][] clips, int T) {
+        int[] dp = new int[T + 1];
+        Arrays.fill(dp, T + 1);
+        dp[0] = 0;
+        for (int i = 1; i <= T && dp[i - 1] < T; i++) {
+            for (int[] c : clips) {
+                if (c[0] <= i && i <= c[1])
+                    dp[i] = Math.min(dp[i], dp[c[0]] + 1);
+            }
+        }
+        return dp[T] == T + 1 ? -1 : dp[T];
+    }
+
+    /**
+     * 做法2：贪心，类似jump game ii,按照开始时间从小到大排序，然后确定第res块clip能覆盖到的最远距离curFarest。
      * 比如，排序后第一个区间是[0,0]，那么就在这个范围内(对应while循环)找curFarest。下一轮会在[0,curFarest]范围内再找一个能跳最远的。
      * Time O(NlogN), Space O(1)
      **/
@@ -60,20 +79,5 @@ public class VideoStitching {
         return res;
     }
 
-    /**
-     * 做法2，DP
-     * dp[i]代表截止到i为止需要的最少clips。Time O(NT), Space O(T)
-     */
-    public int videoStitching__DP(int[][] clips, int T) {
-        int[] dp = new int[T + 1];
-        Arrays.fill(dp, T + 1);
-        dp[0] = 0;
-        for (int i = 1; i <= T && dp[i - 1] < T; i++) {
-            for (int[] c : clips) {
-                if (c[0] <= i && i <= c[1])
-                    dp[i] = Math.min(dp[i], dp[c[0]] + 1);
-            }
-        }
-        return dp[T] == T + 1 ? -1 : dp[T];
-    }
+
 }
