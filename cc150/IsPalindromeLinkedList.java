@@ -35,4 +35,35 @@ public class IsPalindromeLinkedList {
         }
         return true;
     }
+
+    /**
+     * 我的写法，先翻转后半部分，然后再对比。缺点是没有利用翻转链表的过程中实现快慢指针从而实现one pass
+     */
+    public boolean isPalindrome_(ListNode head) {
+        ListNode dummy = head, fast = head, slow = head;
+        int len = 0;
+        while (head != null) {
+            head = head.next;
+            len++;
+        }
+        int half = (len + 1) / 2;
+        while (half-- > 0) {
+            fast = fast.next;
+        }
+        fast = reverse(fast);
+        while (slow != null && fast != null) {
+            if (slow.val != fast.val) return false;
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return true;
+    }
+
+    private ListNode reverse(ListNode node) {
+        if (node == null || node.next == null) return node;
+        ListNode r = reverse(node.next);
+        node.next.next = node;
+        node.next = null;
+        return r;
+    }
 }
