@@ -44,7 +44,9 @@ package twopointers;
  */
 public class LongestMountainInArray {
     /**
-     * 类似926题，可以说是2 pointers或dp。
+     * 题意：给你一个数字组成的数组，如果满足先严格上坡然后严格下坡，就说找到了一个mountain，问最长的mountain是多长(最小是3)。
+     * 解法：从左到右、从右到左扫描。
+     * 类似926题，可以说是twp pointers或dp。
      * 分别从左往右和从右往左记录A[i]为止(必须包含A[i]在内)最长的上坡路
      * 那么最长的山峰就是l[i - 1] + r[i]中最大的那个
      **/
@@ -62,8 +64,8 @@ public class LongestMountainInArray {
         }
         int res = 0;
         for (int i = 1; i <= len - 2; i++) {
-            //这边corner case要注意，比如[1,2,3],[1,0,1]这种。
-            res = Math.max(res, A[i] > A[i - 1] && A[i] > A[i + 1] ? l[i] + r[i + 1] : 0);
+            if (A[i] > A[i - 1] && A[i] > A[i + 1]) // 这边corner case要注意，比如[1,2,3],[1,0,1]这种。
+                res = Math.max(res, l[i - 1] + r[i]); // l[i] + r[i - 1]也行
         }
         return res;
     }

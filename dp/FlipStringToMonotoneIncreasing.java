@@ -27,13 +27,12 @@ package dp;
  */
 public class FlipStringToMonotoneIncreasing {
     /**
-     * 这题是把数组变成单调增。
+     * 题意：字符串中只有0或1，请把它变成单调增，也就是0001111这种，或者00000也行。
+     * 类似题目：LongestMountainInArray
      * 解法是前缀和(prefix sum)，也可以说成是dp吧。
      * 从左往右，把string全变成0，需要的步数存放在l里
      * 从右往左，把string全变成1，需要的步数存放在r里
      * 答案就是l[i - 1] + r[i] 的最小值。
-     * <p>
-     * 这题我还是习惯把下标处理成一一对应的，虽然写起来长一点，但是容易理解。
      * 另外还可以优化成O(1)空间，我没研究了。
      **/
     public int minFlipsMonoIncr(String S) {
