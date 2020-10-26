@@ -31,7 +31,7 @@ import java.util.TreeMap;
 public class TopKFrequentElements {
     /**
      * 题意：给你一个数组，找出出现频率最高的k个数字。要求时间复杂度低于O(n log n)。
-     * 解法1：很简单的BucketSort，每个桶的长度是1，很巧妙，同样是先取得一个FrequencyMap，
+     * 解法1：很简单的BucketSort（像计数排序），用一个cnt数组统计freq，然后从后往前读取。
      * 取得Map之后根据frequency来散列到一个一些桶里（把出现次数同样多的放到一个桶里），在从桶从后往前加入到结果集。
      * Idea is simple. Build a array of list to be buckets with length 1 to sort.
      * Time: O(n)
@@ -85,7 +85,7 @@ public class TopKFrequentElements {
 
     /**
      * 解法2. heap。
-     * 低于O(n log n)，可以是O(n)；也可以是O(n log k), 也就是维持一个size为k的heap。
+     * 低于O(n log n)，可以是O(n)；也可以是O(n log k), 也就是维持一个size为k的heap。注意是小顶堆，因为poll()会把堆顶poll()出去。
      * leetcode的official solution，最后还有用一次heap的遍历，跟KSmallestNumbers那题一个操作
      * Time complexity : O(Nlog(k))
      */
