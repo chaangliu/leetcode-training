@@ -15,13 +15,28 @@ package dp;
 public class DistinctSubsequences {
 
     /**
-     * 20190503review
-     * 我感觉这题可以看做求LCS的个数，但是真正做的时候发现套用LCS的转移方程是行不通的，因为无法统计LCS正好匹配到之前有多少种重复情况满足。
+     * 题意：给你s和t两个string，问t在s中出现的个数。
+     * 解法：dp[i][j]表示t的前i个字符串在s的前j个字符串中出现的个数。
      */
     public int numDistinct(String s, String t) {
+        int[][] dp = new int[t.length() + 1][s.length() + 1];
+        for (int j = 0; j < s.length() + 1; j++) dp[0][j] = 1;
+        for (int i = 1; i < t.length() + 1; i++) {
+            for (int j = 1; j < s.length() + 1; j++) {
+                if (t.charAt(i - 1) == s.charAt(j - 1))
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i][j - 1]; // dp[i - 1][j - 1]: 先不考虑第i位，t[i-1]在s[j-1]中出现次数
+                else
+                    // dp[i][j - 1]: 已知s[j] != t[i]，s[j]中包含t[i]的个数等于s[j - 1]中包含t[i]的个数
+                    dp[i][j] = dp[i][j - 1];
+            }
+        }
+        return dp[t.length()][s.length()];
+    }
+
+    // 如果把i,j交换，dp[i][j]表示t的前j个字符串在s的前i个字符串中出现的个数的写法
+    public int numDistinct__(String s, String t) {
         if (s.length() == 0 || t.length() == 0) return 0;
         int dp[][] = new int[s.length() + 1][t.length() + 1];
-        //如果t.length() == 0，那么对于s的前i位结果都是1
         for (int i = 0; i < s.length() + 1; i++) {
             dp[i][0] = 1;
         }
@@ -38,10 +53,5 @@ public class DistinctSubsequences {
                 }
             }
         return dp[s.length()][t.length()];
-    }
-
-    public static void main(String args[]) {
-        DistinctSubsequences distinctSubsequences = new DistinctSubsequences();
-        System.out.println(distinctSubsequences.numDistinct("rabbbit", "rabbit"));
     }
 }
