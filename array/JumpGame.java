@@ -14,7 +14,8 @@ package array;
 
 public class JumpGame {
     /**
-     * 20190412 复习一下solutions里4种循序渐进的解法
+     * 题意：给你一串数字，A[i]代表在i位置能向右走几格，问从0位置能否到最后一个位置。
+     * solutions里有4种循序渐进的解法
      * Approach 1: Backtracking
      */
     public boolean canJumpFromPosition(int position, int[] nums) {
@@ -100,7 +101,8 @@ public class JumpGame {
 
     /**
      * Approach 4: Greedy
-     * 从后往前，只要当前index能cover到最小的一个能调到结尾的index(lastPos)，lastPos就换成当前index
+     * 从后往前，
+     * 只要当前index能cover到最小的一个能调到结尾的index(lastPos)，lastPos就换成当前index
      * 也就是，每次从当前位置尝试跳最远，如果能跳到终点线，就把终点线🏁提前。不断更新最小的valid的那个index（终点线）。
      * 其实这个greedy解法，跟前面几种并不很像，只是跟DP有那么一点像，不是很intuitive。
      * 时间：O(n)
@@ -115,12 +117,25 @@ public class JumpGame {
         return lastPos == 0;
     }
 
-
+    /**
+     * 从前往后
+     */
     public boolean canJump__2017(int[] nums) {
         int maxCover = 0;
         for (int i = 0; i <= nums.length - 1 && i <= maxCover; i++) {
             maxCover = Math.max(maxCover, nums[i] + i);
             if (maxCover >= nums.length - 1) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 今天写的时候，脑子里有个关键词：farthest，想到维护这个最远距离，答案也就呼之欲出了
+     */
+    public boolean canJump__2020(int[] A) {
+        for (int farthest = A[0], i = 0; i <= farthest; i++) {
+            farthest = Math.max(A[i] + i, farthest);
+            if (farthest >= A.length - 1) return true; // 写了个bug, A.length - 1，不是A.length
         }
         return false;
     }
