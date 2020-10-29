@@ -1,7 +1,7 @@
 package array;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import tree.TreeNode;
 
@@ -10,51 +10,76 @@ import tree.TreeNode;
  */
 
 public class SumRootToLeafNumbers {
+    /**
+     * 题意：计算从root到leaf组成的所有数字的和。
+     * 解法：DFS或者BFS。
+     */
     public int sumNumbers(TreeNode root) {
-        if (root == null) return 0;
-        List<Integer> res = new ArrayList<>();
-//        dfs(root, 0, res);
-//        int sum = 0;
-//        for (Integer i : res) {
-//            sum += i;
-//        }
-//        return sum;
-
-//        return dfs(root , 0 , 0);
-        return dfs2(root , 0);
+        dfs(root, 0);
+        return res;
     }
 
-//    private int dfs(TreeNode root, int curNum,  int sum) {
-//        if (root == null) {
-//            return 0 ;
-//        }
-//        if (root.left == null && root.right == null){
-//            curNum = curNum * 10 + root.val;
-//            sum += curNum;
-//            return sum;
-//        }
-//        curNum = curNum * 10 + root.val;
-//        dfs(root.left, curNum , sum);
-//        dfs(root.right, curNum , sum );
-//
-//        return sum ;
-//    }
+    int res = 0;
 
-    private int dfs2(TreeNode root , int sum ){
-        if (root == null )return 0 ;
-        if (root.left == null && root.right == null) return sum * 10 + root.val ;
-        sum = sum * 10 + root.val ;
-        return dfs2(root.left , sum) + dfs2(root.right , sum);
+    private void dfs(TreeNode node, int cur) {
+        if (node == null) return;
+        int v = cur * 10 + node.val;
+        if (node.left == null && node.right == null) {
+            res += v;
+            return;
+        }
+        dfs(node.left, v);
+        dfs(node.right, v);
     }
 
-    public static void main(String args[]){
-        TreeNode root = new TreeNode(1);
-        TreeNode left = new TreeNode(2);
-        TreeNode right = new TreeNode(4);
-        root.left = left ;
-        root.right= right ;
+    /**
+     * 不用全局变量的dfs, 思想是遇到叶子结点就返回以便累加；从这个角度看，dfs_返回的值意思就是从当前结点开始找所有leaf能拿到的sum。
+     */
+    public int sumNumbers_d(TreeNode root) {
+        return dfs_(root, 0);
+    }
 
-        System.out.println(new SumRootToLeafNumbers().sumNumbers(root));
+    public int dfs_(TreeNode root, int prevSum) {
+        if (root == null) {
+            return 0;
+        }
+        int sum = prevSum * 10 + root.val;
+        if (root.left == null && root.right == null) {
+            return sum;
+        } else {
+            return dfs_(root.left, sum) + dfs_(root.right, sum);
+        }
+    }
 
+    /**
+     * BFS需要两个queue，一个装Node，一个装迄今为止的值
+     */
+    public int sumNumbers_bfs(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int sum = 0;
+        Queue<TreeNode> nodeQueue = new LinkedList<>();
+        Queue<Integer> numQueue = new LinkedList<>();
+        nodeQueue.offer(root);
+        numQueue.offer(root.val);
+        while (!nodeQueue.isEmpty()) {
+            TreeNode node = nodeQueue.poll();
+            int num = numQueue.poll();
+            TreeNode left = node.left, right = node.right;
+            if (left == null && right == null) {
+                sum += num;
+            } else {
+                if (left != null) {
+                    nodeQueue.offer(left);
+                    numQueue.offer(num * 10 + left.val);
+                }
+                if (right != null) {
+                    nodeQueue.offer(right);
+                    numQueue.offer(num * 10 + right.val);
+                }
+            }
+        }
+        return sum;
     }
 }
