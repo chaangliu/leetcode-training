@@ -33,7 +33,7 @@ public class BinaryTreePostorderTraversal {
      * leetcode上有三种方法的合集，postorder就是preorder反过来操作，并且利用list.addFirst方法
      */
 
-    //先看一下preorder
+    // 先看一下preorder
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
         Deque<TreeNode> stack = new ArrayDeque<>();
@@ -50,7 +50,7 @@ public class BinaryTreePostorderTraversal {
         return res;
     }
 
-    //改造成postorder
+    // 改造成postorder
     public List<Integer> postorderTraversal(TreeNode root) {
         LinkedList<Integer> res = new LinkedList<>();//addFirst是LinkedList的方法
         Deque<TreeNode> stack = new ArrayDeque<>();
@@ -63,6 +63,22 @@ public class BinaryTreePostorderTraversal {
             } else {
                 node = stack.pop().left; //reverse the process of preorder
             }
+        }
+        return res;
+    }
+
+    // 或者这么写
+    public List<Integer> postorderTraversal_(TreeNode root) {
+        LinkedList<Integer> res = new LinkedList<>();//addFirst是LinkedList的方法
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode node = root;
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                stack.push(node);
+                res.addFirst(node.val);// reverse the process of preorder，这样最先加入的就被放到了最后面
+                node = node.right;// reverse the process of preorder
+            }
+            node = stack.pop().left; //reverse the process of preorder
         }
         return res;
     }
