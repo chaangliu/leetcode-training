@@ -7,29 +7,15 @@ import java.util.LinkedList;
  * 编号0 ~ n - 1的小朋友围成圆圈，从0开始依次数m - 1个数，第m - 1个不再参与游戏；然后下一个人继续从0开始数，求最后剩下的人的序号。
  */
 public class LastRemainingChild {
-//    public int LastRemaining_Solution(int n, int m) {
-//        if (m < 1 || n < 1) return 0;
-//        int count = 0;
-//        int remaining = n;
-//        boolean expelled[] = new boolean[n];
-//        while (count < n) {
-//            expelled[(m - 1) % remaining--] = true;
-//            count++;
-//        }
-//        for (int i = 0; i < n; i++) {
-//            if (!expelled[i]) {
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
-//
-//    private void runner(boolean[] expelled, int startIndex, int steps) {
-//        //我只能想出O(mn)解法，不想写
-//    }
+    public int lastRemaining(int n, int m) {
+        if (n == 1) return 0;
+        int r = lastRemaining(n - 1, m);
+        return (r + m) % n;
+    }
 
-    //事实证明仍然需要用O(mn)时间，不能跳着走。用Java的话可以用linkedlist:
-    //用linkedlist模拟，可以模拟remove。linkedlist比arraylist插入删除效率高，因为不用arraycopy
+    // ------------------------------------------------------------------------
+    // 事实证明仍然需要用O(mn)时间，不能跳着走。用Java的话可以用linkedlist:
+    // 用linkedlist模拟，可以模拟remove。linkedlist比arraylist插入删除效率高，因为不用arraycopy
     public int LastRemaining_Solution(int n, int m) {
         if (m < 1 || n < 1) return -1;
         LinkedList<Integer> linkedList = new LinkedList<>();
