@@ -49,11 +49,12 @@ public class WordBreakII {
     /**
      * 题意：给你个string和一个wordDict，让你用字典中的单词去给string分词，输出所有分词的可能。
      * 一道非常棒的backtrack with memo题。
-     * 解法1，针对wordDict来DFS
-     * 这题有点像升级版的permutations，写法有点新颖。另外要用一个memo不然TLE。
+     * 解法1，枚举word。
+     * top down, 针对wordDict来DFS
+     * 跟第一题的写法不一样的地方是，这里直接把remain穿进下一层dfs来找剩余的解集，与已有解集组合即可，而不需要一个start index。
      */
     public List<String> wordBreak_(String s, List<String> wordDict) {
-        //不需要传一个res进去
+        // 不需要传一个res进去
         return dfs(s, wordDict, new HashMap<String, List<String>>());
     }
 
@@ -79,7 +80,8 @@ public class WordBreakII {
     }
 
     /**
-     * 解法2，为防止wordDict过大，可以像word break1一样，枚举index。
+     * 解法2，枚举index。
+     * 为防止wordDict过大，可以像word break1一样，枚举index。
      * 从后往前对s进行拆分。巧妙利用原函数签名（借助一个全局的memo）。
      * 返回s能被wordDict中分词的所有可能句子。
      **/
