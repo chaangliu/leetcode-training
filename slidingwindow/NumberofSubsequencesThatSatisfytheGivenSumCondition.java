@@ -45,7 +45,9 @@ public class NumberofSubsequencesThatSatisfytheGivenSumCondition {
     /**
      * 题意：给你一个Array和一个target，求子序列中最小和最大数之和<= target的子序列的数量。
      * 思路：这题我拿到就觉得是sliding window，感觉要维护最大最小值，有点无从下手。
-     * 看了lee的答案发现有两个要点，第一，因为是求子序列的数量，所以可以sort。第二，需要固定最小的数，去匹配最大的数。
+     * 看了lee的答案发现有两个要点，
+     * 第一，因为是求子序列的数量，所以可以sort。
+     * 第二，用two pointers的形式，固定最小的数，去匹配最大的数，A[i]固定必选，那么A[i+1] ~ A[j]里面每个数字都可以被选或者不选，一共有2 ^ (j - i)种组合
      */
     public int numSubseq(int[] A, int target) {
         Arrays.sort(A);
@@ -86,7 +88,6 @@ public class NumberofSubsequencesThatSatisfytheGivenSumCondition {
             }
             lo--;
             if (lo < i) return res;
-            // System.out.println(">>A[i] and lo is " + i + "  ,  " + lo);
             res = (res + pows[lo - i]) % mod;
         }
         return res;
