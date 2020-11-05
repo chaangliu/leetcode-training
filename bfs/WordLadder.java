@@ -67,7 +67,7 @@ public class WordLadder {
         int res = 1;
         while (!begin.isEmpty() && !end.isEmpty()) {
             HashSet<String> temp = new HashSet<>();
-            for (String word : begin) {//遍历set的简单方式
+            for (String word : begin) {
                 visited.add(word);
                 if (end.contains(word)) return res;
                 getNextStepWords(visited, temp, word, wordList);
@@ -93,7 +93,42 @@ public class WordLadder {
     }
 
     /**
-     * 单向BFS:
+     * 自己写的常规单向BFS，beats 12.88%
+     */
+    public int ladderLength__(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> visited = new HashSet<>();
+        Queue<String> q = new LinkedList<>();
+        q.offer(beginWord);
+        int res = 1;
+        while (!q.isEmpty()) {
+            res++;
+            for (int sz = q.size() - 1; sz >= 0; sz--) { // 注意，凡是计算步数或者几层的，都需要一个sz来清空上一层中的queue
+                String cur = q.poll();
+                for (String w : wordList) {
+                    if (visited.contains(w)) continue;
+                    if (match(cur, w)) {
+                        if (w.equals(endWord)) return res;
+                        visited.add(w);
+                        q.offer(w);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    private boolean match(String w1, String w2) {
+        int cnt = 0;
+        for (int i = 0; i < w1.length(); i++) {
+            if (w1.charAt(i) != w2.charAt(i)) {
+                if (++cnt > 1) return false;
+            }
+        }
+        return cnt == 1;
+    }
+
+    /**
+     * 单向BFS, 模式匹配:
      * 思路是把wordList中的每个单词中的每个字母都试着替换成*，记录成一种模式，然后放到map里记录这种模式里所有的单词，然后一层层去匹配
      * 单向BFS的缺点是，数据量大的时候会延伸出一棵很大的树。所以双向BFS比较好。
      */
