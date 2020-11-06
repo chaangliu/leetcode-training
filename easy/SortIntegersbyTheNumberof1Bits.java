@@ -43,7 +43,7 @@ import java.util.Comparator;
 public class SortIntegersbyTheNumberof1Bits {
     /**
      * 题意：把数组里的数字按照二进制1的个数ascending排序。如果个数相同，按照数字大小ascending排序。
-     * 解法：Integer.bitCount(i)可以找1的个数。第二，相同的情况，可以*10000+i把i放到低位来比较(因为0 <= arr[i] <= 10^4)
+     * 解法：Integer.bitCount(i)可以找1的个数。第二，相同的情况，可以*10000+i把i放到低位来比较(因为0 <= arr[i] <= 10^4, 把低位让出来给原来的数字就行了；另外1111111111111(二进制) = 8191(十进制)，也可以乘多一点)
      */
     public int[] sortByBits(int[] arr) {
         Integer[] a = new Integer[arr.length];
@@ -81,5 +81,17 @@ public class SortIntegersbyTheNumberof1Bits {
             arr[indx++] = a[0];
         }
         return arr;
+    }
+
+    /**
+     * 常规求二进制1数量的方法：
+     */
+    public int get(int x) {
+        int res = 0;
+        while (x != 0) {
+            res += x % 2;
+            x /= 2;
+        }
+        return res;
     }
 }
