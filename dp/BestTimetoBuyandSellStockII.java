@@ -37,6 +37,23 @@ public class BestTimetoBuyandSellStockII {
     }
 
     /**
+     * review
+     */
+    public int maxProfit_(int[] prices) {
+        int n = prices.length, res = 0, cur = 0, prev = prices[0];
+        for (int i = 1; i < n; i++) {
+            cur = prices[i];
+            if (cur > prev) { // 若当前的价格比之前买的价格高，立刻卖
+                res += cur - prev;
+                prev = cur;
+            } else { // 否则立刻选择当前的来买
+                prev = cur;
+            }
+        }
+        return res;
+    }
+
+    /**
      * 以下是解决股票问题模板那个回答里面提到的通用做法(https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/yi-ge-fang-fa-tuan-mie-6-dao-gu-piao-wen-ti-by-lab/)；
      * 0代表当天结束不持有股票，1代表持有股票，转移方程：
      * dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])//不持有==卖掉，所以+price[i]
@@ -68,15 +85,6 @@ public class BestTimetoBuyandSellStockII {
             T_ik0 = Math.max(T_ik0, T_ik1 + price);
             T_ik1 = Math.max(T_ik1, T_ik0_old - price);
         }
-
         return T_ik0;
-    }
-
-    public static void main(String args[]) {
-        BestTimetoBuyandSellStockII instance = new BestTimetoBuyandSellStockII();
-//        int[] nums = {7, 1, 5, 3, 6, 4};
-        int[] nums = {1, 2, 4};
-//        int[] nums = {7, 6, 4, 3, 1};
-//        System.out.println(instance.maxProfit(nums));
     }
 }
