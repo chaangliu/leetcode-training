@@ -2,6 +2,7 @@ package quickselect;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * We have a list of points on the plane.  Find the K closest points to the origin (0, 0).
@@ -32,6 +33,7 @@ import java.util.Comparator;
 public class KClosestPointsToOrigin {
 
     //这题其实就是个求k小元素的经典题
+
     /**
      * approach1.排序，O(n*logn)
      */
@@ -97,8 +99,30 @@ public class KClosestPointsToOrigin {
     }
 
     /**
-     * approach3. maxheap，思路跟KthLargestElementInAnArray一样，略
+     * approach3. maxheap，思路跟KthLargestElementInAnArray一样，O(nlogK)
      */
+    public int[][] kClosest_heap(int[][] points, int K) {
+        PriorityQueue<int[]> q = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] b, int[] a) {
+                return a[0] * a[0] + a[1] * a[1] - b[0] * b[0] - b[1] * b[1];
+            }
+        });
 
-
+        for (int[] p : points) {
+            if (q.size() >= K) {
+                int[] a = q.peek(), b = p;
+                if (a[0] * a[0] + a[1] * a[1] - b[0] * b[0] - b[1] * b[1] > 0) {
+                    q.poll();
+                    q.offer(b);
+                }
+            } else {
+                q.offer(p);
+            }
+            // System.out.println("offering " + p[0] + ", " + p[1]);
+        }
+        int[][] res = new int[K][2];
+        for (int i = K - 1; i >= 0; i--) res[i] = q.poll();
+        return res;
+    }
 }
