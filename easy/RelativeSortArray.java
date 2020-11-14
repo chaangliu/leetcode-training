@@ -26,6 +26,35 @@ import java.util.PriorityQueue;
  * 20190714
  */
 public class RelativeSortArray {
+    /**
+     * 题意：给你arr1和arr2，要求把arr1中的数字按照arr2中出现的顺序排序。没出现过的排最后。
+     * 解法：计数排序。对arr1中的数字计数。
+     */
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        int upper = 0;
+        for (int x : arr1) {
+            upper = Math.max(upper, x);
+        }
+        int[] frequency = new int[upper + 1];
+        for (int x : arr1) {
+            ++frequency[x];
+        }
+        int[] ans = new int[arr1.length];
+        int index = 0;
+        for (int x : arr2) {
+            for (int i = 0; i < frequency[x]; ++i) {
+                ans[index++] = x;
+            }
+            frequency[x] = 0;
+        }
+        for (int x = 0; x <= upper; ++x) {
+            for (int i = 0; i < frequency[x]; ++i) {
+                ans[index++] = x;
+            }
+        }
+        return ans;
+    }
+
     public int[] relativeSortArray(int[] arr1, int[] arr2) {
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < arr1.length; i++) {
