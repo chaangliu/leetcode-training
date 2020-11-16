@@ -23,6 +23,10 @@ import java.util.List;
  * 20190201
  */
 public class QueueReconstructionByHeight {
+    /**
+     * 题意：给你一些数对(h,k)h代表身高,k代表他前面大于等于他身高的人的数量。让你重新排序。
+     * 解法：用list.add功能，先安排高的人，后安排矮的人，只要让矮的人前面有k个人身高大于等于他即可，而当前队伍所有人身高都满足这个条件，就很容易知道当前的人在队伍中的位置了。
+     */
     public int[][] reconstructQueue(int[][] people) {
         //pick up the tallest guy first
         //when insert the next tall guy, just need to insert him into kth position
@@ -39,10 +43,5 @@ public class QueueReconstructionByHeight {
             res.add(cur[1], cur);
         }
         return res.toArray(new int[people.length][]);
-    }
-
-    public static void main(String args[]) {
-        int[][] ppl = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
-        new QueueReconstructionByHeight().reconstructQueue(ppl);
     }
 }
