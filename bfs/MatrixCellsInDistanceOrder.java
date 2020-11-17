@@ -1,9 +1,12 @@
 package bfs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -125,5 +128,19 @@ public class MatrixCellsInDistanceOrder {
             }
         });
         return origin;
+    }
+
+    /**
+     * list.sort 2020
+     */
+    public int[][] allCellsDistOrder__(int R, int C, int r0, int c0) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                list.add(new int[]{i, j});
+            }
+        }
+        Collections.sort(list, (a, b) -> Math.abs(a[0] - r0) + Math.abs(a[1] - c0) - Math.abs(b[0] - r0) - Math.abs(b[1] - c0));
+        return list.toArray(new int[list.size()][]);
     }
 }
