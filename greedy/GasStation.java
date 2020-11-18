@@ -52,7 +52,8 @@ public class GasStation {
      * 跟前不久周赛的一个题有点像，顺序地traverse，不满足的时候选择一个新的起点继续traverse。问题是起点怎么选？
      * 我的做法虽然AC了但不是最优的，我是从每个可能的起点开始遍历，看能否回到当前位置；
      * 讨论区的思路：GREEDY，在不满足的时候，从不满足的位置下一个位置继续。
-     * 这基于一个前提：从A如果到不了B，那么从AB之间的任何一点都到不了B。=》所以从B的下一个位置开始即可。
+     * 这基于一个前提：从A起步如果到不了B，那么从AB之间的任何一点起步都到不了B。=> 所以从B的下一个位置开始即可。
+     * 时间: O(n) one pass
      * 假设AB之间有个点P，走到P时断了，说明从P出发亏空得太多了，AP之间积累的汽油都无法弥补，更别提从P开始了。
      * 这个有点绕，最好用例子来帮助思考。
      */
@@ -77,6 +78,10 @@ public class GasStation {
         }
     }
 
+    /**
+     * brute force
+     * O(n^2)
+     */
     public int canCompleteCircuit__MYCODE(int[] gas, int[] cost) {
         for (int i = 0; i < gas.length; i++) {
             if (cost[i] <= gas[i]) {
