@@ -24,4 +24,23 @@ public class MoveZeroes {
         }
         while (pos < nums.length) nums[pos++] = 0;
     }
+
+    /**
+     * 如果硬要交换怎么办？用第二种方案：双指针，l指向摆放位置，r去找非零数，遇到非0数就交换l r。这样会造成交换之前[l, r)之间都是0
+     */
+    public void moveZeroes_(int[] A) {
+        int l = 0, r = 0;
+        while (r < A.length) {
+            if (A[r] != 0) {
+                swap(A, l++, r);
+            }
+            r++;
+        }
+    }
+
+    private void swap(int[] A, int l, int r) {
+        int t = A[l];
+        A[l] = A[r];
+        A[r] = t;
+    }
 }
