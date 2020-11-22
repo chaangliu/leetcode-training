@@ -20,7 +20,7 @@ class InsertionSortList {
      * 朴素方法，维护待插入node(cur), 每次从头遍历插入位置
      **/
     public ListNode insertionSortList(ListNode head) {
-        ListNode dummy = new ListNode(0);
+        ListNode dummy = new ListNode(0); // 这里并不需要dummy.next = head
         ListNode prev = dummy;
         ListNode cur = head;
         while (cur != null) {
