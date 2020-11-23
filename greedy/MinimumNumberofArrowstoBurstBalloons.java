@@ -26,11 +26,14 @@ import java.util.Arrays;
  */
 public class MinimumNumberofArrowstoBurstBalloons {
     /**
-     * 和435一样，interval schedule问题。贪心地计算最多不重合的interval，结果就是最小弓箭数量
+     * 题意：给你一些气球在x轴的起始结束位置，问最少需要多少枝箭可以射爆所有气球。
+     * 解法：greedy，和435一样，interval schedule问题。贪心地计算最多不重合的interval，结果就是最小弓箭数量。
+     * 详细地，用区间结束位置从小到大排序，然后维护一个end, 如果有气球的start在这个end右边了，那就需要一枝新的箭了，更新cnt和end。
      **/
     public int findMinArrowShots(int[][] points) {
         if (points.length == 0) return 0;
-        Arrays.sort(points, (a, b) -> (a[1] - b[1]));
+        // Arrays.sort(points, (a, b) -> (a[1] - b[1]));
+        Arrays.sort(points, Comparator.comparingInt(o -> o[1]));
         int end = points[0][1];
         int cnt = 1;
         for (int i = 1; i < points.length; i++) {
