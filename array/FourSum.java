@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FourSum {
     /**
-     * 题意：求4sum的解集。
+     * 题意：在一个给定的数组中找出4个数字加起来等于target，Q求所有可能的解集。
      * 解法：没有捷径，在3sum外面加一层； 固定两个pivot，然后两个双指针移动。
      * 时间: O(n^3)
      */

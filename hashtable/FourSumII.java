@@ -21,9 +21,10 @@ import java.util.HashMap;
  */
 public class FourSumII {
     /**
-     * 题意：在ABCD四个数组里分别找一个数字, 加起来等于0.
-     * 这题跟前几题不一样在于，这题是在每个数组里分别找1个。
+     * 题意：在ABCD四个数组里分别找一个数字, 加起来等于0, 问一共有多少种组合.
+     * 这题跟前几题不一样在于，这题是在每个数组里分别找1个，另外只要求数量。
      * 做法是把前(N + 1) /2个数组可能凑成的sum组合记录下来，然后用另外一半数组去碰(相当于乘法)，可以减少一半复杂度。
+     * 时间: O(n^2)
      */
     public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
         HashMap<Integer, Integer> map1 = new HashMap<>(), map2 = new HashMap<>();
