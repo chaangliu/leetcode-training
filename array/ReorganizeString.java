@@ -2,6 +2,8 @@ package array;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
@@ -25,96 +27,33 @@ import java.util.PriorityQueue;
  * https://www.jianshu.com/p/aff4f3db8572
  */
 public class ReorganizeString {
-
-    //#2 using PriorityQueue, tracking the remaining 2 most frequent numbers
+    /**
+     * 题意：给你一个字符串，让你把它重新排列，相同的字母不能相邻。
+     * 解法：贪心，每次贪心地取出现次数最多的元素。一个容易错的地方是，个数相同的情况下需要严格按照alphabet排列，否则会WA（比如"abbabbaaab"会出现"abb..."）。
+     */
     public String reorganizeString(String S) {
-        if (S == null || S.length() <= 1) {
-            return S;
-        }
-        int len = S.length();
-        //attention: array size is 26! not len
-        int[] counts = new int[26];
-        for (int i = 0; i < S.length(); i++) {
-            counts[S.charAt(i) - 'a']++;
-            //attention 2: exit condition
-            if (counts[S.charAt(i) - 'a'] > (len + 1) / 2) return "";
-        }
-
-        PriorityQueue<RichChar> priorityQueue = new PriorityQueue<>(len, new Comparator<RichChar>() {
-            @Override
-            public int compare(RichChar o1, RichChar o2) {
-                return o2.count - o1.count;
-            }
-        });
-        for (int i = 0; i < 26; i++) {
-            if (counts[i] != 0) {
-                priorityQueue.offer(new RichChar((char) (i + 'a'), counts[i]));
-            }
-        }
-
-        //attention, a stringbuilder is used here
-        StringBuilder res = new StringBuilder();
-        while (priorityQueue.size() >= 2) {
-            RichChar ch1 = priorityQueue.poll();
-            RichChar ch2 = priorityQueue.poll();
-            res.append(ch1.letter);
-            res.append(ch2.letter);
-            ch1.count--;
-            ch2.count--;
-            if (ch1.count > 0) priorityQueue.offer(ch1);
-            if (ch2.count > 0) priorityQueue.offer(ch2);
-        }
-        if (priorityQueue.size() > 0) {
-            res.append(priorityQueue.poll().letter);
-        }
-        return res.toString();
-    }
-
-    class RichChar {
-        char letter;
-        int count;
-
-        RichChar(char letter, int count) {
-            this.letter = letter;
-            this.count = count;
-        }
-    }
-
-    public static void main(String args[]) {
-        System.out.println(new ReorganizeString().reorganizeString("vvvlo"));
-    }
-
-
-    //#1
-    public String reorganizeString0(String S) {
-        int N = S.length();
-        int[] counts = new int[26];
-        //aabbc -> [200, 200, 100, 0, 0..]，保证个数多的在前面
+        PriorityQueue<Map.Entry<Character, Integer>> q = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue() != 0 ? b.getValue() - a.getValue() : a.getKey() - b.getKey());
+        HashMap<Character, Integer> map = new HashMap<>();
         for (char c : S.toCharArray()) {
-            counts[c - 'a'] += 100;
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
-        //aabbc -> [200, 201, 102, 3, 4..] 个数相同的情况下按照alphabet排列
-        for (int i = 0; i < 26; ++i) {
-            counts[i] += i;
+        for (Map.Entry<Character, Integer> e : map.entrySet()) {
+            q.offer(e);
         }
-        //Encoded counts[i] = 100*(actual count) + (i)
-        Arrays.sort(counts);
-
-        char[] ans = new char[N];
-        int t = 1;
-        for (int code : counts) {
-            int ct = code / 100;
-            char ch = (char) ('a' + (code % 100));
-            if (ct > (N + 1) / 2) return "";
-            for (int i = 0; i < ct; ++i) {
-                if (t >= N)
-                    t = 0;
-                ans[t] = ch;
-                t += 2;
+        StringBuilder sb = new StringBuilder();
+        while (!q.isEmpty()) {
+            Map.Entry<Character, Integer> e = q.poll();
+            if (sb.length() > 0 && e.getKey() == sb.charAt(sb.length() - 1)) return "";
+            sb.append(e.getKey());
+            if (!q.isEmpty()) {
+                Map.Entry<Character, Integer> e2 = q.poll();
+                sb.append(e2.getKey());
+                e2.setValue(e2.getValue() - 1);
+                if (e2.getValue() > 0) q.offer(e2);
             }
+            e.setValue(e.getValue() - 1);
+            if (e.getValue() > 0) q.offer(e);
         }
-
-        return String.valueOf(ans);
+        return sb.toString();
     }
-
 }
