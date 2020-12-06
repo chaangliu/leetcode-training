@@ -27,55 +27,39 @@ import java.util.PriorityQueue;
  */
 public class DistantBarcodes {
     /**
-     * Approach1. odd even insertion
-     * 这题我一开始用了个Map和队列循环插入，每次插完就放到队尾区，但最后发现结尾会有重复。
-     * 看别人做法发现这题跟之前做过的那道TaskScheduler很像，也是两种做法，从多到少插入或者heap。
+     * 题意：给你一些数字，让你重新排列，使得相邻的数字不相同，任意排列都行。
+     * 解法：贪心地先输出出现次数多的数字。
      * 例子：
      * 111122233
-     * 1 1 1 1 2
      * 121213132
-     *
-     * 【相似题目】
+     *【相似题目】
      * 621. Task Scheduler，358. Rearrange String（LOCKED），767. Reorganize String
-     */
-    //    public int[] rearrangeBarcodes(int[] barcodes) {
-    //      用Java写起来很麻烦，C++/PYTHON比较容易
-    //    }
-
-    /**
-     * Approach2. priority queue
      * 跟上面的做法略有不同，不用间隔一位插入数字了，但是要每次poll完之后更新pq，跟621做法一样。
      * 时间O(n log n)
+     * 对于[1,1,1,2,2,2]comparator一定要有a.getKey() - b.getKey()是否相等的判断， 
+     * 否则会出现1,2,2..这样的情况。如果严格按照顺序去offer和poll，就不会出现这样的情况。
+     * 比如1，2出现次数都是2，从堆取出来会是1，2排列，放回去再取还是1，2。
      */
     public int[] rearrangeBarcodes(int[] barcodes) {
-        //1. 统计出现次数
-        if (barcodes == null || barcodes.length == 0) return new int[0];
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        for (int i : barcodes) map.put(i, map.getOrDefault(i, 0) + 1);
-
-        //2. 对Map.Entry建堆(不用自己构造Pair了，直接用map.entrySet())，出现次数多的Entry放堆顶
-        PriorityQueue<Map.Entry<Integer, Integer>> pq = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue() == 0 ? a.getKey() - b.getKey() : b.getValue() - a.getValue());
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) pq.offer(entry);
-        int[] res = new int[barcodes.length];
-        int i = 0;
-        while (!pq.isEmpty()) {
-            int k = 2;
-            List<Map.Entry<Integer, Integer>> list = new ArrayList<>();
-            while (k-- > 0 && !pq.isEmpty()) {
-                Map.Entry<Integer, Integer> node = pq.poll();
-                node.setValue(node.getValue() - 1);
-                res[i++] = node.getKey();
-                list.add(node);
+        PriorityQueue<Map.Entry<Integer, Integer>> q = new PriorityQueue<>((a, b)-> b.getValue() - a.getValue() != 0 ? b.getValue() - a.getValue() : a.getKey() - b.getKey());
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int b : barcodes) map.put(b, map.getOrDefault(b, 0) + 1);
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) q.offer(e);
+        int [] res = new int [barcodes.length]; int index = 0;
+        while (!q.isEmpty()) {
+            Map.Entry<Integer, Integer> e = q.poll();
+            if (e.getValue() > 0) {
+                res[index++] = e.getKey();
+                e.setValue(e.getValue() - 1);
             }
-            for (Map.Entry<Integer, Integer> entry : list) {
-                if (entry.getValue() > 0) pq.offer(entry);
+            if (!q.isEmpty()) {
+                Map.Entry<Integer, Integer> e2 = q.poll();
+                res[index++] = e2.getKey();
+                e2.setValue(e2.getValue() - 1);
+                if (e2.getValue() > 0) q.offer(e2);
             }
+            if (e.getValue() > 0) q.offer(e);
         }
         return res;
-    }
-
-    public static void main(String args[]) {
-        int[] nums = new int[]{1, 1, 1, 1, 2, 2, 2, 3, 3};
-        new DistantBarcodes().rearrangeBarcodes(nums);
     }
 }
