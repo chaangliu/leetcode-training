@@ -28,9 +28,9 @@ public class ScoreAfterFlippingMatrix {
         for (int i = 0; i < n; i++) {
             int zeros = 0;
             for (int j = 0; j < m; j++) {
-                zeros += A[j][0] ^ A[j][i]; //统计flip之后每列0的个数之和
+                zeros += A[j][0] ^ A[j][i]; // 统计flip之后每列0的个数之和(用第一个数字跟后面的xor，很巧妙)
             }
-            res += Math.max(zeros, m - zeros) * (1 << (n - 1 - i));
+            res += Math.max(zeros, m - zeros) * (1 << (n - 1 - i)); // 如果0多，就flip这一列；否则保持不变。
         }
         return res;
     }

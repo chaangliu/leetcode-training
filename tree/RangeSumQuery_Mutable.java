@@ -20,7 +20,8 @@ package tree;
  */
 public class RangeSumQuery_Mutable {
     /**
-     * 解法：线段树
+     * 题意: 求数组[i,j]下标之间的sum，期间可调用update()改变数组的值。
+     * 解法：线段树 segment tree
      * 参考花花的视频和leetcode discussion吧
      */
     class NumArray {

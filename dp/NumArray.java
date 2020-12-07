@@ -15,13 +15,14 @@ package dp;
 class NumArray {
 
     /**
+     * 题意：给出一个int数组，求i到j之间的sum。
      * 这题很好但是我猜由于有个corner case(nums是null)导致很多人WA所以很多人点了dislike
      * 一开始我想用二维dp，但是MLE了，然后自然而然想到sum[i, j] = sum[0,j] - sum[0, i-1]这种做法
      */
     int dp[];
     int len;
 
-    public NumArray(int[] nums) {
+    public (int[] nums) {
         if (nums == null || nums.length == 0) return;
         len = nums.length;
         dp = new int[len];
