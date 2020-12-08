@@ -90,6 +90,45 @@ public class SplitArrayintoFibonacciSequence {
         }
         return false;
     }
+
+    /**
+     * 重新看了这题，思路没有第一时间想到，但其实直接暴力就行；又写了下，corner case要注意不能直接判断startsWith 0，如"0000"还是有答案的。另外要考虑整数overflow。还有，无需额外全局变量的。
+     */
+    public List<Integer> splitIntoFibonacci_(String S) {
+        helper(S.toCharArray(), 0, new ArrayList<>());
+        if (S.startsWith("0") && result.size() > 1 && result.get(0) > 0) return new ArrayList<>();
+        return result;
+    }
+
+    List<Integer> result = new ArrayList<>();
+
+    private boolean helper(char[] A, int start, List<Integer> res) {
+        if (start == A.length) {
+            if (res.size() >= 3) {
+                result = res;
+                return true;
+            }
+            return false;
+        }
+        int num = 0;
+        for (int i = start; i < A.length; i++) {
+            if (num > Integer.MAX_VALUE / 10) return false;
+            num = num * 10 + (A[i] - '0');
+            int size = res.size();
+            if (size < 2) {
+                res.add(num);
+                if (helper(A, i + 1, res)) return true;
+                res.remove(res.size() - 1);
+            } else {
+                if (res.get(size - 2) + res.get(size - 1) == num) {
+                    res.add(num);
+                    if (helper(A, i + 1, res)) return true;
+                    res.remove(res.size() - 1);
+                }
+            }
+        }
+        return false;
+    }
 //    public:
 //    /**
 //     * 这题因为长度只有200，所以暴力搜索，做法值得学习。用C++的话，由于substr的第二个参数是步长，所以for循环枚举步长比较方便。用Java的话，可以直接枚举结尾index
