@@ -46,7 +46,9 @@ public class WiggleSubsequence {
     }
 
     /**
-     * approach2 O(n^2)dp，反而是最容易理解的一个
+     * approach2 
+     * 跟LCS完全一样的思路，注意内层是从j到i
+     * O(n^2)dp，反而是最容易理解的一个
      */
     public int wiggleMaxLength__2D(int[] nums) {
         if (nums.length < 2) return nums.length;
