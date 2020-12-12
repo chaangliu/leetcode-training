@@ -26,29 +26,9 @@ package dp.dfswithmemo;
 public class WiggleSubsequence {
     /**
      * 题意：求最长的wiggle子序列的长度。
-     * approach1 dfs with memo，回溯，如果不加memo：复杂度O(n!)，调用了n!次calculate，会TLE
-     */
-    public int wiggleMaxLength(int[] nums) {
-        if (nums.length < 2) return nums.length;
-        Integer[][] memo = new Integer[nums.length][2];
-        return 1 + Math.max(calculate(nums, 0, true, memo), calculate(nums, 0, false, memo));
-    }
-
-    private int calculate(int[] nums, int start, boolean isUp, Integer[][] memo) {
-        if (memo[start][isUp ? 0 : 1] != null) return memo[start][isUp ? 0 : 1];
-        int maxcount = 0;
-        for (int i = start + 1; i < nums.length; i++) {// subsequence, 所以for循环+递归
-            if ((isUp && nums[i] > nums[start]) || (!isUp && nums[i] < nums[start]))
-                maxcount = Math.max(maxcount, 1 + calculate(nums, i, !isUp, memo));
-        }
-        memo[start][isUp ? 0 : 1] = maxcount;
-        return maxcount;
-    }
-
-    /**
-     * approach2 
-     * 跟LCS完全一样的思路，注意内层是从j到i
-     * O(n^2)dp，反而是最容易理解的一个
+     * approach1 top down dp
+     * 跟LCS完全一样的思路(注意内层是从j到i)
+     * O(n^2)dp，最容易想到的一个
      */
     public int wiggleMaxLength__2D(int[] nums) {
         if (nums.length < 2) return nums.length;
@@ -67,29 +47,40 @@ public class WiggleSubsequence {
     }
 
     /**
-     * approach3 O(n)dp，
-     * 与上面不同的是，这里up/down保存的不是end with i的wiggle序列的最大长度，
-     * 而是以up/down中间某个位置结尾的wiggle序列最大长度
-     * 可以进一步优化成O(1)空间；
-     * 另外，有greedy解法
+     * approach2 
+     * greedy解法
+     * up[i] 表示 nums[0:i] 中最后两个数字递增的最长摆动序列长度，
+     * down[i] 表示 nums[0:i] 中最后两个数字递减的最长摆动序列长度，只有一个数字时默认为 1。
      */
-    public int wiggleMaxLength__DP_1D(int[] nums) {
-        if (nums.length < 2) return nums.length;
-        int[] up = new int[nums.length];
-        int[] down = new int[nums.length];
-        up[0] = down[0] = 1;
+    public int wiggleMaxLength(int[] nums) {
+        int down = 1, up = 1;
         for (int i = 1; i < nums.length; i++) {
-            if (nums[i] > nums[i - 1]) {
-                up[i] = down[i - 1] + 1;
-                down[i] = down[i - 1];
-            } else if (nums[i] < nums[i - 1]) {
-                down[i] = up[i - 1] + 1;
-                up[i] = up[i - 1];
-            } else {
-                down[i] = down[i - 1];
-                up[i] = up[i - 1];
-            }
+            if (nums[i] > nums[i - 1])
+                up = down + 1;
+            else if (nums[i] < nums[i - 1])
+                down = up + 1;
         }
-        return Math.max(down[nums.length - 1], up[nums.length - 1]);
+        return nums.length == 0 ? 0 : Math.max(down, up);
+    }
+
+
+    /**
+     * approach1 的top down写法：dfs with memo，回溯，如果不加memo：复杂度O(n!)，调用了n!次calculate，会TLE
+     */
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2) return nums.length;
+        Integer[][] memo = new Integer[nums.length][2];
+        return 1 + Math.max(calculate(nums, 0, true, memo), calculate(nums, 0, false, memo));
+    }
+
+    private int calculate(int[] nums, int start, boolean isUp, Integer[][] memo) {
+        if (memo[start][isUp ? 0 : 1] != null) return memo[start][isUp ? 0 : 1];
+        int maxcount = 0;
+        for (int i = start + 1; i < nums.length; i++) {// subsequence, 所以for循环+递归
+            if ((isUp && nums[i] > nums[start]) || (!isUp && nums[i] < nums[start]))
+                maxcount = Math.max(maxcount, 1 + calculate(nums, i, !isUp, memo));
+        }
+        memo[start][isUp ? 0 : 1] = maxcount;
+        return maxcount;
     }
 }
