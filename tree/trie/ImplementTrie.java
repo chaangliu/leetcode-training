@@ -25,39 +25,25 @@ public class ImplementTrie {
      * DFA简介
      * 在实现文字过滤的算法中，DFA是唯一比较好的实现算法。DFA即Deterministic Finite Automaton，也就是确定有穷自动机
      */
-    class TrieNode {
-        public char val;
-        public boolean isWord;
-        public TrieNode[] children = new TrieNode[26];
-
-        TrieNode() {
-        }
-
-        TrieNode(char c) {
-            TrieNode node = new TrieNode();
-            node.val = c;
-        }
-    }
-
     public class Trie {
-        private TrieNode root;
+        // public char val; // 不需要这个成员变量
+        public boolean isWord;
+        public Trie[] children = new Trie[26];
 
         /**
          * Initialize your data structure here.
          */
         public Trie() {
-            root = new TrieNode();
-            root.val = ' ';
         }
 
         /**
          * Inserts a word into the trie.
          */
         public void insert(String word) {
-            TrieNode node = root;
+            Trie node = this;
             for (int i = 0; i < word.length(); i++) {
                 if (node.children[word.charAt(i) - 'a'] == null) {
-                    node.children[word.charAt(i) - 'a'] = new TrieNode(word.charAt(i));
+                    node.children[word.charAt(i) - 'a'] = new Trie();
                 }
                 node = node.children[word.charAt(i) - 'a'];
             }
@@ -68,7 +54,7 @@ public class ImplementTrie {
          * Returns if the word is in the trie.
          */
         public boolean search(String word) {
-            TrieNode node = root;
+            Trie node = this;
             for (int i = 0; i < word.length(); i++) {
                 if (node.children[word.charAt(i) - 'a'] != null) {
                     //改变指向的方法 相当于二叉树的node.left ,right，只不过trie可以有26棵subtree
@@ -84,7 +70,7 @@ public class ImplementTrie {
          * Returns if there is any word in the trie that starts with the given prefix.
          */
         public boolean startsWith(String prefix) {
-            TrieNode node = root;
+            Trie node = this;
             for (int i = 0; i < prefix.length(); i++) {
                 if (node.children[prefix.charAt(i) - 'a'] == null) {
                     return false;
@@ -95,6 +81,79 @@ public class ImplementTrie {
             return true;
         }
     }
+
+// 以下是最初lc英文版上的答案，事实上我发现对于只有26个字母的TrieNode是不需要val这个成员变量的，因为只要判断node的某个格子是不是null就能知道它下一位的值了，无论insert，search还是startsWith都用不到这个val。对于children的数据类型不规则的node，是需要的。
+
+//    class TrieNode {
+//        public char val;
+//        public boolean isWord;
+//        public TrieNode[] children = new TrieNode[26];
+//
+//        TrieNode() {
+//        }
+//
+//        TrieNode(char c) {
+//            TrieNode node = new TrieNode();
+//            node.val = c;
+//        }
+//    }
+//
+//    public class Trie {
+//        private TrieNode root;
+//
+//        /**
+//         * Initialize your data structure here.
+//         */
+//        public Trie() {
+//            root = new TrieNode();
+//            root.val = ' ';
+//        }
+//
+//        /**
+//         * Inserts a word into the trie.
+//         */
+//        public void insert(String word) {
+//            TrieNode node = root;
+//            for (int i = 0; i < word.length(); i++) {
+//                if (node.children[word.charAt(i) - 'a'] == null) {
+//                    node.children[word.charAt(i) - 'a'] = new TrieNode(word.charAt(i));
+//                }
+//                node = node.children[word.charAt(i) - 'a'];
+//            }
+//            node.isWord = true;
+//        }
+//
+//        /**
+//         * Returns if the word is in the trie.
+//         */
+//        public boolean search(String word) {
+//            TrieNode node = root;
+//            for (int i = 0; i < word.length(); i++) {
+//                if (node.children[word.charAt(i) - 'a'] != null) {
+//                    //改变指向的方法 相当于二叉树的node.left ,right，只不过trie可以有26棵subtree
+//                    node = node.children[word.charAt(i) - 'a'];
+//                } else {
+//                    return false;
+//                }
+//            }
+//            return node.isWord;
+//        }
+//
+//        /**
+//         * Returns if there is any word in the trie that starts with the given prefix.
+//         */
+//        public boolean startsWith(String prefix) {
+//            TrieNode node = root;
+//            for (int i = 0; i < prefix.length(); i++) {
+//                if (node.children[prefix.charAt(i) - 'a'] == null) {
+//                    return false;
+//                }
+//                //改变指向的方法 相当于二叉树的node.left ,right，只不过trie可以有26棵subtree
+//                node = node.children[prefix.charAt(i) - 'a'];
+//            }
+//            return true;
+//        }
+//    }
 
     public static void main(String args[]) {
         Trie trie = new ImplementTrie().new Trie();
