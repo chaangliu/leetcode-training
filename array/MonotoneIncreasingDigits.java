@@ -19,16 +19,17 @@ package array;
  */
 public class MonotoneIncreasingDigits {
     /**
-     * 这题如果从后往前一个个判断是不是满足，是TLE的。
-     * 其中一个正确做法：
-     * 从后往前判断哪里出现了cliff，比如1324，会发现3->2出现了cliff，那么把3 - 1，然后把2开始到结尾都改成9.
-     * 这种做法要多写几个数字找规律(会发现很多都是这种结尾是9的情况)
+     * 题意：给你一个数字，让你求第一个<=这个数字的、并且满足各位非递减的数字。
+     * 解法：首先这题如果从后往前一个个判断是不是满足，是TLE的。需要找规律。
+     * 我想了一下，从前往后遍历，判断当前数字是否比后面的数字大，如果比后边的大，那这个数字就必须缩小，后面的全变成9。但遇到的问题是，399443这种case，还需要继续处理前面的数字。
+     * 一个正确做法是从后往前遍历：
+     * 从后往前维护最早出现cliff的地方，比如1324，会发现3->2出现了cliff，那么把3减去1，然后把2开始到结尾都改成9.
      */
     public int monotoneIncreasingDigits(int N) {
         char[] chars = Integer.toString(N).toCharArray();
         int marker = chars.length;
         for (int i = chars.length - 1; i > 0; i--) {
-            if (chars[i] - '0' < chars[i - 1] - '0') {
+            if (chars[i - 1] - '0' > chars[i] - '0') { // 399443 => 388443 => 389999
                 marker = i;
                 chars[i - 1] -= 1;
             }
