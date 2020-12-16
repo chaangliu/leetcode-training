@@ -28,17 +28,25 @@ import java.util.Map;
  * 20190329
  */
 public class WordPattern {
-    public boolean wordPattern(String pattern, String str) {
-        String arr[] = str.split(" ");
+    /**
+     * 题意：判断s是否符合Pattern。例子如下：
+     * pattern = "abba", str = "dog dog dog dog" => 不行
+     * pattern = "aaaa", str = "dog cat cat dog" => 不行
+     * 所以一定要严格映射，一个字母对应一个单词，同时要求一个单词对应一个字母，在集合论中，这种关系被称为「双射」。
+     * 所以一定要同时检查对应关系，用两个map。
+     */
+    public boolean wordPattern(String pattern, String s) {
+        String[] arr = s.split(" ");
         if (arr.length != pattern.length()) return false;
-        Map<Character, String> map = new HashMap<>();
-        for (int i = 0; i < pattern.length(); i++) {
-            if (!map.containsKey(pattern.charAt(i))) {
-                if (map.containsValue(arr[i])) return false;//已犯错误，这种情况没考虑到不能少..test要做好
-                map.put(pattern.charAt(i), arr[i]);
-            } else {
-                if (!map.get(pattern.charAt(i)).equals(arr[i])) return false;
-            }
+        HashMap<Character, String> map1 = new HashMap<>();
+        HashMap<String, Character> map2 = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            String word = arr[i];
+            char c = pattern.charAt(i);
+            if (map1.containsKey(c) && !map1.get(c).equals(word)) return false;
+            if (map2.containsKey(word) && map2.get(word) != c) return false;
+            map1.put(c, word);
+            map2.put(word, c);
         }
         return true;
     }
