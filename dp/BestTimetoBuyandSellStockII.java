@@ -39,7 +39,7 @@ public class BestTimetoBuyandSellStockII {
     /**
      * review
      */
-    public int maxProfit_(int[] prices) {
+    public int maxProfit___(int[] prices) {
         int n = prices.length, res = 0, cur = 0, prev = prices[0];
         for (int i = 1; i < n; i++) {
             cur = prices[i];

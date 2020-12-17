@@ -46,6 +46,21 @@ public class BestTimetoBuyandSellStockwithTransactionFee {
         return dp[n - 1][0];
     }
 
+    // hold[i] = max(notHold[i - 1] - A[i], hold[i - 1]) // 注意这里不要-fee(买入不需要手续费)
+    // notHold[i] = max(notHold[i - 1], hold[i - 1] + A[i] - fee)
+    public int maxProfit__(int[] A, int fee) {
+        int res = 0;
+        int[] hold = new int[A.length], notHold = new int[A.length];
+        hold[0] = -A[0];
+        notHold[0] = 0;
+        for (int i = 1; i < A.length; i++) {
+            hold[i] = Math.max(notHold[i - 1] - A[i], hold[i - 1]);
+            notHold[i] = Math.max(notHold[i - 1], hold[i - 1] + A[i] - fee);
+            res = Math.max(res, notHold[i]);
+        }
+        return res;
+    }
+
     /**
      * ==>滚动数组
      */
