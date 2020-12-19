@@ -19,7 +19,7 @@ public class RotateImage {
      * 解法：这题不是很intuitive，所以想不出来很正常。
      * 要记住。通用解法是先垂直对称再对角线对称。
      * 顺时针逆时针取决于上下翻转还是左右翻转。
-     * 主对角线反转比较容易，matrix[i][j] = matrix[j][i]; 副对角线翻转比较难。
+     * 其实也可以副对角线反转，但是主对角线反转比较容易，matrix[i][j] = matrix[j][i]; 副对角线翻转比较难。
      * <p>
      * clockwise rotate
      * first reverse up to down, then swap the symmetry
