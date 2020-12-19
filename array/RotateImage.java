@@ -19,6 +19,7 @@ public class RotateImage {
      * 解法：这题不是很intuitive，所以想不出来很正常。
      * 要记住。通用解法是先垂直对称再对角线对称。
      * 顺时针逆时针取决于上下翻转还是左右翻转。
+     * 主对角线反转比较容易，matrix[i][j] = matrix[j][i]; 副对角线翻转比较难。
      * <p>
      * clockwise rotate
      * first reverse up to down, then swap the symmetry
@@ -32,22 +33,22 @@ public class RotateImage {
      * 4 5 6  => 6 5 4  => 2 5 8
      * 7 8 9     9 8 7     1 4 7
      */
-    public void rotate(int[][] matrix) {
-        int temp;
+     public void rotate(int[][] matrix) {
         int n = matrix.length;
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i; j++) {
-                temp = matrix[n - 1 - j][n - 1 - i];
-                matrix[n - 1 - j][n - 1 - i] = matrix[i][j];
-                matrix[i][j] = temp;
-
+        // 水平翻转
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[n - i - 1][j];
+                matrix[n - i - 1][j] = temp;
             }
         }
-        for (int i = 0; i < n / 2; i++) {
-            for (int j = 0; j < n; j++) {
-                temp = matrix[i][j];
-                matrix[i][j] = matrix[n - 1 - i][j];
-                matrix[n - i][j] = temp;
+        // 主对角线翻转
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
             }
         }
     }
