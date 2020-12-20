@@ -12,6 +12,7 @@ package greedy;
  */
 public class RemoveDuplicateLetters {
     /**
+     * 题意：去掉一些字母使得剩下的没重复并且字典序最小。
      * 这题跟1081. Smallest Subsequence of Distinct Characters一模一样，一行都不用改
      * 思路就是greedy，只要没遇到过就先添加进来，并检查前面有没有比它大的，如果有，并且后面还有这个数，就出栈，再入栈。所以也可以用Stack做。讨论区里还有用递归做的。
      */
