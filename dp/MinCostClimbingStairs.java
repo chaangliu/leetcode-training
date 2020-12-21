@@ -23,14 +23,15 @@ public class MinCostClimbingStairs {
      * dp[i] = min(dp[i - 2], dp[i - 1]) + A[i];
      */
     public int minCostClimbingStairs(int[] cost) {
-        int len = cost.length;
-        int[] dp = new int[len];
+        int n = cost.length;
+        if (n <= 1) return 0;
+        int[] dp = new int[n + 1];
         dp[0] = cost[0];
-        dp[1] = cost[1];
-        for (int i = 2; i < len; i++) {
-            dp[i] = Math.min(dp[i - 2], dp[i - 1]) + cost[i];
+        dp[1] = cost[1]; // 这里不能是min(A[0], A[1]), 因为dp[i]表示的是必须站在第i级台阶上的时候的最小花费
+        for (int i = 2; i <= n; i++) {
+            dp[i] = Math.min(dp[i - 1], dp[i - 2]) + (i == n ? 0 : cost[i]);
         }
-        return Math.min(dp[len - 2], dp[len - 1]);
+        return dp[n];
     }
 
     public int minCostClimbingStairs_O1(int[] cost) {
