@@ -3,46 +3,34 @@ package tree;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by DrunkPiano on 2017/4/2.
  */
 
 public class BinaryTreeZigzagLevelOrderTraversal {
+    /**
+     * 题意：之字形打印二叉树。
+     * 解法：用一个flag控制bfs的插入链表位置就行了。
+     */
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) return res;
-        LinkedList<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-
-        int curNum = 1;
-        int nextNum = 0;
-        List<Integer> cell = new ArrayList<>();
-        boolean flag = true;
-        while (!queue.isEmpty()) {
-            TreeNode temp = queue.poll();
-            curNum--;
-            if (flag) {
-                cell.add(temp.val);
-            } else {
-                cell.add(0, temp.val);
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        boolean toRight = true;
+        while (!q.isEmpty()) {
+            List<Integer> item = new ArrayList<>();
+            for (int size = q.size(); size > 0; size--) {
+                TreeNode node = q.poll();
+                if (toRight) item.add(node.val);
+                else item.add(0, node.val);
+                if (node.left != null) q.offer(node.left);
+                if (node.right != null) q.offer(node.right);
             }
-
-            if (temp.left != null) {
-                queue.add(temp.left);
-                nextNum++;
-            }
-            if (temp.right != null) {
-                queue.add(temp.right);
-                nextNum++;
-            }
-            if (curNum == 0) {
-                res.add(cell);
-                curNum = nextNum;
-                nextNum = 0;
-                flag = !flag;
-                cell = new ArrayList<>();
-            }
+            toRight = !toRight;
+            res.add(item);
         }
         return res;
     }
