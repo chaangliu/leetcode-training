@@ -1,3 +1,7 @@
+package easy;
+
+import java.util.Arrays;
+
 /**
  * 给定由一些正数（代表长度）组成的数组 A，返回由其中三个长度组成的、面积不为零的三角形的最大周长。
 
@@ -21,7 +25,7 @@
 1 <= A[i] <= 10^6
 20201129
  */
-class Solution {
+class LargestPerimeterTriangle {
     /**
      * 题意：在一个数组中找出三个数字，使得三角形周长最长。问最长的周长是多少。
      * 解法：利用三角形边长性质排序求解即可。

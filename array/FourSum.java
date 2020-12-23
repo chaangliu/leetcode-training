@@ -145,6 +145,5 @@ public class FourSum {
 
     public static void main(String args[]) {
         int[] nums = {-3, -2, -1, 0, 0, 1, 2, 3, 100};
-        System.out.println(fourSum(nums, 0).toString());
     }
 }

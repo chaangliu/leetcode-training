@@ -67,7 +67,7 @@ public class WiggleSubsequence {
     /**
      * approach1 的top down写法：dfs with memo，回溯，如果不加memo：复杂度O(n!)，调用了n!次calculate，会TLE
      */
-    public int wiggleMaxLength(int[] nums) {
+    public int wiggleMaxLength_(int[] nums) {
         if (nums.length < 2) return nums.length;
         Integer[][] memo = new Integer[nums.length][2];
         return 1 + Math.max(calculate(nums, 0, true, memo), calculate(nums, 0, false, memo));

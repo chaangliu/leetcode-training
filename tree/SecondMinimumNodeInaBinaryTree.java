@@ -1,3 +1,7 @@
+package tree;
+
+import tree.TreeNode;
+
 /**
 Given a non-empty special binary tree consisting of nodes with the non-negative value, where each node in this tree has exactly two or zero sub-node. If the node has two sub-nodes, then this node's value is the smaller value among its two sub-nodes. More formally, the property root.val = min(root.left.val, root.right.val) always holds.
 
@@ -22,7 +26,7 @@ class SecondMinimumNodeInaBinaryTree {
         if(x.left == null) return -1; // 叶子节点: 只要判断其中一个child就行
         int leftMin = find(x.left, rootValue);
         int rightMin = find(x.right, rootValue);
-        if(leftMin == -1） return rightMin;
+        if(leftMin == -1) return rightMin;
         if(rightMin == -1) return leftMin;
         return Math.min(leftMin, rightMin);
     }

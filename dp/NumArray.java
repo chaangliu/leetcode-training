@@ -22,7 +22,7 @@ class NumArray {
     int dp[];
     int len;
 
-    public (int[] nums) {
+    public NumArray(int[] nums) {
         if (nums == null || nums.length == 0) return;
         len = nums.length;
         dp = new int[len];

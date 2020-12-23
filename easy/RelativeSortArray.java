@@ -30,7 +30,7 @@ public class RelativeSortArray {
      * 题意：给你arr1和arr2，要求把arr1中的数字按照arr2中出现的顺序排序。没出现过的排最后。
      * 解法：计数排序。对arr1中的数字计数。
      */
-    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+    public int[] relativeSortArray_(int[] arr1, int[] arr2) {
         int upper = 0;
         for (int x : arr1) {
             upper = Math.max(upper, x);

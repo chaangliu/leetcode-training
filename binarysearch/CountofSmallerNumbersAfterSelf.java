@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public Class CountofSmallerNumbersAfterSelf {
+public class CountofSmallerNumbersAfterSelf {
     /**
      * 题意：找出每个数字右边有几个比它小的数。
      * 解法：binary search，有人说是O(n^2)，因为有插入操作。

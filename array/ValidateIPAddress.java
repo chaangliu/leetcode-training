@@ -1,6 +1,6 @@
 import java.net.*;
 
-class Solution {
+class ValidateIPAddress {
     /**
      * 题意：判断给定string是IPV4还是IPV6还是Neither。
      * 解法：（官方题解）可以将地址分为多个块，然后逐块进行验证。
