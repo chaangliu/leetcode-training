@@ -18,27 +18,25 @@ package dp;
  */
 
 public class EditDistance {
+    /**
+     * 题意：求编辑距离。
+     * 解法：dp。
+     * dp[i][j]代表word1的前i位和word2的前j位的距离。i,j为0时代表空字符串。注意要初始化第一行第一列。
+     */
     public int minDistance(String word1, String word2) {
-        if (word1.length() == 0) return word2.length();
-        if (word2.length() == 0) return word1.length();
-
-        //多申请了1行1列存放不加入word1或word2的情况(dp[i][0] = i)
-        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
-        for (int i = 0; i < word1.length() + 1; i++) {
-            dp[i][0] = i;
-        }
-        for (int j = 1; j < word2.length() + 1; j++) {
-            dp[0][j] = j;
-        }
-
-        for (int i = 1; i < word1.length() + 1; i++)
-            for (int j = 1; j < word2.length() + 1; j++) {
+        int m = word1.length(), n = word2.length();
+        int [][] dp = new int [m + 1][n + 1]; // word1的前i位和word2的前j位的距离。i,j为0时代表空字符串。
+        for (int i = 0; i <= m; i++) dp[i][0] = i;
+        for (int i = 0; i <= n; i++) dp[0][i] = i;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
                 if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
                     dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + 1);
+                    dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
                 }
             }
-        return dp[word1.length()][word2.length()];
+        }
+        return dp[m][n];
     }
 }
