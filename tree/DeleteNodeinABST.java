@@ -14,38 +14,41 @@ package tree;
  * root = [5,3,6,2,4,null,7]
  * key = 3
  * <p>
- * 5
- * / \
- * 3   6
- * / \   \
+ *     5
+ *    / \
+ *   3   6
+ *  / \   \
  * 2   4   7
  * <p>
  * Given key to delete is 3. So we find the node with value 3 and delete it.
  * <p>
  * One valid answer is [5,4,6,2,null,null,7], shown in the following BST.
  * <p>
- * 5
- * / \
- * 4   6
- * /     \
+ *     5
+ *    / \
+ *   4   6
+ *  /     \
  * 2       7
  * <p>
  * Another valid answer is [5,2,6,null,4,null,7].
  * <p>
- * 5
- * / \
- * 2   6
- * \   \
- * 4   7
+ *    5
+ *   / \
+ *  2   6
+ *  \   \
+ *  4    7
  */
 public class DeleteNodeinABST {
+    /**
+     * 题意：在bst中删除val是指定值的node，返回root node。
+     * 解法：两个技巧，1 看到bst不要总想着中序遍历，也要想着向左向右搜.. 2 替换node问清楚能不能直接替换node.value
+     */
     public TreeNode deleteNode(TreeNode root, int key) {
         if (root == null) return null;
         if (key > root.val) root.right = deleteNode(root.right, key);
         else if (key < root.val) root.left = deleteNode(root.left, key);
         else {
-            if (root.left == null && root.right == null) return root
-                    ;
+            if (root.left == null && root.right == null) return root;
             else if (root.right != null) {
                 root.val = findMIn(root.right).val;//step1:用找到的node的val替换掉当前node的val
                 root.right = deleteNode(root.right, root.val);//step2:再次利用这个函数，把重复的那个node删掉
