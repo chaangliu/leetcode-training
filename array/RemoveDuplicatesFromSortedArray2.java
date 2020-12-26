@@ -12,44 +12,27 @@ package array;
  */
 
 public class RemoveDuplicatesFromSortedArray2 {
-//    public int removeDuplicates(int[] nums) {
-//        Map<Integer , Integer> map = new HashMap<>();
-//        int result = 1;
-////        int currentAppearance = 0;
-//        for (int i = 1; i < nums.length; i++) {
-//            if (nums[i] != nums[i - 1]) {
-//                nums[result] = nums[i];
-//                result++;
-//            } else if (nums[i] == nums[i - 1] && !map.containsKey(nums[i])) {
-//                nums[result] = nums[i];
-//                result++;
-//                map.put(nums[i], 1);
-//            }
-//        }
-//        return result;
-//    }
 
-    public int removeDuplicates(int[] nums) {
-        int result = 1;
-        int occur = 0;
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1]) {
-                if (occur >= 1) {
-                    occur++;
+    /**
+     * 题意：给你一个sorted array，让你把多余2个连续的数字都删掉。返回最终数组的长度。
+     * 解法：two pointers覆盖法。
+     */
+        public int removeDuplicates(int[] nums) {
+            int j = 1, count = 1; // Initialize the counter and the second pointer.
+            for (int i = 1; i < nums.length; i++) {
+                if (nums[i] == nums[i - 1]) {
+                    count++;
                 } else {
-                    occur++;
-                    nums[result] = nums[i];
-                    result++;
+                    count = 1; // Reset the count since we encountered a different element than the previous one.
                 }
-            } else {
-                //这一步是把occur重新置0
-                occur = 0;
-                nums[result] = nums[i];
-                result++;
+                if (count <= 2) {
+                    nums[j++] = nums[i];
+                }
             }
+            return j;
         }
-        return result;
-    }
+
+
 
     public static void main(String args[]) {
         int[] nums = {1, 1, 1, 2, 2, 3};
