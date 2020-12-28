@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 /**
  * You are given a list of non-negative integers, a1, a2, ..., an, and a target, S. Now you have 2 symbols + and -. For each integer, you should choose one from + and - as its new symbol.
  * <p>
@@ -27,12 +26,8 @@ import java.util.Map;
  */
 
 public class TargetSum {
-    public static void main(String args[]) {
-        int nums[] = {1, 1, 1, 1, 1};
-        new TargetSum().findTargetSumWays_MEMO(nums, 3);
-    }
-
     /**
+     * 题意：给你一个非负整数数组和一个S，让你给每个数字前面加上加减号，计算加起来等于S一共有多少种方案。
      * approach1, dfs，类似word search那种floodfill，只不过这个只有两种方向。
      * 执行顺序类似这样：+++，++-，+-+，+--，-++，-+-，--+，---
      */
@@ -103,7 +98,7 @@ public class TargetSum {
         return ans;
     }
 
-    //这个函数返回的是：当指针指到index了，之前遍历过的path的和是sum，要达到S有可能有几种组合。比如1，1，1，1，1；2->2的时候还有三种组合（剩下的三个1里面任意一个为负数）
+    // 这个函数返回的是：当指针指到index了 并且之前遍历过的path的和是sum的情况下，要达到S有可能有几种组合。比如1，1，1，1，1；2->2的时候还有三种组合（剩下的三个1里面任意一个为负数）
     private int helper(int[] nums, int index, int sum, int S, Map<String, Integer> map, String path) {
         String encodeString = index + "->" + sum;
         if (map.containsKey(encodeString)) {

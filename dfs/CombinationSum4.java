@@ -33,6 +33,8 @@ import java.util.Arrays;
 public class CombinationSum4 {
 
     /**
+     * 题意：给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
+     * 用DFS会超时。正确解法是DP，
      * 和322. coin change 类似，都是bottom up想法，假设还有一步就能达到target；
      * 那么最后一次pick：对于[1,2,3]和target=4，f(4) = f(4-3) + f(4-2) + f(4 - 1), 这么看其实有点像青蛙跳台阶或者斐波那契数列，哈哈
      * -----------------------------------------------------------------
@@ -72,6 +74,7 @@ public class CombinationSum4 {
         return helper(dp, nums, target);
     }
 
+    // 构成target的方案 = sum(构成 target - num的方案)
     private int helper(int[] dp, int[] nums, int target) {
         if (dp[target] != -1) return dp[target];
         int res = 0;
@@ -89,26 +92,4 @@ public class CombinationSum4 {
         int res = new CombinationSum4().combinationSum4_(nums, 4);
         System.out.println();
     }
-
-    //    ## recursion : Time Limit Exceeded
-    //    int count = 0;
-    //
-    //    public int combinationSum4(int[] nums, int target) {
-    //        if (nums == null || nums.length == 0 || target < 1) return 0;
-    //        backtrack(nums, target, new ArrayList<Integer>());
-    //        return count;
-    //    }
-    //
-    //    private void backtrack(int[] nums, int remain, List<Integer> item) {
-    //        if (remain < 0) return;
-    //        if (remain == 0) {
-    //            count++;
-    //            return;
-    //        }
-    //        for (int i = 0; i < nums.length; i++) {
-    //            item.add(nums[i]);
-    //            backtrack(nums, remain - nums[i], item);
-    //            item.remove(item.size() - 1);
-    //        }
-    //    }
 }
