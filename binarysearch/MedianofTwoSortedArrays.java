@@ -18,8 +18,45 @@ package binarysearch;
 
 public class MedianofTwoSortedArrays {
     /**
-     * 题意：找出两个有序数列的中位数，时间：O(log (m+n))
-     * 解法：中位数的意思是，如果有n个有序的数，n是奇数，就取第n/2个；n是偶数，就取第n/2 - 1 和 n/2 个数的平均值；
+     * 题意：找出两个有序数列的中位数，要求时间：O(log (m+n))
+     * 解法: 折半查找，每次取两个数组的第k/2个数字，比较大小，然后缩小搜索范围，直到k == 1。
+     * 这题我感觉递归比较容易理解，官方题解用了迭代。
+     * 参考：https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/zhen-zheng-ologmnde-jie-fa-na-xie-shuo-gui-bing-pa/
+     * 也可以参考：https://www.geeksforgeeks.org/k-th-element-two-sorted-arrays/
+     */
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        if (m == 0)
+            return n % 2 != 0 ? 1.0 * nums2[n / 2] : (nums2[n / 2] + nums2[n / 2 - 1]) / 2.0;
+        if (n == 0)
+            return m % 2 != 0 ? 1.0 * nums1[m / 2] : (nums1[m / 2] + nums1[m / 2 - 1]) / 2.0;
+        int total = m + n;
+        return (total & 1) == 1 ?
+                find_kth(nums1, 0, nums2, 0, total / 2 + 1) :
+                (find_kth(nums1, 0, nums2, 0, total / 2) + find_kth(nums1, 0, nums2, 0, total / 2 + 1)) / 2.0;
+    }
+
+    // 寻找a 和 b 数组中，第k小的数字
+    double find_kth(int[] a, int a_begin, int[] b, int b_begin, int k) {
+        if (a_begin >= a.length) return b[b_begin + k - 1];
+        if (b_begin >= b.length) return a[a_begin + k - 1];
+        if (k == 1) return Math.min(a[a_begin], b[b_begin]);
+        int mid_a = Integer.MAX_VALUE;
+        int mid_b = Integer.MAX_VALUE;
+        // mid_a / mid_b 分别表示 a数组、b数组中第 k / 2 个数
+        if (a_begin + k / 2 - 1 < a.length) mid_a = a[a_begin + k / 2 - 1];
+        if (b_begin + k / 2 - 1 < b.length) mid_b = b[b_begin + k / 2 - 1];
+        // 如果a数组的第 k / 2 个数小于b数组的第 k / 2 个数，表示总的第 k 个数位于a的第k / 2个数的后半段，或者是b的第 k / 2个数的前半段
+        // 由于范围缩小了 k / 2 个数，此时总的第 k 个数实际上等于新的范围内的第 k - k / 2个数，依次递归
+        return mid_a < mid_b ?
+                find_kth(a, a_begin + k / 2, b, b_begin, k - k / 2) :
+                find_kth(a, a_begin, b, b_begin + k / 2, k - k / 2);
+    }
+
+    /**
+     * 解法2：binary search
+     * 中位数的意思是，如果有n个有序的数，n是奇数，就取第n/2个；n是偶数，就取第n/2 - 1 和 n/2 个数的平均值；
      * 那么，这题是两个有序数列，如何让它等效于一个有序数列？可以把arr1/arr2的前半部分和后半部分分成一组(记为left，right)，假设用i,j来分割arr1和arr2，
      * 那么只要保证arr1[i-1] <= arr2[j] && arr2[j - 1] <= arr1[i], 就可以保证left部分总小于等于right部分；
      * 其次就是要保证left部分和right部分的数字数量一样或者相差1，这样接缝处就可以找到中位数。也就是i + j = (m + n) / 2
@@ -28,7 +65,7 @@ public class MedianofTwoSortedArrays {
      * * A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
      * * B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
      **/
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    public double findMedianSortedArrays__(int[] nums1, int[] nums2) {
         int m = nums1.length, n = nums2.length;
         if (m > n) return findMedianSortedArrays(nums2, nums1);//保证m <= n
         int i = 0, j = 0;
