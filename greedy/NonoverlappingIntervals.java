@@ -52,10 +52,11 @@ public class NonoverlappingIntervals {
      * Remove x, and all intervals intersecting x, from the set of candidate intervals.
      * Repeat until the set of candidate intervals is empty.
      * 20200115 review
-     * 这题两个要点：
-     * 1. 按照finish time排序，这样才能保证greedy生效
+     * 两个要点：
+     * 1. 可以按照start time或者finish time排序，但是用start time排序的时候要额外加个条件保证结束早的interval在前面
      * 2. 统计的是【不重合的个数】，而非重合的个数；否则会fails [[1,100],[11,22],[1,11],[2,12]], output 3, expected 2
      * 对于2，可以想象如果有N个连续重合的interval，但是每相隔1个interval都彼此不重合，那么显然不能统计重合的个数。
+     * Approach 1
      */
     public int eraseOverlapIntervals(int[][] intervals) {
         if (intervals.length == 0) return 0;
@@ -71,18 +72,46 @@ public class NonoverlappingIntervals {
         return intervals.length - nonOverlaps;
     }
 
-    public int eraseOverlapIntervals(Interval[] intervals) {
-        if (intervals.length == 0) return 0;
-        Arrays.sort(intervals, (a, b) -> a.end - b.end);
-        int end = intervals[0].end;
-        int count = 1;
+    /**
+     * Approach 2
+     * 用start time排序，需要加一个条件保证结束早的interval在前面
+     */
+    public int eraseOverlapIntervals__(int[][] intervals) {
+        if (intervals.length <= 1) return 0;
+        Arrays.sort(intervals, (a, b) -> a[0] == b[0] ? a[0] - b[0] : a[1] - b[1]); // a[0] == b[0]的时候要保证结束早的interval在前面
+        int nonOverLapped = 1, end = intervals[0][1];
         for (int i = 1; i < intervals.length; i++) {
-            if (intervals[i].start >= end) {
-                end = intervals[i].end;
-                count++;// 统计不重合的个数
+            if (intervals[i][0] >= end) {
+                nonOverLapped++;
+                end = intervals[i][1];
             }
         }
-        return intervals.length - count;
+        return intervals.length - nonOverLapped;
+    }
+
+    /**
+     * Approach 3
+     * 记录需要移除的区间(重合的区间)
+     * credit to: https://leetcode-cn.com/problems/non-overlapping-intervals/solution/wu-zhong-die-qu-jian-ji-bai-liao-100de-y-kkzr/
+     */
+    public int eraseOverlapIntervals___(int[][] intervals) {
+        if (intervals.length == 0)
+            return 0;
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int end = intervals[0][1];
+        int count = 0;
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] < end) {
+                // 如果重叠了，必须要移除一个，所以count要加1，
+                // 然后更新尾部的位置，我们取尾部比较小的
+                end = Math.min(end, intervals[i][1]);
+                count++;
+            } else {
+                // 如果没有重叠，就不需要移除，只需要更新尾部的位置即可
+                end = intervals[i][1];
+            }
+        }
+        return count;
     }
 
     /**
