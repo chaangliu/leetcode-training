@@ -27,7 +27,8 @@ package tree;
 public class BinaryTreeMaximumPathSum {
     /**
      *  题意：给你一个tree，问最大的路径和是多少。可以是一条折线，但是不能出现岔路。
-     *  解法：dfs
+     *  解法：dfs, 后序遍历，我看是hard所以礼貌性地加了个memo，但其实根本不用，dfs就是O(n);
+     *  但要注意，dfs返回的不是包含当前node的路径的最大值，而是左右某个branch的最大值 + 当前node.val。
      */
     int res = Integer.MIN_VALUE;
 
