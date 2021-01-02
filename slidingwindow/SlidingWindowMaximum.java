@@ -51,15 +51,29 @@ public class SlidingWindowMaximum {
         return res;
     }
 
-
     /**
-     * approach2. 双端队列O(n)解法，很经典，单调队列(栈底(左边)最大，栈顶(右边)最小)，
+     * approach2. 双端队列O(n)解法，很经典，单调队列(栈底(左边)最大，栈顶(右边)最小)，像一个播放键；
      * 相当于两边都能操作的单调栈，想象一个从左到右的队列，为了跟窗口移动方向一致，右边是队头head左边是队尾rear；
      * 队头保存window中的最大数的index，添加新数的时候不断从队尾移出比新数小的数的index
-     * Last和First可以理解为加入的顺序
-     * https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation
+     * 需要注意的是peek/pollLast是最后(最近)加入的元素, peekLast(Added)。
      */
     public int[] maxSlidingWindow(int[] A, int k) {
+        int[] res = new int[A.length - k + 1];
+        int index = 0;
+        Deque<Integer> d = new ArrayDeque<>();
+        for (int i = 0; i < A.length; i++) {
+            while (!d.isEmpty() && i - d.peekFirst() >= k) d.pollFirst();
+            while (!d.isEmpty() && A[d.peekLast()] <= A[i]) d.pollLast();
+            d.offer(i);
+            if (i >= k - 1) res[index++] = A[d.peekFirst()];
+        }
+        return res;
+    }
+
+    /**
+     * https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation
+     */
+    public int[] maxSlidingWindow_(int[] A, int k) {
         if (A == null || k <= 0) return new int[0];
         int n = A.length;
         int[] res = new int[n - k + 1];
@@ -112,9 +126,4 @@ public class SlidingWindowMaximum {
         }
         return res;
     }
-
-    public static void main(String[] args) {
-        new SlidingWindowMaximum().maxSlidingWindow(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3);
-    }
-
 }
