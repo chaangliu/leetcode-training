@@ -47,17 +47,15 @@ public class KthLargestElementInAnArray {
         return partition(A, l, r);
     }
 
-    // 3,2,1,5,6,4
-    private int partition(int[] A, int lo, int hi) {
-        int pivot = A[lo]; // A[lo], not lo
-        int pos = lo + 1;
-        for (int i = lo + 1; i <= hi; i++) {//  lo + 1, not lo
-            if (A[i] >= pivot) { // >或者>=都行
-                swap(A, pos++, i);
+    private int partition(int [] A, int l, int r) {
+        int index = l + 1;
+        for (int i = l + 1; i <=r; i++) {
+            if (A[i] > A[l]) { // >或者>=都行
+                swap(A, i, index++); // swap i和index，不是l和index
             }
         }
-        swap(A, lo, pos - 1); // pos - 1, not pos
-        return pos - 1;
+        swap(A, l, index - 1); // pos - 1, not pos
+        return index - 1;
     }
 
 
