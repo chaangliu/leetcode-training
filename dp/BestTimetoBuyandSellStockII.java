@@ -77,7 +77,7 @@ public class BestTimetoBuyandSellStockII {
     /**
      * 上面的2D由于i只依赖i-1状态，可以进而转1D滚动数组:
      */
-    public int maxProfit___(int[] prices) {
+    public int maxProfit____(int[] prices) {
         int T_ik0 = 0, T_ik1 = Integer.MIN_VALUE;
 
         for (int price : prices) {
