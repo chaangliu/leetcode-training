@@ -2,6 +2,7 @@ package graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,33 +26,30 @@ import java.util.Set;
  * 20190316
  */
 public class EvaluateDivision {
-
     /**
+     * 题意：给你一些字母之间的除法运算的结果，然后给你一些query，让你从已知的关系中找出query想要计算的除法结果。
+     * 解法：build graph + dfs
      * 这题没做出来，后面附上了我的思路。
      * 后来发现用graph思想，以下摘录一个比较好理解的解法
-     *
-     * <p>
      * Binary relationship is represented as a graph usually.
      * Does the direction of an edge matters? -- Yes. Take a / b = 2 for example, it indicates a --2--> b as well as b --1/2--> a.
      * Thus, it is a directed weighted graph.
      * In this graph, how do we evaluate division?
      * Take a / b = 2, b / c = 3, a / c = ? for example,
-     * <p>
      * a --2--> b --3--> c
      * We simply find a path using DFS from node a to node c and multiply the weights of edges passed, i.e. 2 * 3 = 6.
-     * <p>
      * Please note that during DFS,
      * Rejection case should be checked before accepting case.
      * Accepting case is (graph.get(u).containsKey(v)) rather than (u.equals(v)) for it takes O(1) but (u.equals(v)) takes O(n) for n is the length of the longer one between u and v.
      */
-    public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
 
         /* Build graph. */
         Map<String, Map<String, Double>> graph = buildGraph(equations, values);
-        double[] result = new double[queries.length];
+        double[] result = new double[queries.size()];
 
-        for (int i = 0; i < queries.length; i++) {
-            result[i] = getPathWeight(queries[i][0], queries[i][1], new HashSet(), graph);
+        for (int i = 0; i < queries.size(); i++) {
+            result[i] = getPathWeight(queries.get(i).get(0), queries.get(i).get(1), new HashSet(), graph);
         }
 
         return result;
@@ -94,13 +92,13 @@ public class EvaluateDivision {
      * b : (a,0.5)(c,2.0)
      * c : (b,0.5)
      */
-    private Map<String, Map<String, Double>> buildGraph(String[][] equations, double[] values) {
+    private Map<String, Map<String, Double>> buildGraph(List<List<String>> equations, double[] values) {
         Map<String, Map<String, Double>> graph = new HashMap<>();
         String u, v;
 
-        for (int i = 0; i < equations.length; i++) {
-            u = equations[i][0];
-            v = equations[i][1];
+        for (int i = 0; i < equations.size(); i++) {
+            u = equations.get(i).get(0);
+            v = equations.get(i).get(1);
             graph.putIfAbsent(u, new HashMap());
             graph.get(u).put(v, values[i]);
             graph.putIfAbsent(v, new HashMap());
