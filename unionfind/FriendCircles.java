@@ -1,6 +1,8 @@
 package unionfind;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * There are N students in a class. Some of them are friends, while some are not. Their friendship is transitive in nature. For example, if A is a direct friend of B, and B is a direct friend of C, then A is an indirect friend of C. And we defined a friend circle is a group of students who are direct or indirect friends.
@@ -32,15 +34,39 @@ import java.util.HashSet;
  */
 public class FriendCircles {
     /**
-     * Approach1.
-     * 我的思路：floodfill，不同的朋友圈用不同颜色染色，最后统计有几种颜色
-     * <p>
-     * 做的过程中出了两个错误：1. 一开始没把颜色带入递归 2. 忘记用set统计颜色
+     * 题意：用邻接表表示朋友是否认识，问朋友圈的数量。
+     * 这题和Number of Provinces一样：城市和城市是否连接用邻接表表示，1表示连接0表示不连接。问有几个连接的城市群。
+     * Approach1: 用dfs + visited数组就行。
+     */
+    public int findCircleNum_DFS(int[][] isConnected) {
+        int provinces = isConnected.length;
+        boolean[] visited = new boolean[provinces];
+        int circles = 0;
+        for (int i = 0; i < provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+
+    public void dfs(int[][] isConnected, boolean[] visited, int provinces, int i) {
+        for (int j = 0; j < provinces; j++) {
+            if (isConnected[i][j] == 1 && !visited[j]) {
+                visited[j] = true;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+
+    /**
+     * 我一开始的floodFill思路：给原数组涂色
      */
     public int findCircleNum(int[][] M) {
         if (M == null || M.length == 0) return 0;
-        for (int i = 0; i < M.length; i++) {
-            floodFill(M, i, -(i + 1));//为了有区分度，用负数作为颜色
+        for (int i = 0; i < M.length; i++) { // 对每个城市尝试涂色
+            floodFill(M, i, -(i + 1)); // 为了有区分度，用负数作为颜色
         }
         HashSet<Integer> set = new HashSet<>();
         for (int i = 0; i < M.length; i++) {
@@ -58,39 +84,40 @@ public class FriendCircles {
         for (int i = 0; i < M[row].length; i++) {
             if (M[row][i] == 1) {
                 M[row][i] = color;
-                if (i != row) floodFill(M, i, color);//一个朋友传给下一个朋友，所以floodFill也不一定是位置连续的区域
+                floodFill(M, i, color);
             }
         }
     }
 
 
     /**
-     * 网上的解法；用一维数组维护有没有访问过（因为朋友是双向的），不改变原来数组的内容；比我的代码💊高一个level
+     * Approach2. BFS + visited数组
      */
-    public int findCircleNum___(int[][] M) {
-        int[] visited = new int[M.length];
-        int count = 0;
-        for (int i = 0; i < M.length; i++) {
-            if (visited[i] == 0) {
-                dfs(M, visited, i);
-                count++;
+    public int findCircleNum_BFS(int[][] isConnected) {
+        int provinces = isConnected.length;
+        boolean[] visited = new boolean[provinces];
+        int circles = 0;
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < provinces; i++) {
+            if (!visited[i]) {
+                queue.offer(i);
+                while (!queue.isEmpty()) {
+                    int j = queue.poll();
+                    visited[j] = true;
+                    for (int k = 0; k < provinces; k++) {
+                        if (isConnected[j][k] == 1 && !visited[k]) {
+                            queue.offer(k);
+                        }
+                    }
+                }
+                circles++;
             }
         }
-        return count;
+        return circles;
     }
-
-    public void dfs(int[][] M, int[] visited, int i) {
-        for (int j = 0; j < M.length; j++) {
-            if (M[i][j] == 1 && visited[j] == 0) {
-                visited[j] = 1;
-                dfs(M, visited, j);
-            }
-        }
-    }
-
 
     /**
-     * Approach2.
+     * Approach3.
      * UnionFind方法，N - 交友成功的次数(union成功次数) = 朋友圈的个数
      */
     public int findCircleNum___UF(int[][] M) {
