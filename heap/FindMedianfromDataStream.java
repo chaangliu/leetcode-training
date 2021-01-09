@@ -26,7 +26,7 @@ import java.util.Queue;
 public class FindMedianfromDataStream {
     /**
      * 题意：给你一个数据流，让你用O(1)时间获取中位数。剑指offer原题。
-     * 做法是用一个最小堆和一个最大堆。如果最小的的peek>最大堆的peek，交换两个数字。注意小顶堆存放较大的数。
+     * 做法是用一个最小堆和一个最大堆。如果最小堆的peek>最大堆的peek，交换两个数字。注意小顶堆存放较大的数。
      */
     class MedianFinder {
         //small:24
