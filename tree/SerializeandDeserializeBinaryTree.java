@@ -1,6 +1,5 @@
 package tree;
 
-import android.text.TextUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -120,7 +119,7 @@ public class SerializeandDeserializeBinaryTree {
     }
 
     public TreeNode deserialize_(String data) {
-        if (TextUtils.isEmpty(data)) return null;
+        if (data.length() == 0) return null;
         Queue<TreeNode> q = new LinkedList<>();
         String[] values = data.split(" ");
         TreeNode root = new TreeNode(Integer.parseInt(values[0]));

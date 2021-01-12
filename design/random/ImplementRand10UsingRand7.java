@@ -35,6 +35,7 @@ package design.random;
  */
 public class ImplementRand10UsingRand7 {
     /**
+     * 题意：也是rand7()实现rand10()
      * 这题是经典老题了，
      * 方法：拒绝取样(Rejection Sampling)
      * Rand_a2 = a * (Rand_a-1) + Rand_a  可生成1-a2的随机数。
@@ -52,7 +53,7 @@ public class ImplementRand10UsingRand7 {
     /**
      * 改进1，缩小拒绝范围
      * 上面有大概率是超出10的，改进方法就是找10的倍数然后做mod操作。
-     * 同样的，如果我们要利用rand5求rand7，那么有rand7 = rand25 % 7 + 1，这样可以找到最接近25的21
+     * 同样的，如果我们要利用rand5求rand7，那么有rand7 = rand25 % 7 + 1，这样可以找到最接近25的21，如果>21就拒绝采样，因为不够凑齐一个周期了。
      * 类似资料：https://blog.csdn.net/gt362ll/article/details/82895591
      */
     public int rand10_() {
