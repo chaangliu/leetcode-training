@@ -39,6 +39,36 @@ public class RedundantConnection {
      * 1. path compression，在find的时候顺便压缩路径，可以减少find的递归次数
      * 2. merge by rank，把rank较低的tree merge到rank高的tree上，这样可以减少path compression的次数
      */
+    public int[] findRedundantConnection_(int[][] edges) {
+        int nodesCount = edges.length;
+        int[] parent = new int[nodesCount + 1];
+        for (int i = 1; i <= nodesCount; i++) parent[i] = i; // 初始状态，每个node的root都是自己
+        for (int i = 0; i < nodesCount; i++) {
+            int[] edge = edges[i];
+            int node1 = edge[0], node2 = edge[1];
+            if (find(parent, node1) != find(parent, node2)) {
+                union(parent, node1, node2);
+            } else {
+                return edge;
+            }
+        }
+        return new int[0];
+    }
+
+    public void union(int[] parent, int index1, int index2) {
+        parent[find(parent, index1)] = find(parent, index2);
+    }
+
+    public int find(int[] parent, int index) {
+        if (parent[index] != index) {
+            parent[index] = find(parent, parent[index]);
+        }
+        return parent[index];
+    }
+
+    /**
+     * 以前的做法，跟花花学的
+     */
     int MAX_EDGE_VAL = 1001;
 
     class DSU {
@@ -46,7 +76,7 @@ public class RedundantConnection {
         int rank[] = new int[MAX_EDGE_VAL];
 
         DSU() {
-            //初始状态，每个node的root都是自己
+            // 初始状态，每个node的root都是自己
             for (int i = 0; i < MAX_EDGE_VAL; i++) rootOf[i] = i;
         }
 
