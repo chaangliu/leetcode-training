@@ -31,7 +31,8 @@ import java.util.List;
  */
 public class BinaryPrefixDivisibleBy5 {
     /**
-     * 这题因为A的长度是30000，所以我一开始从int改成long，也没用的还是会超；
+     * 题意：计算A数组从0开始到迄今为止的每个二进制能否被5整除。
+     * 这题因为A的长度是30000，所以我一开始从int改成long，也没用的，还是会超；
      * 后来经过点拨 发现对于判断取余的题其实只要保留最后一位，或者​多保留几位也行，不超过int就行
      */
     public List<Boolean> prefixesDivBy5(int[] A) {
