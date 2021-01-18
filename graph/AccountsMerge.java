@@ -31,14 +31,13 @@ import java.util.Set;
  */
 public class AccountsMerge {
     /**
+     * 题意：把有相同Email的账户合并。
      * 这题用普通的DFS思路特别复杂，写了好久，Wrong Answer。后面附上我的解法。
      * 后来发现是Graph题，无向图。Graph最近遇到两三题，不熟。另外graph题一般能用并查集解，不知有没有必要学一下并查集。
-     * <p>
      * 下面这个答案来自讨论区。
-     * <p>
      */
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
-        //这个graph是无向图，node的value是email地址，没有重复email
+        // 这个graph是无向图，node的value是email地址，没有重复email
         Map<String, Set<String>> graph = new HashMap<>();  //<email node, neighbor nodes>，neighbor nodes代表邻接点
         Map<String, String> name = new HashMap<>();        //<email, username>
         // Build the graph;
@@ -69,7 +68,6 @@ public class AccountsMerge {
                 res.add(list);
             }
         }
-
         return res;
     }
 
