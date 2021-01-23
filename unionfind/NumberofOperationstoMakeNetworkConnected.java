@@ -1,6 +1,7 @@
 package unionfind;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,15 +35,78 @@ import java.util.List;
  */
 public class NumberofOperationstoMakeNetworkConnected {
     /**
-     * 题意：一些电脑用一些线连起来了，有些线是多余的，问最少可以移动几根线就可以让所有的电脑都connected。
+     * 题意：n台电脑用一些线连起来了，有些线是多余的，问最少可以移动几根线就可以让所有的电脑都connected。
      * 这题跟friend circles那题几乎一样，就是计算有多少多余的线和多少孤立的电脑。
      * 这题我自己建图，但是有个case一直过不了，显示有有12台电脑没有朋友，用DSU来找，发现也是12台孤立的电脑，但是却需要13根线。。无法理解。。
+     * 或者，计算连通分量数量-1.
      */
+    class Solution {
+        public int makeConnected(int n, int[][] connections) {
+            if (connections.length < n - 1) {
+                return -1;
+            }
+
+            UnionFind uf = new UnionFind(n);
+            for (int[] conn : connections) {
+                uf.unite(conn[0], conn[1]);
+            }
+
+            return uf.setCount - 1;
+        }
+    }
+
+    // 并查集模板
+    class UnionFind {
+        int[] parent;
+        int[] size;
+        int n;
+        // 当前连通分量数目
+        int setCount;
+
+        public UnionFind(int n) {
+            this.n = n;
+            this.setCount = n;
+            this.parent = new int[n];
+            this.size = new int[n];
+            Arrays.fill(size, 1);
+            for (int i = 0; i < n; ++i) {
+                parent[i] = i;
+            }
+        }
+
+        public int findset(int x) {
+            return parent[x] == x ? x : (parent[x] = findset(parent[x]));
+        }
+
+        public boolean unite(int x, int y) {
+            x = findset(x);
+            y = findset(y);
+            if (x == y) {
+                return false;
+            }
+            if (size[x] < size[y]) {
+                int temp = x;
+                x = y;
+                y = temp;
+            }
+            parent[y] = x;
+            size[x] += size[y];
+            --setCount;
+            return true;
+        }
+
+        public boolean connected(int x, int y) {
+            x = findset(x);
+            y = findset(y);
+            return x == y;
+        }
+    }
+
     public int makeConnected(int n, int[][] connections) {
         DSU dsu = new DSU(n);
-        int cnt = 0;// 必要的线数
+        int cnt = 0;// 所有线里面必要的线数
         for (int[] con : connections) {
-            if (dsu.union(con[0], con[1])) {
+            if (dsu.union(con[0], con[1])) { // 不在一个connected component中 => union
                 cnt++;
             }
         }
