@@ -17,6 +17,10 @@ package easy;
  * 20190520
  */
 public class LongestContinuousIncreasingSubsequence {
+    /**
+     * 题意：求最长递增子串。
+     * 解法：dp[i] = A[i] > A[i - 1] ? dp[i - 1] + 1 : 1
+     */
     public int findLengthOfLCIS(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         int res = 1, tmp = 1;
