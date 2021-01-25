@@ -20,10 +20,11 @@ package unionfind;
  */
 public class RegionsCutBySlashes {
     /**
+     * 题意：N * N方格，每个方格可能有左右斜杠或者空格。问这些斜杠能分出多少个区域。
      * 此题只能用UnionFind做。每个格子分割成如下4个小方格：
-     * 0
+     *   0
      * 1   3
-     * 2
+     *   2
      */
     int N;
 
