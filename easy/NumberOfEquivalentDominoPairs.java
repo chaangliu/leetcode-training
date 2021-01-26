@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 public class NumberOfEquivalentDominoPairs {
     /**
+     * 题意：一些二元组，如果[a,b][c,d]满足a=c b=d或者a=d b=c就算是一对。问一共有几对。
      * 上周contest第一题，n^2会tle,我写了o(n).我看崔神用了最简单的方案，统一先把小的换前面，o(nlogn)。
      */
     public int numEquivDominoPairs__TLE(int[][] dominoes) {
@@ -29,6 +30,18 @@ public class NumberOfEquivalentDominoPairs {
             }
         }
         return res;
+    }
+
+    // leetcode solutions
+    public int numEquivDominoPairs____(int[][] dominoes) {
+        int[] num = new int[100];
+        int ret = 0;
+        for (int[] domino : dominoes) {
+            int val = domino[0] < domino[1] ? domino[0] * 10 + domino[1] : domino[1] * 10 + domino[0];
+            ret += num[val];
+            num[val]++;
+        }
+        return ret;
     }
 
     // [[1,2],[2,1],[3,4],[5,6]]
