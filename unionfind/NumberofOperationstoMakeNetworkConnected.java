@@ -38,19 +38,17 @@ public class NumberofOperationstoMakeNetworkConnected {
      * 题意：n台电脑用一些线连起来了，有些线是多余的，问最少可以移动几根线就可以让所有的电脑都connected。
      * 这题跟friend circles那题几乎一样，就是计算有多少多余的线和多少孤立的电脑。
      * 这题我自己建图，但是有个case一直过不了，显示有有12台电脑没有朋友，用DSU来找，发现也是12台孤立的电脑，但是却需要13根线。。无法理解。。
-     * 或者，计算连通分量数量-1.
+     * 或者，计算连通分量数量-1，也就是把所有联通分量连起来需要的线数，跟friend circles一样。
      */
     class Solution {
         public int makeConnected(int n, int[][] connections) {
             if (connections.length < n - 1) {
                 return -1;
             }
-
             UnionFind uf = new UnionFind(n);
             for (int[] conn : connections) {
                 uf.unite(conn[0], conn[1]);
             }
-
             return uf.setCount - 1;
         }
     }
