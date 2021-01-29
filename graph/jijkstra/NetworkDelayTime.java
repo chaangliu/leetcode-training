@@ -1,4 +1,4 @@
-package graph;
+package graph.jijkstra;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Queue;
  */
 public class NetworkDelayTime {
     /**
-     * 题意：给你N个网络结点，问从任意一个node发出信号，最早需要多少时间可以让所有node都收到信号。
+     * 题意：给你N个网络结点，问从node K发出信号，最早需要多少时间可以让所有node都收到信号。times[i] = (ui, vi, wi)，其中 ui 是源节点，vi 是目标节点， wi 是一个信号从源节点传递到目标节点的时间。
      * 这题其实是求「最小」网络时延，因为不同路径时延不一样。
      * 可以转换成求K到其他所有节点的最短路径中最大的那个路径，也就是至少需要的时间。
      * 可以用单源最短路径算法解决，比如Bellman-Ford，Dijkstra；Floyd是任意两点最短路径的算法在这里似乎不适用。
@@ -79,8 +79,8 @@ public class NetworkDelayTime {
 
     /**
      * Dijkstra/bfs，推荐这种写法。类似题目787
-     * 最小堆存放二元组[node到K的distance，node]，每轮遍历临接点
-     * dijkstra的bfs和普通bfs的显著区别是，dijkstra不是严格按照层数bfs，而是每次add之后从队列中取出最小的，
+     * 最小堆存放二元组[node到K的distance，node]，每轮遍历邻接点
+     * dijkstra的bfs和普通bfs的显著区别是，dijkstra不是严格按照层数bfs，而是每次add之后从队列中取出最小的，正好符合Dijkstra的贪心思路
      * 两点不同：
      * 1. 这个queue不是linkedlist，而是priorityqueue，
      * 2. 不能像普通bfs一样在加入queue之前就标记visited，而要先把当前层全部加进去，取出来之后再判断是否v过。比如case：
@@ -94,22 +94,22 @@ public class NetworkDelayTime {
             map.putIfAbsent(time[0], new HashMap<>());
             map.get(time[0]).put(time[1], time[2]);
         }
-        //distance, node into pq
-        Queue<int[]> pq = new PriorityQueue<>((a, b) -> (a[0] - b[0]));
+        // distance, node into pq
+        Queue<int[]> pq = new PriorityQueue<>((a, b) -> (a[0] - b[0])); // distance近的在堆顶
         pq.add(new int[]{0, K});
         boolean[] visited = new boolean[N + 1];
         int res = 0;
         while (!pq.isEmpty()) {
-            int[] cur = pq.remove();
-            int curNode = cur[1];
-            int curDist = cur[0];
-            if (visited[curNode]) continue;//v过就跳过，这样能保证res是minDist
-            visited[curNode] = true;
+            int[] pair = pq.remove();
+            int u = pair[1];
+            int curDist = pair[0];
+            if (visited[u]) continue; // v过就跳过，这样能保证res是minDist
+            visited[u] = true;
             res = curDist;
             N--;
-            if (map.containsKey(curNode)) {
-                for (int next : map.get(curNode).keySet()) {// 每次从neighbours里挑最近的；这儿不用判断或添加visited
-                    pq.add(new int[]{curDist + map.get(curNode).get(next), next});
+            if (map.containsKey(u)) {
+                for (int v : map.get(u).keySet()) { // 把所有邻居计算下距离放到pq里
+                    pq.add(new int[] {curDist + map.get(u).get(v), v});
                 }
             }
         }
