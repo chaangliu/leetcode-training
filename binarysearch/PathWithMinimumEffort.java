@@ -17,6 +17,7 @@ public class PathWithMinimumEffort {
     /**
      * 题意：一个二维数组，每个格子上的数字代表高度，让你从左上角走到右下角，使得这个过程中经过的最大高度差绝对值最小。求这个最小的高度绝对值。
      * 解法：枚举高度，binary search + bfs。有点像分巧克力那题。
+     * same as 1631. Path With Minimum Effort 也可以用Dijkstra或并查集。
      */
     public int minimumEffortPath(int[][] heights) {
         int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
