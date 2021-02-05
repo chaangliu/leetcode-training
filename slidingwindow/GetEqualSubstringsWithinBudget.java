@@ -37,10 +37,9 @@ package slidingwindow;
  */
 public class GetEqualSubstringsWithinBudget {
     /**
-     * 这题是想把s,t两个string里面的尽量长的substring转换为相同，转换限制是ascii相差最大为maxCost。
-     * 首先从数据规模看出肯定是O(n)解法。另外，这题是连续的substring，那么不能用最小堆去贪心分配。
-     * 我想到能不能利用前缀和，不过发现前缀和貌似只能O(n^2)。
-     * 然后就想到sliding window，思路很简单但是写起来有一定技巧，right一直expand，left用while来shrink兜底。模板可以参考 Find All Anagrams in a String那题讨论区，https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem
+     * 题意：这题是想把s,t两个string里面的尽量长的substring转换为相同，转换限制是ascii相差最大为maxCost。
+     * 首先，注意到是substring，不是subsequence，所以容易想到sliding window。
+     * 思路很简单但是写起来有一定技巧，right一直expand，left用while来shrink兜底。模板可以参考 Find All Anagrams in a String那题讨论区，https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92007/Sliding-Window-algorithm-template-to-solve-all-the-Leetcode-substring-search-problem
      */
     public int equalSubstring(String s, String t, int maxCost) {
         int len = s.length();
@@ -49,11 +48,11 @@ public class GetEqualSubstringsWithinBudget {
             cost += Math.abs(s.charAt(r) - t.charAt(r));
             if (cost <= maxCost)
                 res = Math.max(res, r - l + 1);
-            while (cost > maxCost) {//left用while来shrink
+            while (cost > maxCost) { // left用while来shrink
                 cost -= Math.abs(s.charAt(l) - t.charAt(l));
                 l++;
             }
-            r++;//right不停地expand
+            r++; // right不停地expand
         }
         return res;
     }
