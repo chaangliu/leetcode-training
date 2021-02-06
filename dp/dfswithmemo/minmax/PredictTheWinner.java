@@ -26,7 +26,7 @@ package dp.dfswithmemo.minmax;
  */
 public class PredictTheWinner {
     /**
-     * 题意：一个长度最多20的数组里存放正整数，我和对手每次从两端分别取一个数字，每个人都全局最优地去取，问取完后我能拿到的分数>=对方的分数的概率。
+     * 题意：一个长度最多20的数组里存放正整数，我和对手每次从两端分别取一个数字，每个人都全局最优地去取，假设没人都拿最大的分数，问先手的人最后是否能赢。
      * 这题也是top down的dfs with memo容易理解；bottom up挺抽象的，转移方程我看了好久，最后看例子才看懂。
      * Approach 1, dfs with memo
      * dp[i][j]（dfs里也就是helper函数）代表[i,j]范围先手的人比后手的人多拿的score。比如[1,5,2]，我选1，然后对方成了先手，在5,2里选一个，他一定可以多拿3。也就是说我当前拿的必须比他即将多拿的还要多才能赢
@@ -35,9 +35,9 @@ public class PredictTheWinner {
         return helper(0, nums.length - 1, nums) >= 0;
     }
 
-    //helper返回palyer1 - palyer2的score差值
-    //注意，题目说you can assume each player plays to maximize his score，递归的时候需要模拟我选左边或者选右边然后取一个最大值，而不是简单地贪心地选两者中较大的一个。
-    //例如，[4,3,100,9]，如果我选9对方就能选到100，所以我要优先选择4。
+    //  helper返回palyer1 - palyer2的score差值
+    // 注意，题目说you can assume each player plays to maximize his score，递归的时候需要模拟我选左边或者选右边然后取一个最大值，而不是简单地贪心地选两者中较大的一个。
+    // 例如，[4,3,100,9]，如果我选9对方就能选到100，所以我要优先选择4。
     private int helper(int l, int r, int[] nums) {
         return l == r ? nums[l] : Math.max(nums[l] - helper(l + 1, r, nums), nums[r] - helper(l, r - 1, nums));//我当前多拿的 - 他即将多拿的
     }
