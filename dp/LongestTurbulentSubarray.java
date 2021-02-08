@@ -34,7 +34,7 @@ public class LongestTurbulentSubarray {
         dp[1] = A[1] != A[0] ? 2 : 1;
         int res = dp[1];
         for (int i = 2; i < A.length; i++) {
-            dp[i] = A[i - 2] > A[i - 1] && A[i - 1] < A[i] || A[i - 2] < A[i - 1] && A[i - 1] > A[i] ? dp[i - 1] + 1 : A[i - 1] != A[i] ? 2 : 1;
+            dp[i] = A[i - 2] > A[i - 1] && A[i - 1] < A[i] || A[i - 2] < A[i - 1] && A[i - 1] > A[i] ? dp[i - 1] + 1 : A[i - 1] != A[i] ? 2 : 1; // 只需要判断倒数三个数字
             res = Math.max(res, dp[i]);
         }
         return res;
@@ -61,5 +61,24 @@ public class LongestTurbulentSubarray {
             result = Math.max(result, Math.max(dec, inc));
         }
         return result;
+    }
+
+    /**
+     * two pointers或者说是sliding window思路的代码
+     */
+    public int maxTurbulenceSize_two_pointers(int[] arr) {
+        if (arr.length == 1) return 1;
+        if (arr.length == 2) return arr[0] == arr[1] ? 1 : 2;
+        int res = arr[0] == arr[1] ? 1 : 2;
+        int l = 0, r = 2;
+        while (r < arr.length) {
+            if (arr[r] - arr[r - 1] > 0 && arr[r - 1] - arr[r - 2] < 0 || arr[r] - arr[r - 1] < 0 && arr[r - 1] - arr[r - 2] > 0) { // 只需要判断倒数三个数字是否符合
+                res = Math.max(res, r - l + 1);
+            } else {
+                l = r - 1;
+            }
+            r++;
+        }
+        return res;
     }
 }
