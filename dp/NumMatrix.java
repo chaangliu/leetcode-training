@@ -24,7 +24,8 @@ package dp;
 class NumMatrix {
     /**
      * 题意：实现快速查询某个矩形里面数组的sum。
-     * 经典题了，后面很多题目都会用到。查询时间O(1)，巧妙利用面积之差。
+     * 解法：二维前缀和。
+     * 巧妙利用面积之差。经典题了，后面很多题目都会用到。查询时间O(1)。注意边界条件，多申请一行一列。
      * 相似题目：	1314. Matrix Block Sum
      */
     int[][] dp;
@@ -44,33 +45,36 @@ class NumMatrix {
     }
 
     /**
+     * 一维前缀和
      * 查询时间O(m)
      * 首先如果想通过输入四个数立刻就得出结果，那需要4维dp，4维数组，肯定不行。
      * 做法是完全模仿上一题，只不过上一题只有一行，这一题有很多行；
      * 对每一行分别做上一题的操作，最后进行row2 - row1次相加。
      */
-    //    public NumMatrix(int[][] matrix) {
-    //        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return;
-    //        dp = new int[matrix.length][matrix[0].length];
-    //        dp[0][0] = matrix[0][0];
-    //        for (int i = 0; i < matrix.length; i++) {
-    //            dp[i][0] = matrix[i][0];
-    //            for (int j = 1; j < matrix[0].length; j++) {
-    //                //if (i == 0 && j == 0) continue;
-    //                dp[i][j] = matrix[i][j] + dp[i][j - 1];
-    //            }
-    //        }
-    //        System.out.println("last is " + dp[dp.length - 1][dp[0].length - 1]);
-    //    }
-    //
-    //    public int sumRegion(int row1, int col1, int row2, int col2) {
-    //        int res = 0;
-    //        for (int i = row1; i <= row2; i++) {
-    //            res += dp[i][col2] - ((col1 >= 1) ? dp[i][col1 - 1] : 0);
-    //        }
-    //        return res;
-    //    }
+    class NumMatrix_1 {
+        int[][] sums;
 
+        public NumMatrix_1(int[][] matrix) {
+            int m = matrix.length;
+            if (m > 0) {
+                int n = matrix[0].length;
+                sums = new int[m][n + 1];
+                for (int i = 0; i < m; i++) {
+                    for (int j = 0; j < n; j++) {
+                        sums[i][j + 1] = sums[i][j] + matrix[i][j];
+                    }
+                }
+            }
+        }
+
+        public int sumRegion(int row1, int col1, int row2, int col2) {
+            int sum = 0;
+            for (int i = row1; i <= row2; i++) {
+                sum += sums[i][col2 + 1] - sums[i][col1];
+            }
+            return sum;
+        }
+    }
 }
 
 /**
